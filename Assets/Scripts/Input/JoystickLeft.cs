@@ -2,21 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TouchInputHandler : MonoBehaviour
+public class JoystickLeft : JoystickBase
 {
-    private DFInput input;
-    
-
-
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
-    }
-    
-
-    private void FixedUpdate()
-    {
-
+        base.Start();
     }
 
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
 }
