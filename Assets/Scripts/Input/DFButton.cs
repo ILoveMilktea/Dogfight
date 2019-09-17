@@ -7,8 +7,7 @@ public interface IDFButton
     bool IsLeftJoystickTouched();
     bool IsRightJoystickTouched();
 
-    bool IsLeftJoystickTouched();
-}
+ }
 
 public class DFButton : MonoBehaviour
 {

@@ -22,7 +22,7 @@ public interface IDFInput
     bool IsAnyKeyDown();
 }
 
-public class DisabledInput : IInput
+public class DisabledInput : IDFInput
 {
     public bool GetTouchDown(int pointer)
     {

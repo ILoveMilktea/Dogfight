@@ -6,8 +6,9 @@ using UnityEngine.EventSystems;
 public enum TouchState
 {
     None,
-    begin,
+    Begin,
     Stay,
+    Drag,
     End,
 }
 
@@ -37,6 +38,7 @@ public class JoystickBase : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
     public virtual void OnPointerDown(PointerEventData data)
     {
         touchPos = data.position;
+        state = TouchState.Begin;
     }
 
     // Gameobject drag
@@ -47,13 +49,15 @@ public class JoystickBase : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
         Vector2 moveVector = touchPos - zeroPoint;
         
         MoveHandle(moveVector);
+        state = TouchState.Drag;
     }
 
     // End touch on this gameobject
-    public virtual void OnPointerUp(PointerEventData eventData)
+    public virtual void OnPointerUp(PointerEventData data)
     {
         touchPos = Vector2.zero;
         handle.anchoredPosition = Vector2.zero;
+        state = TouchState.End;
     }
 
     private void MoveHandle(Vector2 moveVector)

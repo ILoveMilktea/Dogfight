@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputManager : MonoSingleton<InputManager>
+public class OnOffSwitch
 {
+
 }
