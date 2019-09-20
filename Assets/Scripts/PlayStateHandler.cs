@@ -20,7 +20,8 @@ public class PlayStateHandler : MonoSingleton<PlayStateHandler>
     // Start is called before the first frame update
     void Start()
     {
-        
+        prevPlayState = PlayState.Fight;
+        curPlayState = PlayState.Fight;
     }
 
     // Update is called once per frame
@@ -35,6 +36,8 @@ public class PlayStateHandler : MonoSingleton<PlayStateHandler>
             {
                 callback();
             }
+
+            prevPlayState = curPlayState;
         }
     }
 

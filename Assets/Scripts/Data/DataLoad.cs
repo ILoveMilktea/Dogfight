@@ -12,9 +12,15 @@ public class DataLoad
     /// <param name="dataPath"></param>
     public void LoadUserData(string dataPath)
     {
-        byte[] saveFile = File.ReadAllBytes(dataPath);
-        MemoryStream memoryStream = new MemoryStream(saveFile);
-        BinaryReader binaryReader = new BinaryReader(memoryStream);
+        string fromJsonData = File.ReadAllText(dataPath);
+
+        DataManager.Instance.SetUserDataToCenter(fromJsonData);
+        Debug.Log("loaded");
+        Debug.Log(fromJsonData);
+
+        //byte[] saveFile = File.ReadAllBytes(dataPath);
+        //MemoryStream memoryStream = new MemoryStream(saveFile);
+        //BinaryReader binaryReader = new BinaryReader(memoryStream);
 
         //info.SetIsDataExist(binaryReader.ReadBoolean());
         //if (info.m_IsDataExist)

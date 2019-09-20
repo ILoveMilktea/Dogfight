@@ -12,7 +12,12 @@ public class DataSave
     /// <param name="slotName"></param>
     public void SaveUserData(string dataPath, UserData userData)
     {
-        string toJsonData = JsonUtility.ToJson(userData);
+        string toJsonData = JsonUtility.ToJson(userData.playInfo);
+        //string toJsonData = JsonHelper.ToJson(userData, prettyPrint: true);
+
+        File.WriteAllText(dataPath, toJsonData);
+        Debug.Log("saved");
+        Debug.Log(toJsonData);
     }
     
     /// <summary>

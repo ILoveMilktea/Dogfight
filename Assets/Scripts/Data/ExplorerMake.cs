@@ -5,9 +5,20 @@ using UnityEngine;
 
 public class ExplorerMake
 {
-    public void MakeFile()
+    public void MakeNewFile(string dataPath)
     {
+        if (!File.Exists(dataPath))
+        {
+            File.Create(dataPath);
+        }
+    }
 
+    public void MakeNewDirectory(string dataPath)
+    {
+        if(!Directory.Exists(dataPath))
+        {
+            Directory.CreateDirectory(dataPath);
+        }
     }
     /// <summary>
     /// SaveData.bytes 파일이 없으면 빈걸로 새로 만들자.

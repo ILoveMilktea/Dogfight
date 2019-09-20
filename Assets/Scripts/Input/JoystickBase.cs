@@ -22,7 +22,7 @@ public class JoystickBase : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
     private Canvas canvas;
 
     protected Vector2 touchPos;
-    private float handleMoveRange;
+    protected float handleMoveRange;
 
     protected TouchState state;
 
@@ -32,6 +32,9 @@ public class JoystickBase : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
 
         touchPos = Vector2.zero;
         handleMoveRange = border.rect.width * 0.5f;
+
+        // UI Grouping
+        UIManager.Instance.onOffSwitch.AddFightUIGroupMember(gameObject);
     }
 
     // Gameobject touch

@@ -10,6 +10,7 @@ public class DataManager : MonoSingleton<DataManager>
 {
     private string dataPath;
 
+    private DataCenter dataCenter;
     private DataSave dataSave = new DataSave();
     private DataLoad dataLoad = new DataLoad();
     private ExplorerMake explorerMake = new ExplorerMake();
@@ -27,10 +28,20 @@ public class DataManager : MonoSingleton<DataManager>
 #endif
 
 #if UNITY_STANDALONE || UNITY_EDITOR
-        dataPath = Application.persistentDataPath;
+        dataPath = Application.persistentDataPath + "/SaveData";
 #endif
-        dataPath = dataPath + "/SaveData.bytes";
+        //dataPath = dataPath + "/SaveData.bytes";
+        dataPath = MakeNewStorage(dataPath);
 
+        dataCenter = FindObjectOfType<DataCenter>();
+    }
+
+    private string MakeNewStorage(string dataPath)
+    {
+        explorerMake.MakeNewDirectory(dataPath);
+        dataPath = dataPath + "/SaveData.json";
+        explorerMake.MakeNewFile(dataPath);
+        return dataPath;
     }
 
     /// <summary>
@@ -38,9 +49,10 @@ public class DataManager : MonoSingleton<DataManager>
     /// </summary>
     public void Save()
     {
-        UserData data = new UserData();
+        UserData data = dataCenter.GetUserData;
         dataSave.SaveUserData(dataPath, data);
     }
+
     /// <summary>
     /// 저장된 세이브 데이터 불러오기,
     /// 시작 화면에서 이어서 하기 할 때만 호출됩니다.
@@ -62,7 +74,23 @@ public class DataManager : MonoSingleton<DataManager>
     /// </summary>
     public void MakeSaveFile()
     {
-        explorerMake.MakeFile();
+        //explorerMake.MakeFile();
     }
 
+    public void SetUserDataToCenter(string jsonData)
+    {
+        dataCenter.SetLoadData(jsonData);
+    }
+
+    //datacenter test
+    public void levelup(int val)
+    {
+        dataCenter.SetStage(val);
+        Debug.Log(dataCenter.GetPlayInfo.stage);
+    }
+
+    public void testt()
+    {
+
+    }
 }

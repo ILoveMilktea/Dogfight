@@ -14,7 +14,6 @@ public class JoystickMove : JoystickBase
     // Update is called once per frame
     void FixedUpdate()
     {
-        Debug.Log(state);
         switch (state)
         {
             case TouchState.Begin:
@@ -22,18 +21,32 @@ public class JoystickMove : JoystickBase
                 break;
             case TouchState.Stay:
                 // 현재 handle 이동만큼 움직임전달
+                PlayerMove();
                 break;
             case TouchState.Drag:
                 state = TouchState.Stay;
                 // 여기도 전달
+                PlayerMove();
                 break;
             case TouchState.End:
                 //손을 뗌
                 state = TouchState.None;
+                GameManager.Instance.playerCtrl.Stop();
                 break;
             default:
                 break;
         }
+    }
+
+    private void PlayerMove()
+    {
+        Vector2 moveDirection = handle.position - border.position;
+        moveDirection.Normalize();
+        Vector3 moveDirection3D = new Vector3(moveDirection.x, 0, moveDirection.y);
+
+        float moveAmount = Vector2.Distance(border.position, handle.position);
+        moveAmount = moveAmount / handleMoveRange;
+        GameManager.Instance.playerCtrl.Move(moveDirection3D, moveAmount);
     }
 
     //public override void OnPointerDown(PointerEventData data)
