@@ -10,7 +10,7 @@ public enum WeaponType
 }
 public class DataCenter : MonoSingleton<DataCenter>
 {
-    private UserData userData = new UserData();
+    private UserData userData;
 
     public UserData GetUserData { get { return userData; } }
     public PlayerStatus GetPlayerStatus { get { return userData.playerStatus; } }
@@ -84,6 +84,26 @@ public class DataCenter : MonoSingleton<DataCenter>
 
     private void Start()
     {
+        CreateCenter();
+        SetDefaultData();
+    }
+
+    private void CreateCenter()
+    {
+        userData = new UserData();
+
+        userData.playerStatus = new PlayerStatus();
+
+        userData.weapons = new Weapons();
+        userData.weapons.wa = new WeaponStatus();
+        userData.weapons.wb = new WeaponStatus();
+        userData.weapons.wc = new WeaponStatus();
+
+        userData.playInfo = new PlayInfo();
+    }
+
+    private void SetDefaultData()
+    {
         SetMaxHp(100);
         SetRemainHp(100);
         SetAtk(5);
@@ -95,7 +115,6 @@ public class DataCenter : MonoSingleton<DataCenter>
         SetWeaponExp(WeaponType.b, 0);
         SetWeaponLevel(WeaponType.b, 1);
         SetWeaponExp(WeaponType.b, 0);
-
 
         SetPlaytime(0f);
         SetStage(1);

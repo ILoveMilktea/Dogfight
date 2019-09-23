@@ -36,8 +36,8 @@ public class OnOffSwitch : MonoSingleton<OnOffSwitch>
 
     private void Start()
     {
-        GameManager.Instance.playStateHandler.SetStateChangeCallback(PlayState.Pause, fightUIGroup.InactiveAllMembers);
-        GameManager.Instance.playStateHandler.SetStateChangeCallback(PlayState.Fight, fightUIGroup.ActiveAllMembers);
+        GameManager.Instance.SetStateChangeCallback(PlayState.Pause, fightUIGroup.InactiveAllMembers);
+        GameManager.Instance.SetStateChangeCallback(PlayState.Fight, fightUIGroup.ActiveAllMembers);
     }
     private void Update()
     {

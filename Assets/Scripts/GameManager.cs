@@ -1,17 +1,18 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 public class GameManager : MonoSingleton<GameManager>
 {
-    public PlayStateHandler playStateHandler;
-    public IPlayer playerCtrl;
+    private PlayStateHandler playStateHandler;
+    private IPlayerMove playerMove;
 
     private void Awake()
     {
         DontDestroyOnLoad(Instance);
 
         playStateHandler = PlayStateHandler.Instance;
-        playerCtrl = PlayerCtrl.Instance;
+        playerMove = Player.Instance;
     }
 
 
@@ -60,5 +61,19 @@ public class GameManager : MonoSingleton<GameManager>
         {
             DataManager.Instance.levelup(3);
         }
+    }
+
+    public void MovePlayer(Vector3 dir, float amount)
+    {
+        playerMove.Move(dir, amount);
+    }
+    public void StopPlayer()
+    {
+        playerMove.Stop();
+    }
+
+    public void SetStateChangeCallback(PlayState playState, Action func)
+    {
+        playStateHandler.SetStateChangeCallback(playState, func);
     }
 }

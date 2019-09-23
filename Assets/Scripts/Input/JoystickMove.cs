@@ -31,7 +31,7 @@ public class JoystickMove : JoystickBase
             case TouchState.End:
                 //손을 뗌
                 state = TouchState.None;
-                GameManager.Instance.playerCtrl.Stop();
+                //GameManager.Instance.StopPlayer();
                 break;
             default:
                 break;
@@ -46,7 +46,7 @@ public class JoystickMove : JoystickBase
 
         float moveAmount = Vector2.Distance(border.position, handle.position);
         moveAmount = moveAmount / handleMoveRange;
-        GameManager.Instance.playerCtrl.Move(moveDirection3D, moveAmount);
+        GameManager.Instance.MovePlayer(moveDirection3D, moveAmount);
     }
 
     //public override void OnPointerDown(PointerEventData data)

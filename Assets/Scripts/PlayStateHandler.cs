@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,8 +12,7 @@ public enum PlayState
 
 public class PlayStateHandler : MonoSingleton<PlayStateHandler>
 {
-    public delegate void Callback();
-    private Dictionary<PlayState, List<Callback>> stateChangeCallback = new Dictionary<PlayState, List<Callback>>();
+    private Dictionary<PlayState, List<Action>> stateChangeCallback = new Dictionary<PlayState, List<Action>>();
 
 
     private PlayState prevPlayState;
@@ -30,7 +30,7 @@ public class PlayStateHandler : MonoSingleton<PlayStateHandler>
         // Game state is changed
         if (prevPlayState != curPlayState)
         {
-            List<Callback> callbacks = stateChangeCallback[curPlayState];
+            List<Action> callbacks = stateChangeCallback[curPlayState];
 
             foreach (var callback in callbacks)
             {
@@ -48,7 +48,7 @@ public class PlayStateHandler : MonoSingleton<PlayStateHandler>
     }
 
     // 전투 상황이 변경 될 때에 부를 Callback 함수들을 등록합니다.
-    public void SetStateChangeCallback(PlayState playState, Callback function)
+    public void SetStateChangeCallback(PlayState playState, Action function)
     {
         if (stateChangeCallback.ContainsKey(playState))
         {
@@ -56,7 +56,7 @@ public class PlayStateHandler : MonoSingleton<PlayStateHandler>
         }
         else
         {
-            List<Callback> callbackList = new List<Callback>();
+            List<Action> callbackList = new List<Action>();
             callbackList.Add(function);
 
             stateChangeCallback.Add(playState, callbackList);

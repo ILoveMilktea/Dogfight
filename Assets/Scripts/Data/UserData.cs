@@ -16,16 +16,17 @@ public class PlayerStatus
     public int def;
 }
 
-public class WeaponStatus
-{
-    public int level;
-    public int exp;
-}
 public class Weapons
 {
     public WeaponStatus wa;
     public WeaponStatus wb;
     public WeaponStatus wc;
+}
+
+public class WeaponStatus
+{
+    public int level;
+    public int exp;
 }
 
 public class PlayInfo

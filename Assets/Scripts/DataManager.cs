@@ -28,7 +28,7 @@ public class DataManager : MonoSingleton<DataManager>
 #endif
 
 #if UNITY_STANDALONE || UNITY_EDITOR
-        dataPath = Application.persistentDataPath + "/SaveData";
+        dataPath = Application.dataPath + "/SaveData";
 #endif
         //dataPath = dataPath + "/SaveData.bytes";
         dataPath = MakeNewStorage(dataPath);
@@ -43,39 +43,18 @@ public class DataManager : MonoSingleton<DataManager>
         explorerMake.MakeNewFile(dataPath);
         return dataPath;
     }
-
-    /// <summary>
-    /// 현재 게임 플레이 상태 저장
-    /// </summary>
+    
     public void Save()
     {
         UserData data = dataCenter.GetUserData;
         dataSave.SaveUserData(dataPath, data);
     }
-
-    /// <summary>
-    /// 저장된 세이브 데이터 불러오기,
-    /// 시작 화면에서 이어서 하기 할 때만 호출됩니다.
-    /// </summary>
+    
     public void Load()
     {
         dataLoad.LoadUserData(dataPath);
     }
-    /// <summary>
-    /// SaveFile 존재하는지 확인하기
-    /// </summary>
-    /// <returns></returns>
-    public bool IsSaveFileExist()
-    {
-        return File.Exists(dataPath);
-    }
-    /// <summary>
-    /// SaveFile이 없을 경우에, 혹은 새로 시작하는 경우에 GameManager에서 호출됩니다.
-    /// </summary>
-    public void MakeSaveFile()
-    {
-        //explorerMake.MakeFile();
-    }
+    
 
     public void SetUserDataToCenter(string jsonData)
     {

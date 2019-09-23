@@ -12,8 +12,6 @@ public class UIManager : MonoSingleton<UIManager>
         joystickAttack = FindObjectOfType<JoystickAttack>();
         joystickMove = FindObjectOfType<JoystickMove>();
         onOffSwitch = OnOffSwitch.Instance;
-
-        DataManager.Instance.Save();
     }
 
     public JoystickAttack joystickAttack;
