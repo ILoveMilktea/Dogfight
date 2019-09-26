@@ -46,19 +46,22 @@ public class DataManager : MonoSingleton<DataManager>
     
     public void Save()
     {
-        UserData data = dataCenter.GetUserData;
-        dataSave.SaveUserData(dataPath, data);
+        UserData data = dataCenter.GetUserData();
+
+        string toJsonData = JsonUtility.ToJson(data, true);
+
+        File.WriteAllText(dataPath, toJsonData);
+        Debug.Log("saved");
     }
     
     public void Load()
     {
-        dataLoad.LoadUserData(dataPath);
-    }
-    
+        string fromJsonData = File.ReadAllText(dataPath);
 
-    public void SetUserDataToCenter(string jsonData)
-    {
-        dataCenter.SetLoadData(jsonData);
+        UserData data = JsonUtility.FromJson<UserData>(fromJsonData);
+        Debug.Log("loaded");
+
+        dataCenter.SetUserData(data);
     }
 
     //datacenter test

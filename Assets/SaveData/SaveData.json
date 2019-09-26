@@ -1,1 +1,32 @@
-{}
+{
+    "playInfo": {
+        "playtime": 0.0,
+        "stage": 1,
+        "energy": 0
+    },
+    "playerStatusInfo": {
+        "maxHp": 100,
+        "remainHp": 100,
+        "atk": 10,
+        "def": 10
+    },
+    "weaponInfo": {
+        "weaponsList": [
+            {
+                "name": "gun",
+                "level": 1,
+                "exp": 0
+            },
+            {
+                "name": "bow",
+                "level": 1,
+                "exp": 0
+            },
+            {
+                "name": "nuclear",
+                "level": 1,
+                "exp": 0
+            }
+        ]
+    }
+}
