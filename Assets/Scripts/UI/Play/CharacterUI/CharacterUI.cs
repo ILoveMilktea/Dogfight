@@ -12,15 +12,18 @@ public class CharacterUI : MonoBehaviour
     private Transform target;
     private RectTransform rectTransform;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         characterName = GetComponentInChildren<Text>();
         characterHp = GetComponentInChildren<Slider>();
         rectTransform = GetComponent<RectTransform>();
+    }
 
+    // Start is called before the first frame update
+    void Start()
+    {
         //target = FindObjectOfType<Player>().transform;
-
+        characterName.text = gameObject.name; // 임시
         ResizeUI();
     }
 

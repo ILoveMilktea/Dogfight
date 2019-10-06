@@ -36,14 +36,12 @@ public class PlayerStatusInfo
     public int maxHp;
     public int remainHp;
     public int atk;
-    public int def;
 
     public PlayerStatusInfo()
     {
         maxHp = 100;
         remainHp = 100;
         atk = 10;
-        def = 10;
     }
 }
 

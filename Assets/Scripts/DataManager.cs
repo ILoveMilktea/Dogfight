@@ -9,10 +9,10 @@ using UnityEngine.SceneManagement;
 public class DataManager : MonoSingleton<DataManager>
 {
     private string dataPath;
+    private int maxExp = 100; // 임시 설정
+    private float playtime;
 
-    private DataCenter dataCenter;
-    private DataSave dataSave = new DataSave();
-    private DataLoad dataLoad = new DataLoad();
+    private DataCenter dataCenter = new DataCenter();
     private ExplorerMake explorerMake = new ExplorerMake();
 
     private void Awake()
@@ -32,8 +32,6 @@ public class DataManager : MonoSingleton<DataManager>
 #endif
         //dataPath = dataPath + "/SaveData.bytes";
         dataPath = MakeNewStorage(dataPath);
-
-        dataCenter = FindObjectOfType<DataCenter>();
     }
 
     private string MakeNewStorage(string dataPath)
@@ -63,6 +61,60 @@ public class DataManager : MonoSingleton<DataManager>
 
         dataCenter.SetUserData(data);
     }
+    
+    // player Hp
+    public void UpMaxHp(int value)
+    {
+        dataCenter.SetMaxHp(dataCenter.GetPlayerStatus.maxHp + value);
+        dataCenter.SetRemainHp(dataCenter.GetPlayerStatus.remainHp + value);
+    }
+    public void UpRemainHp(int value)
+    {
+        int remainHp = dataCenter.GetPlayerStatus.remainHp;
+        if(remainHp + value > dataCenter.GetPlayerStatus.maxHp)
+        {
+            dataCenter.SetRemainHp(dataCenter.GetPlayerStatus.maxHp);
+        }
+        else
+        {
+            dataCenter.SetRemainHp(remainHp + value);
+        }
+    }
+
+    public void SetRemainHp(int value)
+    {
+        if (value > dataCenter.GetPlayerStatus.maxHp)
+        {
+            dataCenter.SetRemainHp(dataCenter.GetPlayerStatus.maxHp);
+        }
+        else
+        {
+            dataCenter.SetRemainHp(value);
+        }
+    }
+    // player Atk
+    public void UpAtk(int value)
+    {
+        dataCenter.SetAtk(dataCenter.GetPlayerStatus.atk + value);
+    }
+    // Weapon
+    public void UpWeaponExp(WeaponType type, int value)
+    {
+        Weapon weapon = dataCenter.GetWeaponByType(type);
+        if(weapon.exp + value >= maxExp)
+        {
+            dataCenter.SetWeaponLevel(type, weapon.level + 1);
+            dataCenter.SetWeaponExp(type, weapon.exp + value - maxExp);
+        }
+        else
+        {
+            dataCenter.SetWeaponExp(type, weapon.exp + value);
+        }
+    }
+
+    // 수치 조정 후 ui 수치 리셋
+    public void DisplayReset()
+    { }
 
     //datacenter test
     public void levelup(int val)

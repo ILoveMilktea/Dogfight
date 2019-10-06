@@ -2,14 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IDFButton
-{
-    bool IsLeftJoystickTouched();
-    bool IsRightJoystickTouched();
-
- }
-
-public class DFButton : MonoBehaviour
+public class FightSceneHandler : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()

@@ -10,14 +10,13 @@ public enum PlayState
     Dead,
 }
 
-public class PlayStateHandler : MonoSingleton<PlayStateHandler>
+public class PlayStateObserver : MonoBehaviour
 {
     private Dictionary<PlayState, List<Action>> stateChangeCallback = new Dictionary<PlayState, List<Action>>();
 
-
     private PlayState prevPlayState;
     private PlayState curPlayState;
-    // Start is called before the first frame update
+    
     void Start()
     {
         prevPlayState = PlayState.Fight;
@@ -60,6 +59,26 @@ public class PlayStateHandler : MonoSingleton<PlayStateHandler>
             callbackList.Add(function);
 
             stateChangeCallback.Add(playState, callbackList);
+        }
+    }
+
+    // 제거
+    public void RemoveStateChangeCallback(PlayState playState, Action function)
+    {
+        if (stateChangeCallback.ContainsKey(playState))
+        {
+            if(stateChangeCallback[playState].Contains(function))
+            {
+                stateChangeCallback[playState].Remove(function);
+            }
+            else
+            {
+                Debug.Log("no func");
+            }
+        }
+        else
+        {
+            Debug.Log("no state");
         }
     }
 }

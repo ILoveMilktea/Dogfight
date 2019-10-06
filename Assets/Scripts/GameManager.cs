@@ -2,18 +2,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
+static class Constants
+{
+    public const string StartSceneName = "Start";
+    public const string FightSceneName = "Fight";
+    public const string UpgradeSceneName = "Upgrade";
+}
+
+public enum SceneType
+{
+    Start,
+    Fight,
+    Upgrade
+}
+
 public class GameManager : MonoSingleton<GameManager>
 {
-    private PlayStateHandler playStateHandler;
+    private PlayStateObserver playStateObserver;
+    private PlayTimer playTimer;
     private Player player;
     private PlayState playState = PlayState.Fight;
+    public PlayState CurrentPlayState { get { return playState; } }
 
     private void Awake()
     {
         DontDestroyOnLoad(Instance);
 
-        playStateHandler = PlayStateHandler.Instance;
-        player = FindObjectOfType<Player>();
+        playTimer = new PlayTimer();
+
+        SceneManager.sceneLoaded += OnLoadCallback;
+        SetFightSceneMember(); // 이거 테스트, 나중에 지워주세요
     }
 
     // 현재 업데이트 내 키입력들은 모두 테스트용임니다. 지워야함
@@ -24,13 +44,13 @@ public class GameManager : MonoSingleton<GameManager>
             if(playState == PlayState.Pause)
             {
                 playState = PlayState.Fight;
-                playStateHandler.SetCurrentPlayState(playState);
+                playStateObserver.SetCurrentPlayState(playState);
 
             }
             else
             {
                 playState = PlayState.Pause;
-                playStateHandler.SetCurrentPlayState(playState);
+                playStateObserver.SetCurrentPlayState(playState);
             }
         }
 
@@ -57,6 +77,27 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
+    void OnLoadCallback(Scene scene, LoadSceneMode sceneMode)
+    {
+        switch (scene.name)
+        {
+            case Constants.StartSceneName:
+                break;
+            case Constants.FightSceneName:
+                SetFightSceneMember();
+                break;
+            case Constants.UpgradeSceneName:
+                break;
+        }
+    }
+
+    private void SetFightSceneMember()
+    {
+        playStateObserver = FindObjectOfType<PlayStateObserver>();
+        player = FindObjectOfType<Player>();
+    }
+
+    // 플레이어 이동
     public void MovePlayer(Vector3 dir, float amount)
     {
         if(playState == PlayState.Fight)
@@ -64,6 +105,7 @@ public class GameManager : MonoSingleton<GameManager>
             player.Move(dir, amount);
         }
     }
+    // 플레이어 멈춤
     public void StopPlayer()
     {
         if (playState == PlayState.Fight)
@@ -71,7 +113,7 @@ public class GameManager : MonoSingleton<GameManager>
             player.StopMove();
         }
     }
-
+    // 플레이어 공격
     public void PlayerAttack(Vector3 dir)
     {
         if (playState == PlayState.Fight)
@@ -79,7 +121,7 @@ public class GameManager : MonoSingleton<GameManager>
             player.Attack(dir);
         }
     }
-
+    // 플레이어 공격 대기
     public void PlayerStandby()
     {
         if (playState == PlayState.Fight)
@@ -88,8 +130,28 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
+    // play state change
+    public void ChangePlayState()
+    {
+        if (playState == PlayState.Pause)
+        {
+            playState = PlayState.Fight;
+            playStateObserver.SetCurrentPlayState(playState);
+
+        }
+        else
+        {
+            playState = PlayState.Pause;
+            playStateObserver.SetCurrentPlayState(playState);
+        }
+    }
+    // 전투 중 일시정지시에 처리할 콜백함수들 등록
     public void SetStateChangeCallback(PlayState playState, Action func)
     {
-        playStateHandler.SetStateChangeCallback(playState, func);
+        playStateObserver.SetStateChangeCallback(playState, func);
+    }
+    public void RemoveStateChangeCallback(PlayState playState, Action func)
+    {
+        playStateObserver.RemoveStateChangeCallback(playState, func);
     }
 }

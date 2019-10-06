@@ -7,10 +7,10 @@ using UnityEngine;
 public enum WeaponType
 {
     gun,
-    bow,
-    nuclear
+    shotgun,
+    energysphere
 }
-public class DataCenter : MonoSingleton<DataCenter>
+public class DataCenter : MonoBehaviour
 {
     private UserData userData;
 
@@ -28,7 +28,6 @@ public class DataCenter : MonoSingleton<DataCenter>
     public void SetMaxHp(int value) { playerStatusInfo.maxHp = value; }
     public void SetRemainHp(int value) { playerStatusInfo.remainHp = value; }
     public void SetAtk(int value) { playerStatusInfo.atk = value; }
-    public void SetDef(int value) { playerStatusInfo.def = value; }
 
 
     public Dictionary<WeaponType, Weapon> GetWeapons { get { return weapons; } }
@@ -36,9 +35,8 @@ public class DataCenter : MonoSingleton<DataCenter>
     public void SetWeaponLevel(WeaponType type, int value) { weapons[type].level = value; }
     public void SetWeaponExp(WeaponType type, int value) { weapons[type].exp = value; }
 
-    private void Awake()
+    public DataCenter()
     {
-        DontDestroyOnLoad(gameObject);
         CreateCenter();
     }
 

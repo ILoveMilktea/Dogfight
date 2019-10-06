@@ -32,9 +32,6 @@ public class JoystickBase : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
 
         touchPos = Vector2.zero;
         handleMoveRange = border.rect.width * 0.5f;
-
-        // UI Grouping
-        UIManager.Instance.onOffSwitch.AddFightUIGroupMember(gameObject);
     }
 
     // Gameobject touch
