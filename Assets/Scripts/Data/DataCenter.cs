@@ -13,6 +13,7 @@ public enum WeaponType
 public class DataCenter : MonoSingleton<DataCenter>
 {
     private UserData userData;
+
     private PlayInfo playInfo;
     private PlayerStatusInfo playerStatusInfo;
     private Dictionary<WeaponType, Weapon> weapons;
@@ -74,7 +75,7 @@ public class DataCenter : MonoSingleton<DataCenter>
         playerStatusInfo = data.playerStatusInfo;
 
         foreach(var weapon in data.weaponInfo.weaponsList)
-        {
+        { 
             WeaponType type = (WeaponType)Enum.Parse(typeof(WeaponType), weapon.name);
             weapons[type] = weapon;
         }

@@ -70,9 +70,5 @@ public class DataManager : MonoSingleton<DataManager>
         dataCenter.SetStage(val);
         Debug.Log(dataCenter.GetPlayInfo.stage);
     }
-
-    public void testt()
-    {
-
-    }
+ 
 }

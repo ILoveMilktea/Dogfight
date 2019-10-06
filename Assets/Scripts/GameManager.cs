@@ -5,38 +5,32 @@ using UnityEngine;
 public class GameManager : MonoSingleton<GameManager>
 {
     private PlayStateHandler playStateHandler;
-    private IPlayerMove playerMove;
+    private Player player;
+    private PlayState playState = PlayState.Fight;
 
     private void Awake()
     {
         DontDestroyOnLoad(Instance);
 
         playStateHandler = PlayStateHandler.Instance;
-        playerMove = Player.Instance;
+        player = FindObjectOfType<Player>();
     }
 
-
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
-    private PlayState test;
-    // Update is called once per frame
+    // 현재 업데이트 내 키입력들은 모두 테스트용임니다. 지워야함
     void Update()
     {
         if (Input.GetKeyUp(KeyCode.Space))
         {
-            if(test == PlayState.Pause)
+            if(playState == PlayState.Pause)
             {
-                test = PlayState.Fight;
-                playStateHandler.SetCurrentPlayState(test);
+                playState = PlayState.Fight;
+                playStateHandler.SetCurrentPlayState(playState);
 
             }
             else
             {
-                test = PlayState.Pause;
-                playStateHandler.SetCurrentPlayState(test);
+                playState = PlayState.Pause;
+                playStateHandler.SetCurrentPlayState(playState);
             }
         }
 
@@ -65,11 +59,33 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void MovePlayer(Vector3 dir, float amount)
     {
-        playerMove.Move(dir, amount);
+        if(playState == PlayState.Fight)
+        {
+            player.Move(dir, amount);
+        }
     }
     public void StopPlayer()
     {
-        playerMove.Stop();
+        if (playState == PlayState.Fight)
+        {
+            player.StopMove();
+        }
+    }
+
+    public void PlayerAttack(Vector3 dir)
+    {
+        if (playState == PlayState.Fight)
+        {
+            player.Attack(dir);
+        }
+    }
+
+    public void PlayerStandby()
+    {
+        if (playState == PlayState.Fight)
+        {
+            player.Standby();
+        }
     }
 
     public void SetStateChangeCallback(PlayState playState, Action func)
