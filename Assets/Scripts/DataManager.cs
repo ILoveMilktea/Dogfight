@@ -62,6 +62,12 @@ public class DataManager : MonoSingleton<DataManager>
         dataCenter.SetUserData(data);
     }
     
+    // play time
+    public void AddPlayTime(float playtime)
+    {
+        dataCenter.SetPlaytime(dataCenter.GetPlayInfo.playtime + playtime);
+    }
+
     // player Hp
     public void UpMaxHp(int value)
     {

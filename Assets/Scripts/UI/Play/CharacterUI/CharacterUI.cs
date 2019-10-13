@@ -5,31 +5,32 @@ using UnityEngine.UI;
 
 public class CharacterUI : MonoBehaviour
 {
-    private Text characterName;
-    private Slider characterHp;
+    protected Text characterName;
+    protected Slider characterHp;
 
     [SerializeField]
-    private Transform target;
-    private RectTransform rectTransform;
+    protected Transform target;
+    protected RectTransform rectTransform;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         characterName = GetComponentInChildren<Text>();
         characterHp = GetComponentInChildren<Slider>();
+
         rectTransform = GetComponent<RectTransform>();
     }
 
     // Start is called before the first frame update
-    void Start()
+    protected void Start()
     {
         //target = FindObjectOfType<Player>().transform;
-        characterName.text = gameObject.name; // 임시
+        characterName.text = target.gameObject.name; // 임시
         ResizeUI();
     }
 
     // Update is called once per frame
     // Late 안쓰면 ui가 먼저 가버려서 떨림 현상 생김
-    void LateUpdate()
+    protected void LateUpdate()
     {
         ChaseTarget();
         

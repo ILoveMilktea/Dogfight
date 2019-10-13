@@ -8,21 +8,15 @@ public class PlayTimer : MonoBehaviour
     private bool isFight;
     private IEnumerator timer;
 
-    public PlayTimer()
+    private void Start()
     {
         playtime = 0f;
         isFight = false;
         timer = Timer();
-
-        //DontDestroyOnLoad(gameObject);
     }
 
     public IEnumerator Timer()
     {
-        //GameManager.Instance.SetStateChangeCallback(PlayState.NonFight, FreezeTimer);
-        GameManager.Instance.SetStateChangeCallback(PlayState.Pause, FreezeTimer);
-        GameManager.Instance.SetStateChangeCallback(PlayState.Dead, FreezeTimer);
-        GameManager.Instance.SetStateChangeCallback(PlayState.Fight, ReleaseTimer);
         isFight = false;
 
         while(true)
@@ -63,10 +57,7 @@ public class PlayTimer : MonoBehaviour
     {
         StopCoroutine(timer);
 
-        //GameManager.Instance.RemoveStateChangeCallback(PlayState.NonFight, FreezeTimer);
-        GameManager.Instance.RemoveStateChangeCallback(PlayState.Pause, FreezeTimer);
-        GameManager.Instance.RemoveStateChangeCallback(PlayState.Dead, FreezeTimer);
-        GameManager.Instance.RemoveStateChangeCallback(PlayState.Fight, ReleaseTimer);
+        DataManager.Instance.AddPlayTime(playtime);
     }
 
 }

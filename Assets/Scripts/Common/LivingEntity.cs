@@ -32,6 +32,7 @@ public class LivingEntity : MonoBehaviour,IDamageable
         {
             Die();
         }
+
     }
 
     public void TakeKnockBack(Vector3 dir, float force, float knockBackDuration)
