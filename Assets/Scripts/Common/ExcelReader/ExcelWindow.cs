@@ -18,7 +18,7 @@ public class ExcelWindow : EditorWindow
 
     private void OnGUI()
     {
-        Repaint();
+        //Repaint();
 
         GUILayout.BeginArea(new Rect(10, 10, 80, 60));
         {

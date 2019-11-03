@@ -108,6 +108,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         //StartTimer();
         SetUIToAllCharacters();
         UIGrouping();
+        SetEnemyOnStage(); // test
     }
 
     public void StartFightScene()
@@ -133,10 +134,12 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     private void SetEnemyOnStage()
     {
         int stageNumber = DataCenter.Instance.GetPlayInfo.stage;
-        string stageName = "Stage" + stageNumber.ToString();
 
-        var enemyTable = Tables.Instance.GetType().GetMember(stageName).GetType().GetMethod("GetTable");
-        
+        StageEnemyTable table = Tables.Instance.StageEnemyTables[stageNumber];
+        foreach(var tuple in table.GetTable())
+        {
+            Debug.Log(tuple.Value.m_serialNumber + " --- " + EnemyStatusTable.GetTuple(tuple.Value.m_serialNumber).m_name);
+        }
     }
     private void SetUIToAllCharacters()
     {

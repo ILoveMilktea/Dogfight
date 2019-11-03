@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using OfficeOpenXml;
 using UnityEngine;
 
+
 /// <summary>
 /// 읽고, 쓰는 부분
 /// 다 했는데 에러처리나 null값에 대한 것은 신경을 안썼음
@@ -36,6 +37,7 @@ public partial class ExcelReader : MonoBehaviour
 
         CreateTableScript();
     }
+    
 
     /// <summary>
     /// 기존 데이터들을 지우는 함수, 주의 요함!
@@ -245,186 +247,356 @@ public partial class ExcelReader : MonoBehaviour
         stringBuilder.AppendLine(AddTab(@"using UnityEngine;"));
         stringBuilder.AppendLine();
 
+        KeyValuePair<ExcelWorksheet, Dictionary<string,List<string>>> stageEnemyInfo;
+        int stageCount = 0;
         // 각 worksheet의 Info, Table Class 만드는 곳
         foreach (var tableinfo in m_TableInfos)
         {
-            //----------------- NameInfo Class ---------------
+            if(tableinfo.Key.Name.Substring(0,6) != "Stage_")
             {
-                // 각 worksheet의 이름으로 class를 만듭니다.
-                stringBuilder.AppendLine(AddTab("public class " + tableinfo.Key.Name + "Info"));
-                stringBuilder.AppendLine(AddTab("{"));
-
-                // name으로 변수들 생성
-                // ex) public int m_Name { get; private set; }
-                for (int i = 1; i < tableinfo.Value["name"].Count; i++)
+                //----------------- NameInfo Class ---------------
                 {
-                    stringBuilder.AppendLine(AddTab("public " + tableinfo.Value["type"][i] + " m_"
-                                                            + tableinfo.Value["name"][i] + " { get; private set; }", 1));
-                }
+                    // 각 worksheet의 이름으로 class를 만듭니다.
+                    stringBuilder.AppendLine(AddTab("public class " + tableinfo.Key.Name + "Info"));
+                    stringBuilder.AppendLine(AddTab("{"));
 
-                stringBuilder.AppendLine();
-
-                // 각 변수들의 set함수 생성
-                // ex) public void SetName(int name) { m_Name = name; }
-                for (int i = 1; i < tableinfo.Value["name"].Count; i++)
-                {
-                    stringBuilder.AppendLine(AddTab("public void Set" + tableinfo.Value["name"][i]
-                        + "(" + tableinfo.Value["type"][i] + " " + tableinfo.Value["name"][i] + ")"
-                        + " { m_" + tableinfo.Value["name"][i] + " = " + tableinfo.Value["name"][i] + "; }", 1));
-                }
-
-
-                stringBuilder.AppendLine(AddTab("}"));
-                stringBuilder.AppendLine();
-            }
-            //----------------- NameTable Class ---------------
-            {
-
-                stringBuilder.AppendLine(AddTab("public class " + tableinfo.Key.Name + "Table"));
-                stringBuilder.AppendLine(AddTab("{"));
-
-                // public NameTable() ---- 생성자
-                {
-                    stringBuilder.AppendLine(AddTab(@"public " + tableinfo.Key.Name + "Table" + @"()", 1));
-                    stringBuilder.AppendLine(AddTab("{", 1));
-                    stringBuilder.AppendLine(AddTab(@"ReadBinaryTable();", 2));
-                    stringBuilder.AppendLine(AddTab("}", 1));
-                    stringBuilder.AppendLine();
-                }
-
-                // private static Dictionary<type, NameInfo> Table = new Dictionary<type, NameInfo>();
-                {
-                    stringBuilder.AppendLine(AddTab(@"private static Dictionary<" + tableinfo.Value["type"][0] + ", " + tableinfo.Key.Name + @"Info> " + "Table"
-                                                   + @" = new Dictionary<" + tableinfo.Value["type"][0] + ", " + tableinfo.Key.Name + @"Info>();", 1));
-                    stringBuilder.AppendLine();
-                }
-
-                // private void ReadBinaryTable()
-                {
-                    stringBuilder.AppendLine(AddTab(@"private void ReadBinaryTable()", 1));
-                    stringBuilder.AppendLine(AddTab("{", 1));
-                    stringBuilder.AppendLine(AddTab(@"TextAsset textAsset = Resources.Load(""Tables/" + m_BinaryFolders[tableinfo.Key] + "/" + tableinfo.Key.Name + "\") as TextAsset;", 2));
-                    stringBuilder.AppendLine(AddTab("MemoryStream memoryStream = new MemoryStream(textAsset.bytes);", 2));
-                    stringBuilder.AppendLine(AddTab("BinaryReader binaryReader = new BinaryReader(memoryStream);", 2));
-                    stringBuilder.AppendLine();
-                    stringBuilder.AppendLine(AddTab("int tupleCount = binaryReader.ReadInt32();", 2));
-                    stringBuilder.AppendLine();
-
-
-                    // for(int i = 1; i < tupleCount; i++)
+                    // name으로 변수들 생성
+                    // ex) public int m_Name { get; private set; }
+                    for (int i = 1; i < tableinfo.Value["name"].Count; i++)
                     {
-                        stringBuilder.AppendLine(AddTab("for( int i = 0; i < tupleCount; i++)", 2));
-                        stringBuilder.AppendLine(AddTab("{", 2));
+                        stringBuilder.AppendLine(AddTab("public " + tableinfo.Value["type"][i] + " m_"
+                                                                + tableinfo.Value["name"][i] + " { get; private set; }", 1));
+                    }
 
-                        stringBuilder.AppendLine(AddTab(tableinfo.Key.Name + "Info info = new " + tableinfo.Key.Name + "Info();", 3));
+                    stringBuilder.AppendLine();
 
-                        // Key값 read
-                        switch (tableinfo.Value["type"][0])
-                        {
-                            case "int":
-                                stringBuilder.AppendLine(AddTab(tableinfo.Value["type"][0] + " key = binaryReader.ReadInt32();", 3));
-                                break;
-                            case "string":
-                                stringBuilder.AppendLine(AddTab(tableinfo.Value["type"][0] + " key = binaryReader.ReadString();", 3));
-                                break;
-                            case "float":
-                                stringBuilder.AppendLine(AddTab(tableinfo.Value["type"][0] + " key = binaryReader.ReadSingle();", 3));
-                                break;
-                            case "bool":
-                                stringBuilder.AppendLine(AddTab(tableinfo.Value["type"][0] + " key = binaryReader.ReadBoolean();", 3));
-                                break;
-                            case "byte":
-                                stringBuilder.AppendLine(AddTab(tableinfo.Value["type"][0] + " key = binaryReader.ReadByte();", 3));
-                                break;
-                            default:
-                                break;
-                        }
+                    // 각 변수들의 set함수 생성
+                    // ex) public void SetName(int name) { m_Name = name; }
+                    for (int i = 1; i < tableinfo.Value["name"].Count; i++)
+                    {
+                        stringBuilder.AppendLine(AddTab("public void Set" + tableinfo.Value["name"][i]
+                            + "(" + tableinfo.Value["type"][i] + " " + tableinfo.Value["name"][i] + ")"
+                            + " { m_" + tableinfo.Value["name"][i] + " = " + tableinfo.Value["name"][i] + "; }", 1));
+                    }
 
-                        // 각 Attribute값 read
-                        for (int i = 1; i < tableinfo.Value["type"].Count; i++)
-                        {
-                            switch (tableinfo.Value["type"][i])
-                            {
-                                case "int":
-                                    stringBuilder.AppendLine(AddTab(@"info.Set" + tableinfo.Value["name"][i]
-                                                                    + "(binaryReader.ReadInt32());", 3));
-                                    break;
-                                case "string":
-                                    stringBuilder.AppendLine(AddTab(@"info.Set" + tableinfo.Value["name"][i]
-                                                                    + "(binaryReader.ReadString());", 3));
-                                    break;
-                                case "float":
-                                    stringBuilder.AppendLine(AddTab(@"info.Set" + tableinfo.Value["name"][i]
-                                                                    + "(binaryReader.ReadSingle());", 3));
-                                    break;
-                                case "bool":
-                                    stringBuilder.AppendLine(AddTab(@"info.Set" + tableinfo.Value["name"][i]
-                                                                    + "(binaryReader.ReadBoolean());", 3));
-                                    break;
-                                case "byte":
-                                    stringBuilder.AppendLine(AddTab(@"info.Set" + tableinfo.Value["name"][i]
-                                                                    + "(binaryReader.ReadByte());", 3));
-                                    break;
-                                default:
-                                    //null값을 읽어야 하나요??
-                                    break;
-                            }
-                        }
 
-                        stringBuilder.AppendLine();
-                        stringBuilder.AppendLine(AddTab(@"Table.Add(key, info);", 3));
-                        stringBuilder.AppendLine(AddTab("}", 2));
+                    stringBuilder.AppendLine(AddTab("}"));
+                    stringBuilder.AppendLine();
+                }
+                //----------------- NameTable Class ---------------
+                {
+
+                    stringBuilder.AppendLine(AddTab("public class " + tableinfo.Key.Name + "Table"));
+                    stringBuilder.AppendLine(AddTab("{"));
+
+                    // public NameTable() ---- 생성자
+                    {
+                        stringBuilder.AppendLine(AddTab(@"public " + tableinfo.Key.Name + "Table" + @"()", 1));
+                        stringBuilder.AppendLine(AddTab("{", 1));
+                        stringBuilder.AppendLine(AddTab(@"ReadBinaryTable();", 2));
                         stringBuilder.AppendLine(AddTab("}", 1));
                         stringBuilder.AppendLine();
                     }
-                }
 
-                // public static Dictionary<type, NameInfo> GetTable(int Key)
-                {
-                    stringBuilder.AppendLine(AddTab(@"public static Dictionary<" + tableinfo.Value["type"][0] + ", " + tableinfo.Key.Name + @"Info> "
-                                                    + "GetTable()", 1));
-                    stringBuilder.AppendLine(AddTab("{", 1));
-                    stringBuilder.AppendLine(AddTab(@"return Table;", 2));
-                    stringBuilder.AppendLine(AddTab("}", 1));
-                    stringBuilder.AppendLine();
-                }
+                    // private static Dictionary<type, NameInfo> Table = new Dictionary<type, NameInfo>();
+                    {
+                        stringBuilder.AppendLine(AddTab(@"private static Dictionary<" + tableinfo.Value["type"][0] + ", " + tableinfo.Key.Name + @"Info> " + "Table"
+                                                       + @" = new Dictionary<" + tableinfo.Value["type"][0] + ", " + tableinfo.Key.Name + @"Info>();", 1));
+                        stringBuilder.AppendLine();
+                    }
 
-                // public static NameInfo GetTuple(int Key)
-                {
-                    stringBuilder.AppendLine(AddTab(@"public static " + tableinfo.Key.Name + @"Info "
-                                                    + @"GetTuple(" + tableinfo.Value["type"][0] + " key)", 1));
-                    stringBuilder.AppendLine(AddTab("{", 1));
-                    stringBuilder.AppendLine(AddTab(tableinfo.Key.Name + @"Info value;", 2));
-                    stringBuilder.AppendLine();
-                    stringBuilder.AppendLine(AddTab(@"if (Table.TryGetValue(key, out value))", 2));
-                    stringBuilder.AppendLine(AddTab(@"return value;", 3));
-                    stringBuilder.AppendLine();
-                    stringBuilder.AppendLine(AddTab(@"return null;", 2));
-                    stringBuilder.AppendLine(AddTab("}", 1));
-                    stringBuilder.AppendLine();
-                }
+                    // private void ReadBinaryTable()
+                    {
+                        stringBuilder.AppendLine(AddTab(@"private void ReadBinaryTable()", 1));
+                        stringBuilder.AppendLine(AddTab("{", 1));
+                        stringBuilder.AppendLine(AddTab(@"TextAsset textAsset = Resources.Load(""Tables/" + m_BinaryFolders[tableinfo.Key] + "/" + tableinfo.Key.Name + "\") as TextAsset;", 2));
+                        stringBuilder.AppendLine(AddTab("MemoryStream memoryStream = new MemoryStream(textAsset.bytes);", 2));
+                        stringBuilder.AppendLine(AddTab("BinaryReader binaryReader = new BinaryReader(memoryStream);", 2));
+                        stringBuilder.AppendLine();
+                        stringBuilder.AppendLine(AddTab("int tupleCount = binaryReader.ReadInt32();", 2));
+                        stringBuilder.AppendLine();
 
-                // public static NameInfo GetByIndex(int index) -> 생략
-                {
-                    //stringBuilder.AppendLine(AddTab(@"public static " + table.Key.Name + @"Info " + @"GetByIndex(" + "int index)", 1));
-                    //stringBuilder.AppendLine(AddTab("{", 1));
-                    //stringBuilder.AppendLine(AddTab(@"return Table.Values.ElementAt(index);", 2));
-                    //stringBuilder.AppendLine(AddTab("}", 1));
-                    //stringBuilder.AppendLine();
-                    //stringBuilder.AppendLine(AddTab(@"public static " + @"List<" + table.Key.Name + @"Info> " + @"GetAllList()", 1));
-                    //stringBuilder.AppendLine(AddTab("{", 1));
-                    //stringBuilder.AppendLine(AddTab(@"return Table.Values.ToList();", 2));
-                    //stringBuilder.AppendLine(AddTab("}", 1));
-                    //stringBuilder.AppendLine();
-                    //stringBuilder.AppendLine(AddTab("public " + table.Key.Name + "Table()", 1));
-                    //stringBuilder.AppendLine(AddTab("{", 1));
-                    //stringBuilder.AppendLine(AddTab(@"InitTable();", 2));
-                    //stringBuilder.AppendLine(AddTab("}", 1));
-                    //stringBuilder.AppendLine();
-                }
 
-                stringBuilder.AppendLine(AddTab("}"));
+                        // for(int i = 1; i < tupleCount; i++)
+                        {
+                            stringBuilder.AppendLine(AddTab("for( int i = 0; i < tupleCount; i++)", 2));
+                            stringBuilder.AppendLine(AddTab("{", 2));
+
+                            stringBuilder.AppendLine(AddTab(tableinfo.Key.Name + "Info info = new " + tableinfo.Key.Name + "Info();", 3));
+
+                            // Key값 read
+                            switch (tableinfo.Value["type"][0])
+                            {
+                                case "int":
+                                    stringBuilder.AppendLine(AddTab(tableinfo.Value["type"][0] + " key = binaryReader.ReadInt32();", 3));
+                                    break;
+                                case "string":
+                                    stringBuilder.AppendLine(AddTab(tableinfo.Value["type"][0] + " key = binaryReader.ReadString();", 3));
+                                    break;
+                                case "float":
+                                    stringBuilder.AppendLine(AddTab(tableinfo.Value["type"][0] + " key = binaryReader.ReadSingle();", 3));
+                                    break;
+                                case "bool":
+                                    stringBuilder.AppendLine(AddTab(tableinfo.Value["type"][0] + " key = binaryReader.ReadBoolean();", 3));
+                                    break;
+                                case "byte":
+                                    stringBuilder.AppendLine(AddTab(tableinfo.Value["type"][0] + " key = binaryReader.ReadByte();", 3));
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            // 각 Attribute값 read
+                            for (int i = 1; i < tableinfo.Value["type"].Count; i++)
+                            {
+                                switch (tableinfo.Value["type"][i])
+                                {
+                                    case "int":
+                                        stringBuilder.AppendLine(AddTab(@"info.Set" + tableinfo.Value["name"][i]
+                                                                        + "(binaryReader.ReadInt32());", 3));
+                                        break;
+                                    case "string":
+                                        stringBuilder.AppendLine(AddTab(@"info.Set" + tableinfo.Value["name"][i]
+                                                                        + "(binaryReader.ReadString());", 3));
+                                        break;
+                                    case "float":
+                                        stringBuilder.AppendLine(AddTab(@"info.Set" + tableinfo.Value["name"][i]
+                                                                        + "(binaryReader.ReadSingle());", 3));
+                                        break;
+                                    case "bool":
+                                        stringBuilder.AppendLine(AddTab(@"info.Set" + tableinfo.Value["name"][i]
+                                                                        + "(binaryReader.ReadBoolean());", 3));
+                                        break;
+                                    case "byte":
+                                        stringBuilder.AppendLine(AddTab(@"info.Set" + tableinfo.Value["name"][i]
+                                                                        + "(binaryReader.ReadByte());", 3));
+                                        break;
+                                    default:
+                                        //null값을 읽어야 하나요??
+                                        break;
+                                }
+                            }
+
+                            stringBuilder.AppendLine();
+                            stringBuilder.AppendLine(AddTab(@"Table.Add(key, info);", 3));
+                            stringBuilder.AppendLine(AddTab("}", 2));
+                            stringBuilder.AppendLine(AddTab("}", 1));
+                            stringBuilder.AppendLine();
+                        }
+                    }
+
+                    // public static Dictionary<type, NameInfo> GetTable(int Key)
+                    {
+                        stringBuilder.AppendLine(AddTab(@"public static Dictionary<" + tableinfo.Value["type"][0] + ", " + tableinfo.Key.Name + @"Info> "
+                                                        + "GetTable()", 1));
+                        stringBuilder.AppendLine(AddTab("{", 1));
+                        stringBuilder.AppendLine(AddTab(@"return Table;", 2));
+                        stringBuilder.AppendLine(AddTab("}", 1));
+                        stringBuilder.AppendLine();
+                    }
+
+                    // public static NameInfo GetTuple(int Key)
+                    {
+                        stringBuilder.AppendLine(AddTab(@"public static " + tableinfo.Key.Name + @"Info "
+                                                        + @"GetTuple(" + tableinfo.Value["type"][0] + " key)", 1));
+                        stringBuilder.AppendLine(AddTab("{", 1));
+                        stringBuilder.AppendLine(AddTab(tableinfo.Key.Name + @"Info value;", 2));
+                        stringBuilder.AppendLine();
+                        stringBuilder.AppendLine(AddTab(@"if (Table.TryGetValue(key, out value))", 2));
+                        stringBuilder.AppendLine(AddTab(@"return value;", 3));
+                        stringBuilder.AppendLine();
+                        stringBuilder.AppendLine(AddTab(@"return null;", 2));
+                        stringBuilder.AppendLine(AddTab("}", 1));
+                        stringBuilder.AppendLine();
+                    }
+
+                    // public static NameInfo GetByIndex(int index) -> 생략
+                    {
+                        //stringBuilder.AppendLine(AddTab(@"public static " + table.Key.Name + @"Info " + @"GetByIndex(" + "int index)", 1));
+                        //stringBuilder.AppendLine(AddTab("{", 1));
+                        //stringBuilder.AppendLine(AddTab(@"return Table.Values.ElementAt(index);", 2));
+                        //stringBuilder.AppendLine(AddTab("}", 1));
+                        //stringBuilder.AppendLine();
+                        //stringBuilder.AppendLine(AddTab(@"public static " + @"List<" + table.Key.Name + @"Info> " + @"GetAllList()", 1));
+                        //stringBuilder.AppendLine(AddTab("{", 1));
+                        //stringBuilder.AppendLine(AddTab(@"return Table.Values.ToList();", 2));
+                        //stringBuilder.AppendLine(AddTab("}", 1));
+                        //stringBuilder.AppendLine();
+                        //stringBuilder.AppendLine(AddTab("public " + table.Key.Name + "Table()", 1));
+                        //stringBuilder.AppendLine(AddTab("{", 1));
+                        //stringBuilder.AppendLine(AddTab(@"InitTable();", 2));
+                        //stringBuilder.AppendLine(AddTab("}", 1));
+                        //stringBuilder.AppendLine();
+                    }
+
+                    stringBuilder.AppendLine(AddTab("}"));
+                }
             }
+            else
+            {
+                stageCount++;
+                stageEnemyInfo = tableinfo;
+            }
+
+        }
+
+        //----------------- StageEnemyInfo Class ---------------
+        {
+            stringBuilder.AppendLine(AddTab("public class StageEnemyInfo"));
+            stringBuilder.AppendLine(AddTab("{"));
+
+            // name으로 변수들 생성
+            // ex) public int m_Name { get; private set; }
+            for (int i = 1; i < stageEnemyInfo.Value["name"].Count; i++)
+            {
+                stringBuilder.AppendLine(AddTab("public " + stageEnemyInfo.Value["type"][i] + " m_"
+                                                        + stageEnemyInfo.Value["name"][i] + " { get; private set; }", 1));
+            }
+
+            stringBuilder.AppendLine();
+
+            // 각 변수들의 set함수 생성
+            // ex) public void SetName(int name) { m_Name = name; }
+            for (int i = 1; i < stageEnemyInfo.Value["name"].Count; i++)
+            {
+                stringBuilder.AppendLine(AddTab("public void Set" + stageEnemyInfo.Value["name"][i]
+                    + "(" + stageEnemyInfo.Value["type"][i] + " " + stageEnemyInfo.Value["name"][i] + ")"
+                    + " { m_" + stageEnemyInfo.Value["name"][i] + " = " + stageEnemyInfo.Value["name"][i] + "; }", 1));
+            }
+
+
+            stringBuilder.AppendLine(AddTab("}"));
+            stringBuilder.AppendLine();
+        }
+        //----------------- StageEnemyTable Class ---------------
+        {
+
+            stringBuilder.AppendLine(AddTab("public class StageEnemyTable"));
+            stringBuilder.AppendLine(AddTab("{"));
+
+            // public NameTable() ---- 생성자
+            {
+                stringBuilder.AppendLine(AddTab(@"public StageEnemyTable" + @"(int stageNumber)", 1));
+                stringBuilder.AppendLine(AddTab("{", 1));
+                stringBuilder.AppendLine(AddTab(@"ReadBinaryTable(stageNumber);", 2));
+                stringBuilder.AppendLine(AddTab("}", 1));
+                stringBuilder.AppendLine();
+            }
+
+            // private static Dictionary<type, NameInfo> Table = new Dictionary<type, NameInfo>();
+            {
+                stringBuilder.AppendLine(AddTab(@"private Dictionary<" + stageEnemyInfo.Value["type"][0] + ", StageEnemyInfo> " + "Table"
+                                               + @" = new Dictionary<" + stageEnemyInfo.Value["type"][0] + ", StageEnemyInfo>();", 1));
+                stringBuilder.AppendLine();
+            }
+
+            // private void ReadBinaryTable()
+            {
+                stringBuilder.AppendLine(AddTab(@"private void ReadBinaryTable(int stageNumber)", 1));
+                stringBuilder.AppendLine(AddTab("{", 1));
+                stringBuilder.AppendLine(AddTab("string resourceName = \"Stage_\" + stageNumber.ToString() + \"_Enemy\";", 2));
+                stringBuilder.AppendLine(AddTab("TextAsset textAsset = Resources.Load(\"Tables/" + m_BinaryFolders[stageEnemyInfo.Key] + "/\" + resourceName) as TextAsset;", 2));
+                stringBuilder.AppendLine(AddTab("MemoryStream memoryStream = new MemoryStream(textAsset.bytes);", 2));
+                stringBuilder.AppendLine(AddTab("BinaryReader binaryReader = new BinaryReader(memoryStream);", 2));
+                stringBuilder.AppendLine();
+                stringBuilder.AppendLine(AddTab("int tupleCount = binaryReader.ReadInt32();", 2));
+                stringBuilder.AppendLine();
+
+
+                // for(int i = 1; i < tupleCount; i++)
+                {
+                    stringBuilder.AppendLine(AddTab("for( int i = 0; i < tupleCount; i++)", 2));
+                    stringBuilder.AppendLine(AddTab("{", 2));
+
+                    stringBuilder.AppendLine(AddTab("StageEnemyInfo info = new StageEnemyInfo();", 3));
+
+                    // Key값 read
+                    switch (stageEnemyInfo.Value["type"][0])
+                    {
+                        case "int":
+                            stringBuilder.AppendLine(AddTab(stageEnemyInfo.Value["type"][0] + " key = binaryReader.ReadInt32();", 3));
+                            break;
+                        case "string":
+                            stringBuilder.AppendLine(AddTab(stageEnemyInfo.Value["type"][0] + " key = binaryReader.ReadString();", 3));
+                            break;
+                        case "float":
+                            stringBuilder.AppendLine(AddTab(stageEnemyInfo.Value["type"][0] + " key = binaryReader.ReadSingle();", 3));
+                            break;
+                        case "bool":
+                            stringBuilder.AppendLine(AddTab(stageEnemyInfo.Value["type"][0] + " key = binaryReader.ReadBoolean();", 3));
+                            break;
+                        case "byte":
+                            stringBuilder.AppendLine(AddTab(stageEnemyInfo.Value["type"][0] + " key = binaryReader.ReadByte();", 3));
+                            break;
+                        default:
+                            break;
+                    }
+
+                    // 각 Attribute값 read
+                    for (int i = 1; i < stageEnemyInfo.Value["type"].Count; i++)
+                    {
+                        switch (stageEnemyInfo.Value["type"][i])
+                        {
+                            case "int":
+                                stringBuilder.AppendLine(AddTab(@"info.Set" + stageEnemyInfo.Value["name"][i]
+                                                                + "(binaryReader.ReadInt32());", 3));
+                                break;
+                            case "string":
+                                stringBuilder.AppendLine(AddTab(@"info.Set" + stageEnemyInfo.Value["name"][i]
+                                                                + "(binaryReader.ReadString());", 3));
+                                break;
+                            case "float":
+                                stringBuilder.AppendLine(AddTab(@"info.Set" + stageEnemyInfo.Value["name"][i]
+                                                                + "(binaryReader.ReadSingle());", 3));
+                                break;
+                            case "bool":
+                                stringBuilder.AppendLine(AddTab(@"info.Set" + stageEnemyInfo.Value["name"][i]
+                                                                + "(binaryReader.ReadBoolean());", 3));
+                                break;
+                            case "byte":
+                                stringBuilder.AppendLine(AddTab(@"info.Set" + stageEnemyInfo.Value["name"][i]
+                                                                + "(binaryReader.ReadByte());", 3));
+                                break;
+                            default:
+                                //null값을 읽어야 하나요??
+                                break;
+                        }
+                    }
+
+                    stringBuilder.AppendLine();
+                    stringBuilder.AppendLine(AddTab(@"Table.Add(key, info);", 3));
+                    stringBuilder.AppendLine(AddTab("}", 2));
+                    stringBuilder.AppendLine(AddTab("}", 1));
+                    stringBuilder.AppendLine();
+                }
+            }
+
+            // public static Dictionary<type, NameInfo> GetTable(int Key)
+            {
+                stringBuilder.AppendLine(AddTab(@"public Dictionary<" + stageEnemyInfo.Value["type"][0] + ", StageEnemyInfo> "
+                                                + "GetTable()", 1));
+                stringBuilder.AppendLine(AddTab("{", 1));
+                stringBuilder.AppendLine(AddTab(@"return Table;", 2));
+                stringBuilder.AppendLine(AddTab("}", 1));
+                stringBuilder.AppendLine();
+            }
+
+            // public static NameInfo GetTuple(int Key)
+            {
+                stringBuilder.AppendLine(AddTab(@"public StageEnemyInfo "
+                                                + @"GetTuple(" + stageEnemyInfo.Value["type"][0] + " key)", 1));
+                stringBuilder.AppendLine(AddTab("{", 1));
+                stringBuilder.AppendLine(AddTab(@"StageEnemyInfo value;", 2));
+                stringBuilder.AppendLine();
+                stringBuilder.AppendLine(AddTab(@"if (Table.TryGetValue(key, out value))", 2));
+                stringBuilder.AppendLine(AddTab(@"return value;", 3));
+                stringBuilder.AppendLine();
+                stringBuilder.AppendLine(AddTab(@"return null;", 2));
+                stringBuilder.AppendLine(AddTab("}", 1));
+                stringBuilder.AppendLine();
+            }
+
+            stringBuilder.AppendLine(AddTab("}"));
         }
 
         // --------------- Tables Class ---------------
@@ -445,8 +617,13 @@ public partial class ExcelReader : MonoBehaviour
             // table 목록
             foreach (var tableinfo in m_TableInfos)
             {
-                stringBuilder.AppendLine(AddTab("public " + tableinfo.Key.Name + "Table " + tableinfo.Key.Name + " = null;", 1));
+                if(tableinfo.Key.Name.Substring(0,5) != "Stage")
+                {
+                    stringBuilder.AppendLine(AddTab("public " + tableinfo.Key.Name + "Table " + tableinfo.Key.Name + " = null;", 1));
+                }
             }
+
+            stringBuilder.AppendLine(AddTab("public Dictionary<int, StageEnemyTable> StageEnemyTables = null;", 1));
 
             // private void Start()
             {
@@ -455,8 +632,18 @@ public partial class ExcelReader : MonoBehaviour
                 stringBuilder.AppendLine(AddTab("{", 1));
                 foreach (var tableinfo in m_TableInfos)
                 {
-                    stringBuilder.AppendLine(AddTab(tableinfo.Key.Name + " = new " + tableinfo.Key.Name + "Table();", 2));
+                    if (tableinfo.Key.Name.Substring(0, 5) != "Stage")
+                    {
+                        stringBuilder.AppendLine(AddTab(tableinfo.Key.Name + " = new " + tableinfo.Key.Name + "Table();", 2));
+                    }
                 }
+                stringBuilder.AppendLine(AddTab("StageEnemyTables = new Dictionary<int, StageEnemyTable>();", 2));
+                stringBuilder.AppendLine(AddTab("for(int i = 1; i <= " + stageCount.ToString() + "; i++)", 2));
+                stringBuilder.AppendLine(AddTab("{", 2));
+                stringBuilder.AppendLine(AddTab("StageEnemyTable table = new StageEnemyTable(i);", 3));
+                stringBuilder.AppendLine(AddTab("StageEnemyTables.Add(i, table);", 3));
+                stringBuilder.AppendLine(AddTab("}", 2));
+
                 stringBuilder.AppendLine(AddTab("}", 1));
             }
 

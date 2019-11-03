@@ -115,7 +115,7 @@ public class EnemyStatusTable
     }
 
 }
-public class Stage1Info
+public class StageEnemyInfo
 {
     public int m_serialNumber { get; private set; }
     public int m_level { get; private set; }
@@ -128,18 +128,19 @@ public class Stage1Info
     public void SetposY(float posY) { m_posY = posY; }
 }
 
-public class Stage1Table
+public class StageEnemyTable
 {
-    public Stage1Table()
+    public StageEnemyTable(int stageNumber)
     {
-        ReadBinaryTable();
+        ReadBinaryTable(stageNumber);
     }
 
-    private static Dictionary<string, Stage1Info> Table = new Dictionary<string, Stage1Info>();
+    private Dictionary<int, StageEnemyInfo> Table = new Dictionary<int, StageEnemyInfo>();
 
-    private void ReadBinaryTable()
+    private void ReadBinaryTable(int stageNumber)
     {
-        TextAsset textAsset = Resources.Load("Tables/EnemyInfo/Stage1") as TextAsset;
+        string resourceName = "Stage_" + stageNumber.ToString() + "_Enemy";
+        TextAsset textAsset = Resources.Load("Tables/EnemyInfo/" + resourceName) as TextAsset;
         MemoryStream memoryStream = new MemoryStream(textAsset.bytes);
         BinaryReader binaryReader = new BinaryReader(memoryStream);
 
@@ -147,8 +148,8 @@ public class Stage1Table
 
         for( int i = 0; i < tupleCount; i++)
         {
-            Stage1Info info = new Stage1Info();
-            string key = binaryReader.ReadString();
+            StageEnemyInfo info = new StageEnemyInfo();
+            int key = binaryReader.ReadInt32();
             info.SetserialNumber(binaryReader.ReadInt32());
             info.Setlevel(binaryReader.ReadInt32());
             info.SetposX(binaryReader.ReadSingle());
@@ -158,73 +159,14 @@ public class Stage1Table
         }
     }
 
-    public static Dictionary<string, Stage1Info> GetTable()
+    public Dictionary<int, StageEnemyInfo> GetTable()
     {
         return Table;
     }
 
-    public static Stage1Info GetTuple(string key)
+    public StageEnemyInfo GetTuple(int key)
     {
-        Stage1Info value;
-
-        if (Table.TryGetValue(key, out value))
-            return value;
-
-        return null;
-    }
-
-}
-public class Stage2Info
-{
-    public int m_serialNumber { get; private set; }
-    public int m_level { get; private set; }
-    public float m_posX { get; private set; }
-    public float m_posY { get; private set; }
-
-    public void SetserialNumber(int serialNumber) { m_serialNumber = serialNumber; }
-    public void Setlevel(int level) { m_level = level; }
-    public void SetposX(float posX) { m_posX = posX; }
-    public void SetposY(float posY) { m_posY = posY; }
-}
-
-public class Stage2Table
-{
-    public Stage2Table()
-    {
-        ReadBinaryTable();
-    }
-
-    private static Dictionary<string, Stage2Info> Table = new Dictionary<string, Stage2Info>();
-
-    private void ReadBinaryTable()
-    {
-        TextAsset textAsset = Resources.Load("Tables/EnemyInfo/Stage2") as TextAsset;
-        MemoryStream memoryStream = new MemoryStream(textAsset.bytes);
-        BinaryReader binaryReader = new BinaryReader(memoryStream);
-
-        int tupleCount = binaryReader.ReadInt32();
-
-        for( int i = 0; i < tupleCount; i++)
-        {
-            Stage2Info info = new Stage2Info();
-            string key = binaryReader.ReadString();
-            info.SetserialNumber(binaryReader.ReadInt32());
-            info.Setlevel(binaryReader.ReadInt32());
-            info.SetposX(binaryReader.ReadSingle());
-            info.SetposY(binaryReader.ReadSingle());
-
-            Table.Add(key, info);
-        }
-    }
-
-    public static Dictionary<string, Stage2Info> GetTable()
-    {
-        return Table;
-    }
-
-    public static Stage2Info GetTuple(string key)
-    {
-        Stage2Info value;
+        StageEnemyInfo value;
 
         if (Table.TryGetValue(key, out value))
             return value;
@@ -243,15 +185,18 @@ public class Tables : MonoSingleton<Tables>
 
     public EnemyListTable EnemyList = null;
     public EnemyStatusTable EnemyStatus = null;
-    public Stage1Table Stage1 = null;
-    public Stage2Table Stage2 = null;
+    public Dictionary<int, StageEnemyTable> StageEnemyTables = null;
 
     private void Start() 
     {
         EnemyList = new EnemyListTable();
         EnemyStatus = new EnemyStatusTable();
-        Stage1 = new Stage1Table();
-        Stage2 = new Stage2Table();
+        StageEnemyTables = new Dictionary<int, StageEnemyTable>();
+        for(int i = 1; i <= 2; i++)
+        {
+            StageEnemyTable table = new StageEnemyTable(i);
+            StageEnemyTables.Add(i, table);
+        }
     }
 }
 
