@@ -6,9 +6,12 @@ using UnityEngine.SceneManagement;
 
 static class Constants
 {
-    public const string StartSceneName = "Start";
-    public const string FightSceneName = "Fight";
+    public const string StartSceneName = "StartScene";
+    public const string FightSceneName = "PlayerTestScene"; // "Fight"
     public const string UpgradeSceneName = "Upgrade";
+
+    public const string PlayerTag = "Player";
+    public const string EnemyTag = "Enemy";
 }
 
 public enum SceneType
@@ -20,13 +23,13 @@ public enum SceneType
 
 public class GameManager : MonoSingleton<GameManager>
 {
-    private FightSceneHandler fightSceneHandler;
 
     private void Awake()
     {
         DontDestroyOnLoad(Instance);
 
         SceneManager.sceneLoaded += OnLoadCallback;
+        OnLoadCallback(SceneManager.GetActiveScene(), LoadSceneMode.Single);
     }
 
 
@@ -37,38 +40,30 @@ public class GameManager : MonoSingleton<GameManager>
             case Constants.StartSceneName:
                 break;
             case Constants.FightSceneName:
-                //SetFightSceneMember();
+                //FightSceneController.Instance.StartFightScene();
                 break;
             case Constants.UpgradeSceneName:
                 break;
         }
     }
 
-    // 플레이어 이동
-    public void MovePlayer(Vector3 dir, float amount)
+    public void NewStartGame()
     {
-        fightSceneHandler.MovePlayer(dir, amount);
+        FightSceneStart();
     }
-    // 플레이어 멈춤
-    public void StopPlayer()
+    public void ContinueGame()
     {
-        fightSceneHandler.StopPlayer();
-    }
-    // 플레이어 공격
-    public void PlayerAttack(Vector3 dir)
-    {
-        fightSceneHandler.PlayerAttack(dir);
-    }
-    // 플레이어 공격 대기
-    public void PlayerStandby()
-    {
-        fightSceneHandler.PlayerStandby();
+        DataManager.Instance.Load();
+        UpgradeSceneStart();
     }
 
-
-    //damage test, 나중에 삭제
-    public void DamageToEnemy(GameObject target, float damage)
+    public void FightSceneStart()
     {
-        fightSceneHandler.DamageToCharacter(target, (int)damage);
+        SceneManager.LoadScene(Constants.FightSceneName);
+    }
+
+    public void UpgradeSceneStart()
+    {
+        SceneManager.LoadScene(Constants.UpgradeSceneName);
     }
 }

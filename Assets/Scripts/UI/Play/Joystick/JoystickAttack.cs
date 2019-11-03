@@ -47,12 +47,23 @@ public class JoystickAttack : JoystickBase
         Vector2 attackDirection = handle.position - border.position;
         attackDirection.Normalize();
         Vector3 moveDirection3D = new Vector3(attackDirection.x, 0, attackDirection.y);
-        
-        GameManager.Instance.PlayerAttack(moveDirection3D);
+
+        float moveAmount = Vector2.Distance(border.position, handle.position);
+        moveAmount = moveAmount / handleMoveRange;
+
+        if (moveAmount > 0.5f)
+        {
+            // joystick handle의 이동 범위가 반을 넘어가야 움직이는거
+            FightSceneController.Instance.PlayerAttack(moveDirection3D);
+        }
+        else
+        {
+            Standby();
+        }
     }
 
     private void Standby()
     {
-        GameManager.Instance.PlayerStandby();
+        FightSceneController.Instance.PlayerStandby();
     }
 }

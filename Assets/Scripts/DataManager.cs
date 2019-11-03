@@ -12,8 +12,7 @@ public class DataManager : MonoSingleton<DataManager>
     private int maxExp = 100; // 임시 설정
     private float playtime;
 
-    private DataCenter dataCenter = new DataCenter();
-    private ExplorerMake explorerMake = new ExplorerMake();
+    private DataCenter dataCenter;
 
     private void Awake()
     {
@@ -30,18 +29,49 @@ public class DataManager : MonoSingleton<DataManager>
 #if UNITY_STANDALONE || UNITY_EDITOR
         dataPath = Application.dataPath + "/SaveData";
 #endif
-        //dataPath = dataPath + "/SaveData.bytes";
-        dataPath = MakeNewStorage(dataPath);
+
+
+        if (!Directory.Exists(dataPath))
+        {
+            Directory.CreateDirectory(dataPath);
+        }
+
+        dataPath += "/SaveData.json";
+        //dataPath = dataPath + "/SaveData.json";
+
+        dataCenter = DataCenter.Instance;
     }
 
-    private string MakeNewStorage(string dataPath)
+    public bool CheckSaveData()
     {
-        explorerMake.MakeNewDirectory(dataPath);
-        dataPath = dataPath + "/SaveData.json";
-        explorerMake.MakeNewFile(dataPath);
-        return dataPath;
+        if (File.Exists(dataPath))
+        {
+            return IsDataExist();
+        }
+        else
+        {
+            File.Create(dataPath);
+            Save();
+        }
+
+        return false;
     }
-    
+
+    private bool IsDataExist()
+    {
+        string fromJsonData = File.ReadAllText(dataPath);
+
+        UserData data = JsonUtility.FromJson<UserData>(fromJsonData);
+        if(data.playInfo.playtime != 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public void Save()
     {
         UserData data = dataCenter.GetUserData();
@@ -128,5 +158,11 @@ public class DataManager : MonoSingleton<DataManager>
         dataCenter.SetStage(val);
         Debug.Log(dataCenter.GetPlayInfo.stage);
     }
- 
+
+
+    public void DamageToTarget(GameObject source, GameObject target)
+    {
+        //int damage = dataCenter.GetAttackResult(source, target);
+        //fightSceneHandler.DamageToCharacter(source, damage);
+    }
 }

@@ -78,7 +78,7 @@ public class Player : LivingEntity
 
     public void Attack(Vector3 direction)
     {
-        Debug.Log("attack" + direction);
+        //Debug.Log("attack" + direction);
         controller.LookAt(transform.position + direction);
         gunController.OnTirggerHold();
         //gunController.OnTriggerRelease(); // 연사를 위해 임시추가

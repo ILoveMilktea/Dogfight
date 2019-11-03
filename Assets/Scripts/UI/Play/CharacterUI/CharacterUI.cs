@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class CharacterUI : MonoBehaviour
 {
+    protected GameObject floatingText;
+    private int xTextStack;
+    private int yTextStack;
+
     protected Text characterName;
     protected Slider characterHp;
 
@@ -14,6 +18,8 @@ public class CharacterUI : MonoBehaviour
 
     protected virtual void Awake()
     {
+        floatingText = Resources.Load("Prefab/UI/FloatingText") as GameObject;
+
         characterName = GetComponentInChildren<Text>();
         characterHp = GetComponentInChildren<Slider>();
 
@@ -23,6 +29,8 @@ public class CharacterUI : MonoBehaviour
     // Start is called before the first frame update
     protected void Start()
     {
+        xTextStack = 0;
+        yTextStack = 0;
         //target = FindObjectOfType<Player>().transform;
         characterName.text = target.gameObject.name; // 임시
         ResizeUI();
@@ -79,6 +87,7 @@ public class CharacterUI : MonoBehaviour
     public void SetMaxHp(int maxHp)
     {
         characterHp.maxValue = maxHp;
+        //characterHp.value = maxHp;
     }
     public int GetRemainHp()
     {
@@ -88,10 +97,42 @@ public class CharacterUI : MonoBehaviour
     public void HpUp(int value)
     {
         characterHp.value += value;
+        DisplayDamage(value);
     }
 
     public void HpDown(int value)
     {
-        characterHp.value -= value;
+        if(characterHp.value < value)
+        {
+            characterHp.value = 0;
+        }
+        else
+        {
+            characterHp.value -= value;
+        }
+        
+        DisplayDamage(value);
+    }
+
+    private void DisplayDamage(int value)
+    {
+        GameObject damageText = Instantiate(floatingText, transform) as GameObject;
+        yTextStack++;
+        if (yTextStack > 3)
+        {
+            xTextStack++;
+            yTextStack = 1;
+        }
+        StartCoroutine(damageText.GetComponent<FloatingText>().DisplayDamage(value, xTextStack, yTextStack - 1, RemoveFloatingText));
+    }
+
+    public void RemoveFloatingText()
+    {
+        yTextStack--;
+        if(yTextStack < 1)
+        {
+            xTextStack--;
+            yTextStack = 3;
+        }
     }
 }

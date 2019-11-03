@@ -46,11 +46,21 @@ public class JoystickMove : JoystickBase
 
         float moveAmount = Vector2.Distance(border.position, handle.position);
         moveAmount = moveAmount / handleMoveRange;
-        GameManager.Instance.MovePlayer(moveDirection3D, moveAmount);
+         
+        if (moveAmount > 0.5f)
+        {
+            // joystick handle의 이동 범위가 반을 넘어가야 움직이는거
+            FightSceneController.Instance.MovePlayer(moveDirection3D, moveAmount);
+        }
+        else
+        {
+            Stop();
+        }
+        
     }
 
     private void Stop()
     {
-        GameManager.Instance.StopPlayer();
+        FightSceneController.Instance.StopPlayer();
     }
 }

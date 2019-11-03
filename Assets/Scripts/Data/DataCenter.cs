@@ -10,7 +10,7 @@ public enum WeaponType
     shotgun,
     energysphere
 }
-public class DataCenter : MonoBehaviour
+public class DataCenter : MonoSingleton<DataCenter>
 {
     private UserData userData;
 
@@ -35,8 +35,9 @@ public class DataCenter : MonoBehaviour
     public void SetWeaponLevel(WeaponType type, int value) { weapons[type].level = value; }
     public void SetWeaponExp(WeaponType type, int value) { weapons[type].exp = value; }
 
-    public DataCenter()
+    private void Awake()
     {
+        DontDestroyOnLoad(gameObject);
         CreateCenter();
     }
 
@@ -80,4 +81,5 @@ public class DataCenter : MonoBehaviour
 
         userData = data;
     }
+
 }

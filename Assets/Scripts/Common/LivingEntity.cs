@@ -27,6 +27,7 @@ public class LivingEntity : MonoBehaviour,IDamageable
     {
         health -= damage;
         Debug.Log("체력:"+health);
+        FightSceneController.Instance.DamageToCharacter(gameObject, (int)damage); // UI & data
 
         if(health<=0 && !dead)
         {
