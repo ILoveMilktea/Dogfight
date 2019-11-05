@@ -29,7 +29,7 @@ public class PlayerCharacterUI : CharacterUI
         base.LateUpdate();
     }
 
-    protected override void ResizeUI()
+    public override void ResizeUI()
     {
         Vector3 targetPos = target.transform.position;
         Vector3 targetRightHandPos = target.transform.position + new Vector3(target.transform.lossyScale.x, 0, 0); ;

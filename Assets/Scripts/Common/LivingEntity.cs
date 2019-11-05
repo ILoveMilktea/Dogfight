@@ -25,14 +25,15 @@ public class LivingEntity : MonoBehaviour,IDamageable
 
     public void TakeHit(float damage)
     {
-        health -= damage;
-        Debug.Log("체력:"+health);
         FightSceneController.Instance.DamageToCharacter(gameObject, (int)damage); // UI & data
+        //health -= damage;
+        //Debug.Log("체력:"+health);
+        //FightSceneController.Instance.DamageToCharacter(gameObject, (int)damage); // UI & data
 
-        if(health<=0 && !dead)
-        {
-            Die();
-        }
+        //if(health<=0 && !dead)
+        //{
+        //    Die();
+        //}
 
     }
 
@@ -54,7 +55,8 @@ public class LivingEntity : MonoBehaviour,IDamageable
     public void Die()
     {
         dead = true;
-        GameObject.Destroy(gameObject);
+        StopAllCoroutines();
+        FightSceneController.Instance.EnemyDead(gameObject);
     }
 
     IEnumerator KnockBackTimer(float knockBackDuration)

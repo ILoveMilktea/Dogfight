@@ -31,9 +31,6 @@ public class CharacterUI : MonoBehaviour
     {
         xTextStack = 0;
         yTextStack = 0;
-        //target = FindObjectOfType<Player>().transform;
-        characterName.text = target.gameObject.name; // 임시
-        ResizeUI();
     }
 
     // Update is called once per frame
@@ -44,7 +41,7 @@ public class CharacterUI : MonoBehaviour
         
     }
 
-    protected virtual void ResizeUI()
+    public virtual void ResizeUI()
     {
         Vector3 targetPos = target.transform.position;
         Vector3 targetRightHandPos = target.transform.position + new Vector3(target.transform.lossyScale.x, 0, 0); ;
@@ -87,7 +84,7 @@ public class CharacterUI : MonoBehaviour
     public void SetMaxHp(int maxHp)
     {
         characterHp.maxValue = maxHp;
-        //characterHp.value = maxHp;
+        characterHp.value = maxHp;
     }
     public int GetRemainHp()
     {

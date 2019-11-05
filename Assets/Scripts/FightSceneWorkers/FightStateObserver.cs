@@ -5,6 +5,7 @@ using UnityEngine;
 
 public enum FightState
 {
+    Standby,
     Fight,
     Pause,
     Dead,
@@ -15,12 +16,12 @@ public class FightStateObserver : MonoBehaviour
     private Dictionary<FightState, List<Action>> stateChangeCallback = new Dictionary<FightState, List<Action>>();
 
     private FightState prevFightState;
-    private FightState curFightState;
+    public FightState curFightState { get; private set; }
     
     void Start()
     {
-        prevFightState = FightState.Fight;
-        curFightState = FightState.Fight;
+        prevFightState = FightState.Standby;
+        curFightState = FightState.Standby;
     }
 
     // Update is called once per frame
@@ -29,14 +30,17 @@ public class FightStateObserver : MonoBehaviour
         // Game state is changed
         if (prevFightState != curFightState)
         {
-            List<Action> callbacks = stateChangeCallback[curFightState];
-
-            foreach (var callback in callbacks)
+            if (stateChangeCallback.ContainsKey(curFightState))
             {
-                callback();
-            }
+                List<Action> callbacks = stateChangeCallback[curFightState];
 
-            prevFightState = curFightState;
+                foreach (var callback in callbacks)
+                {
+                    callback();
+                }
+
+                prevFightState = curFightState;
+            }
         }
     }
 

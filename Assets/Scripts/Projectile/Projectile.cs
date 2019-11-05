@@ -92,8 +92,9 @@ public class Projectile : MonoBehaviour
         IDamageable damageableObject=collider.GetComponent<IDamageable>();
         if(damageableObject!=null)
         {
-            damageableObject.TakeHit(damage);
-            if(isKnockBackMode==true)
+            GameObject attacker = FindObjectOfType<Player>().transform.gameObject;
+            FightSceneController.Instance.DamageToCharacter(attacker, hit.transform.gameObject); // UI & data
+            if (isKnockBackMode==true)
             {
                 KnockBack(collider);
             }

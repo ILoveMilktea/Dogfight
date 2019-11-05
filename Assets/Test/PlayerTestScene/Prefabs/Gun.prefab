@@ -45,14 +45,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 958ab188703fc5448a8f0c327cc07cba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fireMode: 1
+  fireMode: 0
   skillMode: 1
   muzzle: {fileID: 3898110433157598704}
   projectile: {fileID: 1545097402564553592, guid: 8c9b0a08751ab184c899cf50cac12ae8,
     type: 3}
-  msBetweenShots: 10
-  muzzleVelocity: 30
-  maxRange: 10
+  msBetweenShots: 100
+  muzzleVelocity: 10
+  maxRange: 5
   damage: 1
   burstCount: 10
 --- !u!1 &3898110433157598707

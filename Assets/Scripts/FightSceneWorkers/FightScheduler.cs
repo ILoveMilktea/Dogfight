@@ -16,7 +16,7 @@ public class FightScheduler : MonoBehaviour
         
     }
 
-    public void StageStart(int stageNumber)
+    public void StageStart()
     {
         StartCoroutine(StandbyPhase());
     }
@@ -24,37 +24,28 @@ public class FightScheduler : MonoBehaviour
     private IEnumerator StandbyPhase()
     {
         // 맵한번 둘러보는 연출??
+        FightSceneController.Instance.standbyImage.SetActive(true);
 
-        float temptimer = 0;
-        while(temptimer < 1f)
+        float timer = 0f;
+        while(timer < 1f)
         {
-            temptimer += Time.deltaTime;
             yield return new WaitForEndOfFrame();
+            timer += Time.deltaTime;
         }
+
+        FightSceneController.Instance.standbyImage.SetActive(false);
         StartCoroutine(FightPhase());
     }
 
     private IEnumerator FightPhase()
     {
+        FightSceneController.Instance.ChangeFightState(FightState.Fight);
         while(FightSceneController.Instance.RemainEnemyNumber() > 0)
         {
+            Debug.Log(FightSceneController.Instance.RemainEnemyNumber());
             yield return new WaitForEndOfFrame();
         }
 
-        StartCoroutine(EndPhase());
-    }
-
-    private IEnumerator EndPhase()
-    {
-        // 결과창 띄우기??
-
-        float temptimer = 0;
-        while (temptimer < 1f)
-        {
-            temptimer += Time.deltaTime;
-            yield return new WaitForEndOfFrame();
-        }
-
-        GameManager.Instance.UpgradeSceneStart();
+        FightSceneController.Instance.ShowResult();
     }
 }
