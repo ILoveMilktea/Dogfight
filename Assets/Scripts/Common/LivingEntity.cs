@@ -2,26 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LivingEntity : MonoBehaviour,IDamageable
+public abstract class LivingEntity : MonoBehaviour,IDamageable
 {
     public float startingHealth;
     protected float health;
     protected bool dead;
 
-    //KnockBack Timer
-    private float knockBackCount = 0;   
+    //KnockBack Timer   
     private bool isKnockBack = false;
 
     // Start is called before the first frame update
     public virtual void Start()
     {
         health = startingHealth;
-    }
-
-    public void Update()
-    {
-       
-    }
+    }  
 
     public void TakeHit(float damage)
     {

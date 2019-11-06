@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1545097402564553595}
   - component: {fileID: 1545097402564553594}
   - component: {fileID: 1545097402564553593}
-  - component: {fileID: 1545097402564553592}
+  - component: {fileID: 1819394283502921670}
   m_Layer: 0
   m_Name: Bullet
   m_TagString: Untagged
@@ -79,7 +79,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &1545097402564553592
+--- !u!114 &1819394283502921670
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -88,14 +88,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1545097402564553599}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17a6fd136c2a9e949a22818d597be75c, type: 3}
+  m_Script: {fileID: 11500000, guid: e08c5349b81bef944b1e1c44fe7f1f97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   collisionMask:
     serializedVersion: 2
     m_Bits: 256
-  speed: 300
-  damage: 1
-  maxRange: 300
-  isPenetratingActive: 0
-  isSpecialMode: 0

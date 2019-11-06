@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 static class Constants
 {
     public const string StartSceneName = "StartScene";
-    public const string FightSceneName = "PlayerTestScene"; // "Fight"
+    public const string FightSceneName = "FightScene"; // "Fight"
     public const string UpgradeSceneName = "Upgrade";
 
     public const string PlayerTag = "Player";
@@ -26,6 +26,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void Awake()
     {
+        
         DontDestroyOnLoad(Instance);
 
         SceneManager.sceneLoaded += OnLoadCallback;

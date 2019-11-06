@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour
+//발사체 클래스
+public abstract class Projectile : MonoBehaviour
 {
     public LayerMask collisionMask;
     //총알 속도
@@ -10,7 +11,7 @@ public class Projectile : MonoBehaviour
     //총알 데미지
     protected float damage;
     //총알 최대 거리
-    protected float maxRange;
+    protected float maxRange=10.0f;
     //총알 관통 여부
     protected bool isPenetratingActive=false;
     //필살기 모드 여부
@@ -20,36 +21,20 @@ public class Projectile : MonoBehaviour
     //KnockBack 힘
     protected float knockBackForce = 5.0f;
     //KnockBack 시간
-    protected float knockBackDuration = 0.3f;
+    protected float knockBackDuration = 0.3f;   
 
-    protected Vector3 startPosition;
-    
-    void Start()
-    {
-        //isPenetratingActive = false;        
-        startPosition = gameObject.transform.position;        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {       
-        float moveDistance = speed * Time.deltaTime;
-              
-        CheckCollision(moveDistance);        
-        transform.Translate(Vector3.forward * moveDistance);
-        CheckMoveDistance();
-
-    }
+    //지금까지 간 거리 합
+    protected float distanceTotal = 0.0f;     
 
     //Set함수
-    public void SetSpeed(float _speed)
+    public void SetSpeed(float speed)
     {       
-        speed = _speed;        
+        this.speed = speed;        
     }
 
-    public void SetMaxRange(float _maxRange)
+    public void SetMaxRange(float maxRange)
     {
-        maxRange = _maxRange;
+        this.maxRange = maxRange;
     }
     
     public void SetKnockBackMode(bool mode)
@@ -62,14 +47,38 @@ public class Projectile : MonoBehaviour
         knockBackForce = force;
     }
 
-    public void SetDamage(float _damage)
+    public void SetDamage(float damage)
     {
-        damage = _damage;
+        this.damage = damage;
     }
 
-   
+    public void SetSpecialMode(bool mode)
+    {
+        isSpecialMode = mode;
+    }
 
-   
+    public void SetPentratingActive(bool mode)
+    {
+        this.isPenetratingActive = mode;
+
+    }
+
+    protected float Move()
+    {
+        float moveDistance = speed * Time.deltaTime;
+
+        if (distanceTotal + moveDistance > maxRange)
+        {
+            moveDistance = maxRange - distanceTotal;
+            distanceTotal = maxRange;
+        }
+        else
+        {
+            distanceTotal += moveDistance;
+        }
+
+        return moveDistance;
+    }   
 
     //충돌 검사
     virtual protected void CheckCollision(float moveDistance)
@@ -86,45 +95,31 @@ public class Projectile : MonoBehaviour
        
     }
 
+    //물체와 부딪혔을 때 작동하는 함수
     protected void OnHitObject(RaycastHit hit)
     {
         Collider collider = hit.collider;
         IDamageable damageableObject=collider.GetComponent<IDamageable>();
         if(damageableObject!=null)
         {
-            GameObject attacker = FindObjectOfType<Player>().transform.gameObject;
-            FightSceneController.Instance.DamageToCharacter(attacker, hit.transform.gameObject); // UI & data
-            if (isKnockBackMode==true)
-            {
-                KnockBack(collider);
-            }
-        }
+            damageableObject.TakeHit(damage);
+           
+        } 
+    }   
 
-        if (!isPenetratingActive)
-        {            
-            GameObject.Destroy(gameObject);
-        }
-        
-    }
-
-    public void SetPentratingActive(bool mode)
-    {        
-        this.isPenetratingActive = mode;
-       
-    }
-
-    //총알 거리 계산
+    //발사체가 최대 거리까지가 움직였는지 체크
     virtual protected void CheckMoveDistance()
-    {        
-        if (Vector3.Distance(startPosition,gameObject.transform.position)>=maxRange)
-        {             
-            GameObject.Destroy(gameObject);            
-        }        
+    {            
+        if(distanceTotal==maxRange)
+        {           
+            distanceTotal = 0;
+            ObjectPoolManager.Instance.Free(gameObject);
+        }
     }
 
+    //넉백 효과
     public void KnockBack(Collider collider)
-    {
-        Debug.Log("KnockBack");
+    {        
         Vector3 dir = (collider.transform.position - transform.position).normalized;
         dir.y = 0;
 

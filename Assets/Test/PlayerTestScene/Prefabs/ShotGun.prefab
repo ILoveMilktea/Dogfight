@@ -82,7 +82,7 @@ MonoBehaviour:
     type: 3}
   msBetweenShots: 800
   muzzleVelocity: 20
-  maxRange: 3
+  maxRange: 5
   damage: 1
   burstCount: 3
   knockBackforce: 5

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gun : MonoBehaviour
+//발사무기 클래스
+public abstract class Gun : MonoBehaviour
 {
     //Auto : 자동(계속 연발)
     //Burst : 한번에 n발 연속으로 발사
@@ -34,58 +35,9 @@ public class Gun : MonoBehaviour
     protected float nextShotTime=0;
 
     protected bool triggerReleasedSinceLastShot=true;
-    protected int shotsRemainingInBurst;
+    protected int shotsRemainingInBurst=0;
 
-    virtual public void Shoot()
-    {
-        if(Time.time>nextShotTime)
-        {
-            //Time.time : 게임이 시작되고 지난 시간(초)
-            nextShotTime = Time.time + msBetweenShots / 1000;
-
-            //일직선 총
-            
-                if(fireMode==FireMode.AUTO)
-                {
-                    
-                }                
-                else if (fireMode == FireMode.SINGLE)
-                {
-                    if (!triggerReleasedSinceLastShot)
-                    {
-                        return;
-                    }
-                }
-                else if (fireMode == FireMode.BURST)
-                {
-                    if (shotsRemainingInBurst == 0)
-                    {
-                        return;
-                    }
-                    --shotsRemainingInBurst;
-                }
-                
-                Projectile newProjectile = Instantiate(projectile, muzzle.position, muzzle.rotation) as Projectile;    
-
-                if(skillMode==SkillMode.GENERAL)
-                {
-
-                }
-                else if(skillMode==SkillMode.SPECIAL)
-                {
-                    
-                    //발사체 관통 활성화
-                    newProjectile.SetPentratingActive(true);
-                }
-                
-                newProjectile.SetMaxRange(maxRange);
-                newProjectile.SetDamage(damage);                
-                newProjectile.SetSpeed(muzzleVelocity);            
-            
-
-        }
-        
-    }
+    public abstract void Shoot();   
 
     public void OnTriggerHold()
     {       

@@ -6,12 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Test/StartScene/StartScene.unity
+    path: Assets/Test/LEEEE/StartScene/StartScene.unity
     guid: a801fb5538ab3b5488ee2409e7387190
   - enabled: 1
-    path: Assets/Test/PlayerTestScene/Scenes/Player/PlayerTestScene.unity
+    path: Assets/Test/LEEEE/FightScene/FightScene.unity
     guid: a0b58261984f5fa40b622e706f70e08e
   - enabled: 1
-    path: Assets/Test/UpgradeScene/Upgrade.unity
+    path: Assets/Test/LEEEE/UpgradeScene/Upgrade.unity
     guid: 23f9fd43de1016d4ca95eaf361a4defb
   m_configObjects: {}

@@ -3,18 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EnergySphereGun : Gun
-{
-    // Start is called before the first frame update
-    private void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
-        
-    }
+{   
 
     override public void Shoot()
     {
@@ -41,12 +30,18 @@ public class EnergySphereGun : Gun
                     return;
                 }
                 --shotsRemainingInBurst;
-            }            
+            }
 
-            Projectile newProjectile = Instantiate(projectile, muzzle.position, muzzle.rotation) as Projectile;
+            GameObject newProjectileObject = ObjectPoolManager.Instance.Get("EnergySphere");
+            Transform projectileTransform = newProjectileObject.transform;
+            projectileTransform.position = muzzle.position;
+            projectileTransform.rotation = muzzle.rotation;
+            Projectile newProjectile = newProjectileObject.GetComponent<EnergySphere>();
+            
 
             if (skillMode == SkillMode.GENERAL)
             {
+
                 newProjectile.SetDamage(damage);
                 newProjectile.SetMaxRange(maxRange);                
                 newProjectile.SetSpeed(muzzleVelocity);
@@ -63,6 +58,9 @@ public class EnergySphereGun : Gun
                 }
                 
             }
+
+            newProjectileObject.SetActive(true);
+           
 
         }
 

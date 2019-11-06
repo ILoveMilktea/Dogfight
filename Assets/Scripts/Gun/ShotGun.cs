@@ -23,17 +23,7 @@ public class ShotGun : Gun
         {
             projectiles.Add(Quaternion.Euler(Vector3.zero));
         }
-    }
-
-    private void Start()
-    {
-       
-    }
-
-    private void Update()
-    {
-        
-    }
+    }    
 
     override public void Shoot()
     {
@@ -65,10 +55,26 @@ public class ShotGun : Gun
             }        
             
             for (int i = 0; i < projectiles.Count; ++i)
-            {
+            {                
                 projectiles[i] = Random.rotation;
-                Projectile newProjectile = Instantiate(projectile, muzzle.position, muzzle.rotation) as Projectile;               
-                newProjectile.transform.rotation = Quaternion.RotateTowards(newProjectile.transform.rotation, projectiles[i], spreadAngle);
+
+
+                //Projectile newProjectile = Instantiate(projectile, muzzle.position, muzzle.rotation) as Projectile;               
+                //newProjectile.transform.rotation = Quaternion.RotateTowards(newProjectile.transform.rotation, projectiles[i], spreadAngle);
+
+                GameObject newProjectileObject = ObjectPoolManager.Instance.Get("Bullet");
+                Transform projectileTransform = newProjectileObject.transform;
+                projectileTransform.position = muzzle.position;
+                projectileTransform.rotation = muzzle.rotation;
+                Projectile newProjectile = newProjectileObject.GetComponent<Projectile>();
+                
+                Quaternion tmp= Quaternion.RotateTowards(newProjectile.transform.rotation, projectiles[i], spreadAngle);
+                Vector3 randomRotation = tmp.eulerAngles;
+                randomRotation.x = 0;
+                tmp = Quaternion.Euler(randomRotation);              
+                newProjectile.transform.rotation = tmp;
+                
+
 
                 if (skillMode == SkillMode.GENERAL)
                 {
@@ -87,8 +93,9 @@ public class ShotGun : Gun
                     //p.SetKnockBackForce(knockBackforce);
                     newProjectile.SetPentratingActive(true);
                 }
+                newProjectileObject.SetActive(true);
             }
-
+                    
         }
     }
 
