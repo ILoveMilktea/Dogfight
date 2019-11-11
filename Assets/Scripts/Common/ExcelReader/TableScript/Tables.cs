@@ -3,71 +3,17 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyListInfo
-{
-    public string m_name { get; private set; }
-    public int m_hp { get; private set; }
-    public int m_atk { get; private set; }
-
-    public void Setname(string name) { m_name = name; }
-    public void Sethp(int hp) { m_hp = hp; }
-    public void Setatk(int atk) { m_atk = atk; }
-}
-
-public class EnemyListTable
-{
-    public EnemyListTable()
-    {
-        ReadBinaryTable();
-    }
-
-    private static Dictionary<int, EnemyListInfo> Table = new Dictionary<int, EnemyListInfo>();
-
-    private void ReadBinaryTable()
-    {
-        TextAsset textAsset = Resources.Load("Tables/testdb/EnemyList") as TextAsset;
-        MemoryStream memoryStream = new MemoryStream(textAsset.bytes);
-        BinaryReader binaryReader = new BinaryReader(memoryStream);
-
-        int tupleCount = binaryReader.ReadInt32();
-
-        for( int i = 0; i < tupleCount; i++)
-        {
-            EnemyListInfo info = new EnemyListInfo();
-            int key = binaryReader.ReadInt32();
-            info.Setname(binaryReader.ReadString());
-            info.Sethp(binaryReader.ReadInt32());
-            info.Setatk(binaryReader.ReadInt32());
-
-            Table.Add(key, info);
-        }
-    }
-
-    public static Dictionary<int, EnemyListInfo> GetTable()
-    {
-        return Table;
-    }
-
-    public static EnemyListInfo GetTuple(int key)
-    {
-        EnemyListInfo value;
-
-        if (Table.TryGetValue(key, out value))
-            return value;
-
-        return null;
-    }
-
-}
 public class EnemyStatusInfo
 {
     public string m_name { get; private set; }
     public int m_hp { get; private set; }
     public int m_atk { get; private set; }
+    public int m_dropParts { get; private set; }
 
     public void Setname(string name) { m_name = name; }
     public void Sethp(int hp) { m_hp = hp; }
     public void Setatk(int atk) { m_atk = atk; }
+    public void SetdropParts(int dropParts) { m_dropParts = dropParts; }
 }
 
 public class EnemyStatusTable
@@ -94,6 +40,7 @@ public class EnemyStatusTable
             info.Setname(binaryReader.ReadString());
             info.Sethp(binaryReader.ReadInt32());
             info.Setatk(binaryReader.ReadInt32());
+            info.SetdropParts(binaryReader.ReadInt32());
 
             Table.Add(key, info);
         }
@@ -183,13 +130,11 @@ public class Tables : MonoSingleton<Tables>
         DontDestroyOnLoad(gameObject);
     }
 
-    public EnemyListTable EnemyList = null;
     public EnemyStatusTable EnemyStatus = null;
     public Dictionary<int, StageEnemyTable> StageEnemyTables = null;
 
     private void Start() 
     {
-        EnemyList = new EnemyListTable();
         EnemyStatus = new EnemyStatusTable();
         StageEnemyTables = new Dictionary<int, StageEnemyTable>();
         for(int i = 1; i <= 2; i++)

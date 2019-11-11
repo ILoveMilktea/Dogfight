@@ -5,6 +5,8 @@ using UnityEngine;
 //발사체 클래스
 public abstract class Projectile : MonoBehaviour
 {
+    protected GameObject source;
+
     public LayerMask collisionMask;
     //총알 속도
     protected float speed;
@@ -27,6 +29,11 @@ public abstract class Projectile : MonoBehaviour
     protected float distanceTotal = 0.0f;     
 
     //Set함수
+    public void SetSource(GameObject source)
+    {
+        this.source = source;
+    }
+
     public void SetSpeed(float speed)
     {       
         this.speed = speed;        
@@ -102,8 +109,9 @@ public abstract class Projectile : MonoBehaviour
         IDamageable damageableObject=collider.GetComponent<IDamageable>();
         if(damageableObject!=null)
         {
-            damageableObject.TakeHit(damage);
-           
+            //damageableObject.TakeHit(damage);
+            GameObject target = hit.transform.gameObject;
+            FightSceneController.Instance.DamageToCharacter(source, target);
         } 
     }   
 

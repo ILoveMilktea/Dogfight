@@ -21,13 +21,15 @@ public class PlayInfo
 {
     public float playtime;
     public int stage;
-    public int energy;
+    public int parts;
+    public bool isAct;
 
     public PlayInfo()
     {
         playtime = 0;
         stage = 1;
-        energy = 0;
+        parts = 0;
+        isAct = false;
     }
 }
 [Serializable]

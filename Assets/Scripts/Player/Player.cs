@@ -16,6 +16,7 @@ public class Player : LivingEntity
     Camera viewCamera;
 
     int count = 0;
+    private WeaponType equipingWeapon;
 
     // Start is called before the first frame update
     public override void Start()
@@ -24,6 +25,9 @@ public class Player : LivingEntity
         controller = GetComponent<PlayerController>();
         gunController = GetComponent<GunController>();
         viewCamera = Camera.main;
+
+        equipingWeapon = WeaponType.EnergySphereGun;
+        SwapWeapon();
     }
     
 
@@ -87,5 +91,22 @@ public class Player : LivingEntity
     public void Standby()
     {
         gunController.OnTriggerRelease();
+    }
+
+    // swappppp
+    public WeaponType SwapWeapon()
+    {
+        if (equipingWeapon == WeaponType.ShotGun)
+        {
+            equipingWeapon = WeaponType.EnergySphereGun;
+        }
+        else
+        {
+            equipingWeapon++;
+        }
+            
+        gunController.EquipGun(Resources.Load<Gun>("Prefab/Weapon/" + equipingWeapon.ToString()));
+
+        return equipingWeapon;
     }
 }

@@ -57,9 +57,9 @@ public class FenceGenerator : MonoBehaviour
             case 1:
                 fencePrefabName = "Cube_Soil";
                 break;
-            //case 2:
-            //    fencePrefabName = "Plane_Rock";
-            //    break;
+            case 2:
+                fencePrefabName = "Cube_Stone1";
+                break;
             //case 3:
             //    fencePrefabName = "Plane_Rock";
             //    break;

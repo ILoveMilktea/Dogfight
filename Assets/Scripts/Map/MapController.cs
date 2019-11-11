@@ -15,7 +15,7 @@ public class MapController : MonoBehaviour
 
     private void Awake()
     {
-        PrepareMap(1);
+        PrepareMap(DataManager.Instance.GetPlayInfo.stage);
     }
 
     // Start is called before the first frame update

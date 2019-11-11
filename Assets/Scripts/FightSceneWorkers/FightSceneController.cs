@@ -44,81 +44,6 @@ public class UIGroup
     }
 }
 
-public class CharacterStatus
-{
-    public string name { get; private set; }
-    public int maxHp { get; private set; }
-    public int remainHp { get; private set; }
-    public int atk { get; private set; }
-
-    public CharacterStatus(string p_Name, int p_maxHp, int p_remainHp, int p_Atk)
-    {
-        name = p_Name;
-        maxHp = p_maxHp;
-        remainHp = p_remainHp;
-        atk = p_Atk;
-    }
-
-    public bool DamageToCharacter(int damage)
-    {
-        remainHp -= damage;
-
-        if(remainHp <= 0)
-        {
-            remainHp = 0;
-            return true;
-        }
-        return false;
-    }
-    
-    public void HealToCharacter(int heal)
-    {
-        remainHp += heal;
-
-        if(remainHp > maxHp)
-        {
-            remainHp = maxHp;
-        }
-    }
-}
-
-public class FightStatus
-{
-    public int remainEnemy { get; private set; }
-    public int gainParts { get; private set; }
-
-    public CharacterStatus playerStatus { get; private set; }
-    public Dictionary<GameObject, CharacterStatus> enemies { get; private set; }
-
-    public FightStatus()
-    {
-        enemies = new Dictionary<GameObject, CharacterStatus>();
-    }
-
-    public void SetRemainEnemy(int num)
-    {
-        remainEnemy = num;
-    }
-
-    public void SetPlayerStatus(CharacterStatus status)
-    {
-        playerStatus = status;
-    }
-    public void AddEnemyInstance(GameObject enemy, CharacterStatus status)
-    {
-        enemies.Add(enemy, status);
-    }
-
-    public void RemoveEnemyInstance(GameObject enemy)
-    {
-        if(enemies.ContainsKey(enemy))
-        {
-            enemies.Remove(enemy);
-            remainEnemy--;
-        }
-    }
-}
-
 public class FightSceneController : MonoSingleton<FightSceneController>
 {
     private FightStatus fightStatus;
@@ -141,7 +66,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     public GameObject pauseImage;
     public GameObject loadingImage;
     public Button pauseButton;
-    public Text energy;
+    public Text parts;
 
 
     private UIGroup fightGroup = new UIGroup();
@@ -182,7 +107,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
 
     public void StartFightScene()
     {
-        playTimer.StartTimer();
+        SetTimer();
         SetStage();
         fightScheduler.StageStart();
     }
@@ -195,10 +120,19 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         SetUIToAllCharacters();
         UIGrouping();
     }
+    private void SetTimer()
+    {
+        playTimer.StartTimer();
+
+        SetStateChangeCallback(FightState.Standby, playTimer.FreezeTimer);
+        SetStateChangeCallback(FightState.Fight, playTimer.ReleaseTimer);
+        SetStateChangeCallback(FightState.Pause, playTimer.FreezeTimer);
+        SetStateChangeCallback(FightState.Standby, playTimer.FreezeTimer);
+    }
     // player status 등록
     private void SetPlayerOnStage()
     {
-        PlayerStatusInfo statusFromData = DataCenter.Instance.GetPlayerStatus;
+        PlayerStatusInfo statusFromData = DataManager.Instance.GetPlayerStatus;
         CharacterStatus status = new CharacterStatus("Player", statusFromData.maxHp, statusFromData.remainHp, statusFromData.atk);
 
         fightStatus.SetPlayerStatus(status);
@@ -206,7 +140,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     // stage에 해당하는 몹 생성, 위치지정
     private void SetEnemyOnStage()
     {
-        int stageNumber = DataCenter.Instance.GetPlayInfo.stage;
+        int stageNumber = DataManager.Instance.GetPlayInfo.stage;
         int enemyCount = 0;
 
         StageEnemyTable stageTable = Tables.Instance.StageEnemyTables[stageNumber];
@@ -214,7 +148,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         {
             EnemyStatusInfo enemyInfo = EnemyStatusTable.GetTuple(stageEnemyInfo.Value.m_serialNumber);
             GameObject enemy = Instantiate(Resources.Load("Prefab/Enemy/" + enemyInfo.m_name)) as GameObject;
-            CharacterStatus status = new CharacterStatus(enemyInfo.m_name, enemyInfo.m_hp, enemyInfo.m_hp, enemyInfo.m_atk);
+            EnemyCharacterStatus status = new EnemyCharacterStatus(enemyInfo.m_name, enemyInfo.m_hp, enemyInfo.m_hp, enemyInfo.m_atk, enemyInfo.m_dropParts);
 
             fightStatus.AddEnemyInstance(enemy, status);
             enemy.transform.position = new Vector3(stageEnemyInfo.Value.m_posX, enemy.transform.localScale.y * 0.5f, stageEnemyInfo.Value.m_posY);
@@ -330,6 +264,12 @@ public class FightSceneController : MonoSingleton<FightSceneController>
             player.Standby();
         }
     }
+    // 무기 변경
+    public void SwapWeapon()
+    {
+        WeaponType weapon = player.SwapWeapon();
+        joystickAttack.WeaponImageSwap(weapon);
+    }
 
     // hp
     public void DamageToCharacter(GameObject character, int damage)
@@ -420,6 +360,12 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     }
     public void EnemyDead(GameObject enemy)
     {
+        // gain parts
+        int dropParts = fightStatus.enemies[enemy].dropParts;
+        fightStatus.AddParts(dropParts);
+        parts.text = fightStatus.gainParts.ToString();
+
+        // enemy ui, character offf
         fightStatus.RemoveEnemyInstance(enemy);
         enemyCharacterUIs[enemy].gameObject.SetActive(false);
         enemyCharacterUIs.Remove(enemy);
@@ -435,17 +381,22 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     public void ShowResult()
     {
         ChangeFightState(FightState.Standby);
+        playTimer.StopTimer();
+        DataManager.Instance.Save();
+
         resultWindow.ShowResult(EndFight);
     }
 
     public void EndFight()
     {
+        // save playtime
+        DataManager.Instance.AddPlayTime(playTimer.GetPlaytime());
+        // save gain parts
+        DataManager.Instance.AddGainParts(fightStatus.gainParts);
+        // save player reaminHp
+        DataManager.Instance.SetRemainHp(fightStatus.playerStatus.remainHp);
+
         UIEffect.FadeIn(loadingImage.GetComponent<Image>());
         GameManager.Instance.UpgradeSceneStart();
-    }
-
-    private void OnDestroy()
-    {
-        //playTimer.StopTimer();
     }
 }

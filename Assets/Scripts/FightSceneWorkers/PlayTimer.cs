@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayTimer : MonoBehaviour
 {
+    public Text debugTimer; // display playtime for debug
+
     private float playtime;
     private bool isFight;
     private IEnumerator timer;
@@ -17,16 +20,16 @@ public class PlayTimer : MonoBehaviour
 
     public IEnumerator Timer()
     {
-        isFight = false;
-
         while(true)
         {
             yield return new WaitForEndOfFrame();
 
             if(isFight)
             {
-                playtime += Time.deltaTime;
+                playtime += Time.deltaTime * 100;
             }
+            
+            debugTimer.text = playtime.ToString("00:00");
         }
     }
 
@@ -56,8 +59,6 @@ public class PlayTimer : MonoBehaviour
     public void StopTimer()
     {
         StopCoroutine(timer);
-
-        DataManager.Instance.AddPlayTime(playtime);
     }
 
 }

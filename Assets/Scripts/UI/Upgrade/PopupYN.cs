@@ -9,6 +9,7 @@ public class PopupYN : MonoBehaviour
     private Action yesCallback;
     private Action noCallback;
 
+    public Text description;
     public Button yesButton;
     public Button noButton;
 
@@ -35,6 +36,11 @@ public class PopupYN : MonoBehaviour
     {
         yesCallback = yesFunction;
         noCallback = noFunction;
+    }
+
+    public void SetDescription(string p_description)
+    {
+        description.text = p_description;
     }
 
     // 제거

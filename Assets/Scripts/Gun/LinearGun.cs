@@ -53,6 +53,8 @@ public class LinearGun : Gun
                 newProjectile.SetPentratingActive(true);
             }
 
+            GameObject source = FindObjectOfType<Player>().gameObject;
+            newProjectile.SetSource(source);
             newProjectile.SetMaxRange(maxRange);
             newProjectile.SetDamage(damage);
             newProjectile.SetSpeed(muzzleVelocity);

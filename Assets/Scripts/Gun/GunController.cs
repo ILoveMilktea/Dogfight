@@ -10,10 +10,10 @@ public class GunController : MonoBehaviour
 
     void Start()
     {
-        if(startingGun!=null)
-        {           
-            EquipGun(startingGun);
-        }
+        //if(startingGun!=null)
+        //{           
+        //    EquipGun(startingGun);
+        //}
     }
 
     public void EquipGun(Gun gunToEquip)

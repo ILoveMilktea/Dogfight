@@ -1,30 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class JoystickAttack : JoystickBase
 {
-    //임시 공격속도
-    private float attackRate = 1;
+    public Image equipingWeapon;
+    private bool isSwap;
 
     protected override void Start()
     {
         base.Start();
+        isSwap = true;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        //if (attackRate < 0.5)
-        //{
-        //    attackRate += Time.fixedDeltaTime;
-        //    return;
-        //}
-
         switch (state)
         {
             case TouchState.Begin:
                 state = TouchState.Stay;
+                isSwap = true;
                 break;
             case TouchState.Stay:
                 Attack();
@@ -35,6 +32,7 @@ public class JoystickAttack : JoystickBase
                 break;
             case TouchState.End:
                 Standby();
+                CheckSwap();
                 state = TouchState.None;
                 break;
             default:
@@ -53,6 +51,7 @@ public class JoystickAttack : JoystickBase
 
         if (moveAmount > 0.5f)
         {
+            isSwap = false;
             // joystick handle의 이동 범위가 반을 넘어가야 움직이는거
             FightSceneController.Instance.PlayerAttack(moveDirection3D);
         }
@@ -65,5 +64,19 @@ public class JoystickAttack : JoystickBase
     private void Standby()
     {
         FightSceneController.Instance.PlayerStandby();
+    }
+
+    private void CheckSwap()
+    {
+        if (isSwap)
+        {
+            FightSceneController.Instance.SwapWeapon();
+        }
+        isSwap = false;
+    }
+
+    public void WeaponImageSwap(WeaponType weapon)
+    {
+        equipingWeapon.sprite = Resources.Load<Sprite>("Image/Weapon/" + weapon.ToString());
     }
 }

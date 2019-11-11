@@ -50,6 +50,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void NewStartGame()
     {
+        DataManager.Instance.Save();
         FightSceneStart();
     }
     public void ContinueGame()
@@ -102,5 +103,5 @@ public class GameManager : MonoSingleton<GameManager>
             //}
         }
     }
-
+    
 }

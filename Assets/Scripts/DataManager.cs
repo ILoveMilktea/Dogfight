@@ -39,7 +39,7 @@ public class DataManager : MonoSingleton<DataManager>
         dataPath += "/SaveData.json";
         //dataPath = dataPath + "/SaveData.json";
 
-        dataCenter = DataCenter.Instance;
+        dataCenter = new DataCenter();
     }
 
     public bool CheckSaveData()
@@ -80,6 +80,11 @@ public class DataManager : MonoSingleton<DataManager>
 
         File.WriteAllText(dataPath, toJsonData);
         Debug.Log("saved");
+
+        if(SceneManager.GetActiveScene().name == "Upgrade")
+        {
+            FindObjectOfType<PlayerStatusWindow>().RedrawWindow();
+        }
     }
     
     public void Load()
@@ -92,24 +97,37 @@ public class DataManager : MonoSingleton<DataManager>
         dataCenter.SetUserData(data);
     }
     
+    public PlayInfo GetPlayInfo { get { return dataCenter.playInfo; } }
+    public PlayerStatusInfo GetPlayerStatus { get { return dataCenter.playerStatusInfo; } }
+    public Dictionary<WeaponType, Weapon> GetWeapons { get { return dataCenter.weapons; } }
+
     // play time
     public void AddPlayTime(float playtime)
     {
-        dataCenter.SetPlaytime(dataCenter.GetPlayInfo.playtime + playtime);
+        dataCenter.SetPlaytime(dataCenter.playInfo.playtime + playtime);
     }
-
+    // parts
+    public void AddGainParts(int parts)
+    {
+        dataCenter.SetParts(dataCenter.playInfo.parts + parts);
+    }
+    // is acted??
+    public void SetIsAct(bool value)
+    {
+        dataCenter.SetIsAct(value);
+    }
     // player Hp
     public void UpMaxHp(int value)
     {
-        dataCenter.SetMaxHp(dataCenter.GetPlayerStatus.maxHp + value);
-        dataCenter.SetRemainHp(dataCenter.GetPlayerStatus.remainHp + value);
+        dataCenter.SetMaxHp(dataCenter.playerStatusInfo.maxHp + value);
+        dataCenter.SetRemainHp(dataCenter.playerStatusInfo.remainHp + value);
     }
     public void UpRemainHp(int value)
     {
-        int remainHp = dataCenter.GetPlayerStatus.remainHp;
-        if(remainHp + value > dataCenter.GetPlayerStatus.maxHp)
+        int remainHp = dataCenter.playerStatusInfo.remainHp;
+        if(remainHp + value > dataCenter.playerStatusInfo.maxHp)
         {
-            dataCenter.SetRemainHp(dataCenter.GetPlayerStatus.maxHp);
+            dataCenter.SetRemainHp(dataCenter.playerStatusInfo.maxHp);
         }
         else
         {
@@ -119,9 +137,9 @@ public class DataManager : MonoSingleton<DataManager>
 
     public void SetRemainHp(int value)
     {
-        if (value > dataCenter.GetPlayerStatus.maxHp)
+        if (value > dataCenter.playerStatusInfo.maxHp)
         {
-            dataCenter.SetRemainHp(dataCenter.GetPlayerStatus.maxHp);
+            dataCenter.SetRemainHp(dataCenter.playerStatusInfo.maxHp);
         }
         else
         {
@@ -131,7 +149,7 @@ public class DataManager : MonoSingleton<DataManager>
     // player Atk
     public void UpAtk(int value)
     {
-        dataCenter.SetAtk(dataCenter.GetPlayerStatus.atk + value);
+        dataCenter.SetAtk(dataCenter.playerStatusInfo.atk + value);
     }
     // Weapon
     public void UpWeaponExp(WeaponType type, int value)
@@ -148,6 +166,10 @@ public class DataManager : MonoSingleton<DataManager>
         }
     }
 
+    public void UpStage()
+    {
+        dataCenter.SetStage(dataCenter.playInfo.stage + 1);
+    }
     // 수치 조정 후 ui 수치 리셋
     public void DisplayReset()
     { }
@@ -156,7 +178,6 @@ public class DataManager : MonoSingleton<DataManager>
     public void levelup(int val)
     {
         dataCenter.SetStage(val);
-        Debug.Log(dataCenter.GetPlayInfo.stage);
     }
 
 

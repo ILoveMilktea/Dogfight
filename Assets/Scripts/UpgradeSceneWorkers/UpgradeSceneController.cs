@@ -4,21 +4,37 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public static class ConstDecriptions
+{
+    public const string FightButton = "다음?";
+
+    public const string Select_RestButton = "휴식?"; // "Fight"
+    public const string Select_EatButton = "식사?";
+    public const string Select_Training = "단련?";
+    public const string Select_Search = "탐색?";
+    public const string Select_Retry = "재전투?";
+}
+
 public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
 {
-    private SelectAction selectAction;
-    private UpgradeWeapon upgradeWeapon;
+    // Inactive on awake
+    public SelectAct selectAct;
+    public UpgradeWeapon upgradeWeapon;
+    public ExitButton exitButton;
     public PopupYN popupYN;
+    public PopupResult popupResult;
 
     public GameObject loadingImage;
+    public Button actButton;
+    public Button upgradeButton;
     public Button fightButton;
 
     private void Awake()
     {
-        selectAction = FindObjectOfType<SelectAction>();
-        upgradeWeapon = FindObjectOfType<UpgradeWeapon>();
-
+        actButton.onClick.AddListener(OnClickActButton);
         fightButton.onClick.AddListener(OnClickFightButton);
+
+        AwakeAllUIScript();
     }
 
     void Start()
@@ -29,8 +45,26 @@ public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
     public void StartUpgradeScene()
     {
         // 시작시 할 명령들?
+        if(DataManager.Instance.GetPlayInfo.isAct)
+        {
+            actButton.interactable = false;
+        }
     }
 
+    private void AwakeAllUIScript()
+    {
+        selectAct.gameObject.SetActive(true);
+        //upgradeWeapon.gameObject.SetActive(true);
+        exitButton.gameObject.SetActive(true);
+        popupYN.gameObject.SetActive(true);
+        popupResult.gameObject.SetActive(true);
+
+        selectAct.gameObject.SetActive(false);
+        //upgradeWeapon.gameObject.SetActive(false);
+        exitButton.gameObject.SetActive(false);
+        popupYN.gameObject.SetActive(false);
+        popupResult.gameObject.SetActive(false);
+    }
     //private void UIGrouping()
     //{
     //    // 전투 중 active한 UI들
@@ -47,62 +81,65 @@ public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
     //    SetStateChangeCallback(FightState.Pause, pauseGroup.ActiveAllMembers);
     //    SetStateChangeCallback(FightState.Fight, pauseGroup.InactiveAllMembers);
     //}
+    
+    public void ActiveExitButton(GameObject targetUI)
+    {
+        if(!exitButton.gameObject.activeSelf)
+        {
+            exitButton.gameObject.SetActive(true);
+        }
+        exitButton.PushUI(targetUI);
+    }
+    public void OpenPopupYN(string description, Action yesFunc, Action noFunc)
+    {
+        popupYN.gameObject.SetActive(true);
+        popupYN.SetDescription(description);
+        popupYN.SetCallback(yesFunc, noFunc);
 
+        //ActiveExitButton(popupYN.gameObject);
+    }
 
-    // hp
-    //public void DamageToCharacter(GameObject character, int value)
-    //{
-    //    if (character.tag == "Player")
-    //    {
-    //        playerCharacterUI.HpDown(value);
-    //    }
-    //    else if (character.tag == "Enemy")
-    //    {
-    //        if (enemyCharacterUIs.ContainsKey(character))
-    //        {
-    //            enemyCharacterUIs[character].HpDown(value);
-    //        }
-    //    }
-    //}
-    //public void DamageToCharacter(GameObject source, GameObject target)
-    //{
-    //    if (target.tag == Constants.PlayerTag)
-    //    {
-    //        int damage = 0;
-    //        playerCharacterUI.HpDown(damage);
-    //    }
-    //    else if (target.tag == Constants.EnemyTag)
-    //    {
-    //        int damage = 0;
-    //        enemyCharacterUIs[target].HpDown(damage);
-    //    }
-    //}
+    public void OpenPopupResult(string description, Action okFunc)
+    {
+        ClosePopupYN();
+        CloseSelectActWindow();
+        DataManager.Instance.SetIsAct(true);
+        DataManager.Instance.Save();
 
-    //public void HealToCharacter(GameObject character, int value)
-    //{
-    //    if (character.tag == "Player")
-    //    {
-    //        playerCharacterUI.HpUp(value);
-    //    }
-    //    else if (character.tag == "Enemy")
-    //    {
-    //        if (enemyCharacterUIs.ContainsKey(character))
-    //        {
-    //            enemyCharacterUIs[character].HpUp(value);
-    //        }
-    //    }
-    //}
+        popupResult.gameObject.SetActive(true);
+        popupResult.SetDescription(description);
+        popupResult.SetCallback(okFunc);
+    }
 
+    public void OnClickActButton()
+    {
+        selectAct.gameObject.SetActive(true);
+        
+        ActiveExitButton(selectAct.gameObject);
+    }
+
+    public void CloseSelectActWindow()
+    {
+        exitButton.ClearStack();
+        actButton.interactable = false;
+    }
+
+    public void OnClickUpgradeButton()
+    {
+        upgradeWeapon.gameObject.SetActive(true);
+        exitButton.PushUI(upgradeWeapon.gameObject);
+    }
 
     public void OnClickFightButton()
     {
-        popupYN.gameObject.SetActive(true);
-        popupYN.SetCallback(EndUpgrade, ClosePopupYN);
+        OpenPopupYN(ConstDecriptions.FightButton, EndUpgrade, ClosePopupYN);
     }
 
     public void EndUpgrade()
     {
-        DataCenter.Instance.SetStage(DataCenter.Instance.GetPlayInfo.stage + 1);
+        DataManager.Instance.Save();
+        DataManager.Instance.SetIsAct(false);
+        DataManager.Instance.UpStage();
 
         popupYN.gameObject.SetActive(false);
         UIEffect.FadeIn(loadingImage.GetComponent<Image>());
@@ -111,11 +148,12 @@ public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
 
     public void ClosePopupYN()
     {
+        //exitButton.PullUI();
         popupYN.gameObject.SetActive(false);
     }
-
-    private void OnDestroy()
+    
+    public void ClosePopupResult()
     {
-        //playTimer.StopTimer();
+        popupResult.gameObject.SetActive(false);
     }
 }

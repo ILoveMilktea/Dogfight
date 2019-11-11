@@ -46,11 +46,11 @@ public class FloorController : MonoBehaviour
         floorGenerator.GenerateFloor(mapSize, ref floorPrefabList);
     }  
 
-    public void Attack()
+    public void Attack() // temp, 공격 막아둠
     {
-        IDamageable damageableObject = player.GetComponent<IDamageable>();
+        //IDamageable damageableObject = player.GetComponent<IDamageable>();
         //수정-서버로 보내는 공격 데미지 함수로 교체
-        damageableObject.TakeHit(0);
+        //damageableObject.TakeHit(0);
     }
 
     private Vector2 CheckAttackFloor()

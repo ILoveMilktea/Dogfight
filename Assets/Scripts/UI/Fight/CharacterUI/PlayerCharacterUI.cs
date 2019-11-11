@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class PlayerCharacterUI : CharacterUI
 {
     private Slider reloadGauge;
-    void Awake()
+    protected override void Awake()
     {
         characterName = GetComponentInChildren<Text>();
         Slider[] sliders = GetComponentsInChildren<Slider>();
@@ -15,20 +15,7 @@ public class PlayerCharacterUI : CharacterUI
 
         rectTransform = GetComponent<RectTransform>();
     }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        base.Start();
-    }
-
-    // Update is called once per frame
-    // Late 안쓰면 ui가 먼저 가버려서 떨림 현상 생김
-    void LateUpdate()
-    {
-        base.LateUpdate();
-    }
-
+    
     public override void ResizeUI()
     {
         Vector3 targetPos = target.transform.position;

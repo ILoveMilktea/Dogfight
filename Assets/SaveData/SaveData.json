@@ -2,28 +2,28 @@
     "playInfo": {
         "playtime": 0.0,
         "stage": 1,
-        "energy": 0
+        "parts": 0,
+        "isAct": false
     },
     "playerStatusInfo": {
         "maxHp": 100,
         "remainHp": 100,
-        "atk": 10,
-        "def": 10
+        "atk": 10
     },
     "weaponInfo": {
         "weaponsList": [
             {
-                "name": "gun",
+                "name": "EnergySphereGun",
                 "level": 1,
                 "exp": 0
             },
             {
-                "name": "bow",
+                "name": "LinearGun",
                 "level": 1,
                 "exp": 0
             },
             {
-                "name": "nuclear",
+                "name": "ShotGun",
                 "level": 1,
                 "exp": 0
             }

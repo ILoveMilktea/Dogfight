@@ -21,7 +21,7 @@ public static class UIEffect
         {
             target.transform.localScale = Vector3.Lerp(Vector3.zero, originalScale, timer);
             yield return new WaitForEndOfFrame();
-            timer += Time.deltaTime;
+            timer += Time.deltaTime * 2;
         }
 
         target.transform.localScale = originalScale;
