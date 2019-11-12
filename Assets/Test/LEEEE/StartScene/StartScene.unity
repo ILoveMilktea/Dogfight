@@ -395,7 +395,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uB358\uC804\uBC30\uB2EC\uBD80 \uD504\uB85C\uB3C4"
+  m_Text: The Heimr
 --- !u!222 &267211506
 CanvasRenderer:
   m_ObjectHideFlags: 0
