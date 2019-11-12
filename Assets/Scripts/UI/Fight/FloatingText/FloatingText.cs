@@ -21,15 +21,18 @@ public class FloatingText : MonoBehaviour
     }
 
 
-    public IEnumerator DisplayDamage(int damage, int xStack, int yStack, Action RemoveFloatingText)
+    public IEnumerator DisplayDamage(int damage, RectTransform target, Action RemoveFloatingText)
     {
-        rectTransform.anchoredPosition += new Vector2(rectTransform.sizeDelta.x * 0.5f * xStack, rectTransform.sizeDelta.y * 0.5f * yStack);
+        //rectTransform.anchoredPosition += new Vector2(rectTransform.sizeDelta.x * 0.5f, rectTransform.sizeDelta.y * 0.5f);
         damageText.text = damage.ToString();
         damageText.enabled = true;
 
         // Floating Text start floating
-        Vector2 startPosition = rectTransform.anchoredPosition;
-        Vector2 destination = rectTransform.anchoredPosition + new Vector2(0f, upMoveAmount);
+        float xRandomFactor = UnityEngine.Random.Range(-target.sizeDelta.x * 0.4f, target.sizeDelta.x * 0.4f);
+        float yRandomFactor = UnityEngine.Random.Range(-target.sizeDelta.y * 0.1f, target.sizeDelta.y * 0.5f);
+
+        Vector2 startPosition = rectTransform.anchoredPosition + new Vector2(xRandomFactor, yRandomFactor);
+        Vector2 destination = startPosition + new Vector2(0f, upMoveAmount);
 
         float timer = 0f;
         while (rectTransform.anchoredPosition.y < destination.y)
@@ -40,7 +43,7 @@ public class FloatingText : MonoBehaviour
             rectTransform.anchoredPosition = Vector2.Lerp(startPosition, destination, timer);
 
             yield return new WaitForEndOfFrame();
-            timer += Time.deltaTime * 4;
+            timer += Time.deltaTime * 3;
         }
 
         // Wait a moment in character's head

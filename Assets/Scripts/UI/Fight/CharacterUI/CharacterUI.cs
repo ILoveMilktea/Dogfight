@@ -114,22 +114,24 @@ public class CharacterUI : MonoBehaviour
     private void DisplayDamage(int value)
     {
         GameObject damageText = Instantiate(floatingText, transform) as GameObject;
-        yTextStack++;
-        if (yTextStack > 3)
-        {
-            xTextStack++;
-            yTextStack = 1;
-        }
-        StartCoroutine(damageText.GetComponent<FloatingText>().DisplayDamage(value, xTextStack, yTextStack - 1, RemoveFloatingText));
+        //yTextStack++;
+        //if (yTextStack > 3)
+        //{
+        //    xTextStack++;
+        //    yTextStack = 1;
+        //}
+
+        // stack으로 약간 뎀지 입으면 순서대로 뜨게 좀 하고싶은데
+        StartCoroutine(damageText.GetComponent<FloatingText>().DisplayDamage(value, rectTransform, RemoveFloatingText));
     }
 
     public void RemoveFloatingText()
     {
-        yTextStack--;
-        if(yTextStack < 1)
-        {
-            xTextStack--;
-            yTextStack = 3;
-        }
+        //yTextStack--;
+        //if(yTextStack < 1)
+        //{
+        //    xTextStack--;
+        //    yTextStack = 3;
+        //}
     }
 }
