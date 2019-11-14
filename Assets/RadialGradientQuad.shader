@@ -4,11 +4,12 @@
 Shader "Custom/RadialGradientQuad" {
 	Properties{
 		_ColorA("Color A", Color) = (1, 1, 1, 1)
-		_ColorB("Color B", Color) = (0, 0, 0, 1)
+		_ColorB("Color B", Color) = (0, 0, 0, 0)
 		_Slide("Slide", Range(0, 1)) = 0.5
 	}
 
 		SubShader{
+			Blend SrcAlpha OneMinusSrcAlpha
 			Tags {"Queue" = "Transparent" "IgnoreProjector" = "True" "RenderType" = "Transparent" "PreviewType" = "Plane"}
 			LOD 100
 
@@ -43,7 +44,9 @@ Shader "Custom/RadialGradientQuad" {
 				fixed4 frag(v2f i) : SV_Target
 				{
 					float t = length(i.texcoord - float2(0.5, 0.5)) * 1.41421356237; // 1.141... = sqrt(2)
-					return lerp(_ColorA, _ColorB, t + (_Slide - 0.5) * 2);
+					float ratio = t + _Slide;
+
+					return ratio < 0.7 ? lerp(_ColorA, _ColorB, 0) : lerp(_ColorA, _ColorB, (ratio - 0.7)*2);
 				}
 				ENDCG
 			}

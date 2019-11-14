@@ -151,7 +151,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
             EnemyCharacterStatus status = new EnemyCharacterStatus(enemyInfo.m_name, enemyInfo.m_hp, enemyInfo.m_hp, enemyInfo.m_atk, enemyInfo.m_dropParts);
 
             fightStatus.AddEnemyInstance(enemy, status);
-            enemy.transform.position = new Vector3(stageEnemyInfo.Value.m_posX, enemy.transform.localScale.y * 0.5f, stageEnemyInfo.Value.m_posY);
+            enemy.transform.position = new Vector3(stageEnemyInfo.Value.m_posX, enemy.transform.lossyScale.y, stageEnemyInfo.Value.m_posY);
 
             enemyCount++;
         }

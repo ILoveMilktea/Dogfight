@@ -3,12 +3,12 @@
         "playtime": 0.0,
         "stage": 1,
         "parts": 0,
-        "isAct": false
+        "isAct": true
     },
     "playerStatusInfo": {
-        "maxHp": 100,
-        "remainHp": 100,
-        "atk": 10
+        "maxHp": 110,
+        "remainHp": 110,
+        "atk": 15
     },
     "weaponInfo": {
         "weaponsList": [
