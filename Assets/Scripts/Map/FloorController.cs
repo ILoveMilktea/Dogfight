@@ -25,11 +25,10 @@ public class FloorController : MonoBehaviour
         floorGenerator = gameObject.GetComponent<FloorGenerator>();
         
         //수정-GameManager에서 Player정보 받아오기로 교체
-        player = GameObject.FindWithTag("Player");
-        
+        player = GameObject.FindWithTag("Player");        
     }
 
-    private void Start()
+    private void OnEnable()
     {
         StartCoroutine(CheckAttackAvailableTimer());
     }
@@ -42,7 +41,7 @@ public class FloorController : MonoBehaviour
     }
 
     public void GenerateFloor(Vector2 mapSize)
-    {
+    {       
         floorGenerator.GenerateFloor(mapSize, ref floorPrefabList);
     }  
 

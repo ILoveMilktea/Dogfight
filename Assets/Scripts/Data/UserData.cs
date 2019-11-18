@@ -19,6 +19,7 @@ public class UserData
 [Serializable]
 public class PlayInfo
 {
+    public string curDungeon;
     public float playtime;
     public int stage;
     public int parts;

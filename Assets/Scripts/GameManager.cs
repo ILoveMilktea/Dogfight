@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 static class Constants
 {
+    public const string WorldMapSceneName = "WorldMap";
     public const string StartSceneName = "StartScene";
     public const string FightSceneName = "FightScene"; // "Fight"
     public const string UpgradeSceneName = "Upgrade";
@@ -23,6 +24,9 @@ public enum SceneType
 
 public class GameManager : MonoSingleton<GameManager>
 {
+    public Material spriteCutOut;
+    
+    private bool IsUIEffectEnd;
 
     private void Awake()
     {
@@ -39,6 +43,61 @@ public class GameManager : MonoSingleton<GameManager>
         switch (scene.name)
         {
             case Constants.StartSceneName:
+                //IsUIEffectEnd = false;
+                //StartCoroutine(UIEffect.CutIn(spriteCutOut));
+                break;
+            case Constants.WorldMapSceneName:
+                IsUIEffectEnd = false;
+                StartCoroutine(UIEffect.CutIn(spriteCutOut));
+                break;
+            case Constants.FightSceneName:
+                //FightSceneController.Instance.StartFightScene();
+                break;
+            case Constants.UpgradeSceneName:
+                break;
+        }
+    }
+    
+    public void EndUIEffect()
+    {
+        IsUIEffectEnd = true;
+    }
+
+    public void NewStartGame()
+    {
+        DataManager.Instance.Save();
+        SceneStart(Constants.WorldMapSceneName, true);
+    }
+    public void ContinueGame()
+    {
+        DataManager.Instance.Load();
+        SceneStart(Constants.UpgradeSceneName);
+    }
+
+    public void SceneStart(string sceneName)
+    {
+        IsUIEffectEnd = true;
+        StartCoroutine(LoadScene(sceneName));
+    }
+    public void SceneStart(string sceneName, bool cutoutEffect)
+    {
+        if(cutoutEffect)
+        {
+            IsUIEffectEnd = false;
+            SceneEndCallback(SceneManager.GetActiveScene().name);
+        }
+        StartCoroutine(LoadScene(sceneName));
+    }
+
+    private void SceneEndCallback(string sceneName)
+    {
+        switch (sceneName)
+        {
+            case Constants.StartSceneName:
+                StartCoroutine(UIEffect.CutOut(spriteCutOut));
+                break;
+            case Constants.WorldMapSceneName:
+                StartCoroutine(UIEffect.CutOut(spriteCutOut));
                 break;
             case Constants.FightSceneName:
                 //FightSceneController.Instance.StartFightScene();
@@ -48,42 +107,21 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
-    public void NewStartGame()
-    {
-        DataManager.Instance.Save();
-        FightSceneStart();
-    }
-    public void ContinueGame()
-    {
-        DataManager.Instance.Load();
-        UpgradeSceneStart();
-    }
-
-    public void FightSceneStart()
-    {
-        StartCoroutine(LoadScene(Constants.FightSceneName));
-    }
-
-    public void UpgradeSceneStart()
-    {
-        StartCoroutine(LoadScene(Constants.UpgradeSceneName));
-    }
-
     private IEnumerator LoadScene(string sceneName)
     {
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
         operation.allowSceneActivation = false;
 
-        //float timer = 0.0f;
+        float timer = 0.0f;
         while (!operation.isDone)
         {
             yield return new WaitForEndOfFrame();
 
-            if(operation.progress >= 0.9f)
+            if(operation.progress >= 0.9f && IsUIEffectEnd && timer > 2f)
             {
                 operation.allowSceneActivation = true;
             }
-            //timer += Time.deltaTime;
+            timer += Time.deltaTime;
             //if (oper.progress >= 0.9f)
             //{
             //    progressBar.fillAmount = Mathf.Lerp(progressBar.fillAmount, 1f, timer);
@@ -103,5 +141,9 @@ public class GameManager : MonoSingleton<GameManager>
             //}
         }
     }
-    
+
+    private void OnDestroy()
+    {
+        spriteCutOut.SetFloat("_Radius", spriteCutOut.GetFloat("_DefaultRadius"));
+    }
 }

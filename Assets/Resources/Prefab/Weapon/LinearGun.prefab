@@ -48,8 +48,7 @@ MonoBehaviour:
   fireMode: 0
   skillMode: 1
   muzzle: {fileID: 3898110433157598704}
-  projectile: {fileID: 1819394283502921670, guid: 8c9b0a08751ab184c899cf50cac12ae8,
-    type: 3}
+  projectilePrefabName: Bullet
   msBetweenShots: 500
   muzzleVelocity: 20
   maxRange: 5

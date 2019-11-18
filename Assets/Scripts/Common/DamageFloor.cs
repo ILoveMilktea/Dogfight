@@ -19,66 +19,121 @@ public class DamageFloor : MonoBehaviour
     private bool isFloorFinished=false;
     //장판 공격 시간
     private IEnumerator attackCoroutine;
-    
 
-    // Start is called before the first frame update
-    private void Start()
-    {        
+    //장판 공격당하는 대상
+    public List<GameObject> attackedGameObjectList;
+
+    private void Awake()
+    {
+
+        attackedGameObjectList = new List<GameObject>();
+    }
+
+    private void OnEnable()
+    {
         //장판 크기 설정
         gameObject.transform.localScale = new Vector3(floorRange, 0.1f, floorRange);
         //장판 지속 시간 체크 코루틴 시작
         StartCoroutine(FloorLastingTimer());
+        StartCoroutine(AttackTimer());
     }
 
-    // Update is called once per frame
-    private void Update()
+    private void OnDisable()
     {
-        if(isFloorFinished==true)
-        {            
-            Destroy(gameObject);
-        }
+        ResetValue();
+        Debug.Log("DamageFloor비활성화");
     }
 
-    private void OnDestroy()
+    IEnumerator CheckState()
     {
-        StopAllCoroutines();        
-    }
-
-    //장판 공격
-    private void Attack(Collider other)
-    {
-        
-        IDamageable damageableObject = other.GetComponent<IDamageable>();
-        if (damageableObject != null)
+        while(true)
         {
-            
-            damageableObject.TakeHit(damage);
+            if (isFloorFinished == true)
+            {
+                //Destroy(gameObject);
+            }
+            yield return new WaitForEndOfFrame();
         }
+        
     }  
 
-    private void OnTriggerStay(Collider other)
-    {       
-        if (isAttackAvailable==true)
+    //장판 공격
+    private void Attack()
+    {        
+        for(int i=0; i<attackedGameObjectList.Count; ++i)
         {
-            if (other.tag == "Enemy")
-            {                
-                attackCoroutine = AttackTimer();
-                StartCoroutine(attackCoroutine);
-                Attack(other);               
+            IDamageable damageableObject = attackedGameObjectList[i].GetComponent<IDamageable>();
+            if (damageableObject != null)
+            {
+                damageableObject.TakeHit(damage);
             }
         }        
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        
+        if(other.CompareTag("Enemy") || other.CompareTag("Player"))
+        {
+            bool isNew = true;
+            
+            for (int i = 0; i < attackedGameObjectList.Count; ++i)
+            {
+                if (other.gameObject == attackedGameObjectList[i])
+                {
+                    isNew = false;
+                    break;
+                }                           
+            }
+            if(isNew==true)
+            {
+                attackedGameObjectList.Add(other.gameObject);
+            }
+            
+        }
+           
+    }
+
+    //private void OnTriggerStay(Collider other)
+    //{       
+    //    //if (isAttackAvailable==true)
+    //    //{
+    //    //    if (other.tag == "Enemy")
+    //    //    {                
+    //    //        attackCoroutine = AttackTimer();
+    //    //        StartCoroutine(attackCoroutine);
+    //    //        Attack(other);               
+    //    //    }
+    //    //}        
+    //}
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Enemy") || other.CompareTag("Player"))
+        {            
+            attackedGameObjectList.Remove(other.gameObject);
+        }           
+    }
+
     IEnumerator AttackTimer()
-    {        
-        isAttackAvailable = false;
-        yield return new WaitForSeconds(timeBetweenAttack);
-        isAttackAvailable = true;
+    {
+        while(true)
+        {
+            Attack();
+            yield return new WaitForSeconds(timeBetweenAttack);
+        }       
     }
 
     IEnumerator FloorLastingTimer()
     {
         yield return new WaitForSeconds(lastingTime);
         isFloorFinished = true;
+    }
+
+    private void ResetValue()
+    {
+        attackedGameObjectList.Clear();
+        isAttackAvailable = true;
+        isFloorFinished = false;
     }
 }

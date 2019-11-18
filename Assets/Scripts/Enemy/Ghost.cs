@@ -15,13 +15,18 @@ public class Ghost : Enemy
 
     Vector3 startPosition;
 
-    // Start is called before the first frame update
-    public override void Start()
+    //// Start is called before the first frame update
+    //protected override void Start()
+    //{
+    //    base.Start();
+    //    //pos = transform.position;
+    //    //localScale = transform.localScale;
+    //    startPosition = transform.position;
+    //}
+
+    protected override void Move()
     {
-        base.Start();
-        //pos = transform.position;
-        //localScale = transform.localScale;
-        startPosition = transform.position;
+       
     }
 
     // Update is called once per frame

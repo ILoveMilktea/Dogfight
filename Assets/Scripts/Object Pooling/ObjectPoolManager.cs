@@ -63,6 +63,7 @@ public class ObjectPoolManager : MonoSingleton<ObjectPoolManager>
 
     public GameObject Get(string name)
     {
+
         if (!objectPoolList.ContainsKey(name))
         {
             Debug.Log("[ObjectPoolManger] Can't Find ObjectPool!" + name);
@@ -85,6 +86,7 @@ public class ObjectPoolManager : MonoSingleton<ObjectPoolManager>
         {
             //추가로 생성            
             GameObject obj = Instantiate(pool.source);
+            obj.SetActive(false);
             obj.transform.parent = pool.folder.transform;
             return obj;
         }
@@ -99,10 +101,10 @@ public class ObjectPoolManager : MonoSingleton<ObjectPoolManager>
             Debug.Log("[ObjectPoolManager] Can't find Free ObjectPool!" + name);
         }
 
-        ObjectPool pool = objectPoolList[keyName];
-
-        obj.SetActive(false);
+        ObjectPool pool = objectPoolList[keyName];        
+        obj.SetActive(false);        
         pool.unusedList.Add(obj);
+        
     }
 
     //UnusedList에서 빼지않고 그 안의 첫번째 객체에만 접근하기

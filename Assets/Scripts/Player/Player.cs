@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //RequireComponent : 요구되는 의존 컴포넌트 자동으로 이 스크립트를 추가한 게임오브젝트에 추가
-[RequireComponent (typeof(PlayerController))]
+[RequireComponent(typeof(PlayerController))]
 [RequireComponent(typeof(GunController))]
 public class Player : LivingEntity
 {
     //플레이어 상태
-    public enum State {Idle, Attacking, Attacked, KnockBack};
+    public enum State { Idle, Attacking, Attacked, KnockBack };
     public float moveSpeed = 5;
 
     PlayerController controller;
@@ -19,17 +19,15 @@ public class Player : LivingEntity
     private WeaponType equipingWeapon;
 
     // Start is called before the first frame update
-    public override void Start()
+    public void Start()
     {
-        base.Start();
         controller = GetComponent<PlayerController>();
         gunController = GetComponent<GunController>();
         viewCamera = Camera.main;
 
-        equipingWeapon = WeaponType.EnergySphereGun;
-        SwapWeapon();
+        equipingWeapon = WeaponType.LinearGun;
     }
-    
+
 
     // Update is called once per frame
     void Update()
@@ -69,7 +67,7 @@ public class Player : LivingEntity
         controller.Move(moveVelocity);
         controller.LookAt(transform.position + direction);
         //Debug.Log("move" + direction);
-        
+
         GetComponent<Animator>().SetBool("isMove", true); //임시 애니메이팅, 나중에 지움
     }
 
@@ -104,7 +102,7 @@ public class Player : LivingEntity
         {
             equipingWeapon++;
         }
-            
+
         gunController.EquipGun(Resources.Load<Gun>("Prefab/Weapon/" + equipingWeapon.ToString()));
 
         return equipingWeapon;

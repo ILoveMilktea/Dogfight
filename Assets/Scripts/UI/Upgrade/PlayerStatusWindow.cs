@@ -5,14 +5,14 @@ using UnityEngine.UI;
 
 public class PlayerStatusWindow : MonoBehaviour
 {
-    public Text stage;
-    public Text time;
-    public Text parts;
+    public Text dungeonName;
     public Text hp;
     public Text atk;
-    public Text w1;
-    public Text w2;
-    public Text w3;
+    public Text parts;
+    public Text time;
+
+    public Text prevStage;
+    public Text nextStage;
 
     // Start is called before the first frame update
     void Start()
@@ -31,12 +31,15 @@ public class PlayerStatusWindow : MonoBehaviour
 
     private void SetWindow()
     {
-        stage.text = "Stage : " + DataManager.Instance.GetPlayInfo.stage.ToString();
-        time.text = "Time : " + DataManager.Instance.GetPlayInfo.playtime.ToString("00:00");
-        parts.text = "Parts : " + DataManager.Instance.GetPlayInfo.parts.ToString();
+        dungeonName.text = DataManager.Instance.GetPlayInfo.curDungeon;
+        hp.text = DataManager.Instance.GetPlayerStatus.remainHp.ToString() + "/" + DataManager.Instance.GetPlayerStatus.maxHp.ToString();
+        atk.text = DataManager.Instance.GetPlayerStatus.atk.ToString();
+        parts.text = DataManager.Instance.GetPlayInfo.parts.ToString();
+        time.text = DataManager.Instance.GetPlayInfo.playtime.ToString("00:00");
+        
+        prevStage.text = "Stage " + DataManager.Instance.GetPlayInfo.stage.ToString();
+        nextStage.text = "Stage " + (DataManager.Instance.GetPlayInfo.stage + 1).ToString();
 
-        hp.text = "HP : " + DataManager.Instance.GetPlayerStatus.remainHp.ToString() + "/" + DataManager.Instance.GetPlayerStatus.maxHp.ToString();
-        atk.text = "ATK : " + DataManager.Instance.GetPlayerStatus.atk.ToString();
 
         //w1.text = "w1 : " + DataManager.Instance.GetWeapons;
 

@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EnergySphereGun : Gun
-{   
+{
+    private void Awake()
+    {
+        SetProjectilePrefabName("EnergySphere");
+    }
 
     override public void Shoot()
     {
@@ -32,7 +36,7 @@ public class EnergySphereGun : Gun
                 --shotsRemainingInBurst;
             }
 
-            GameObject newProjectileObject = ObjectPoolManager.Instance.Get("EnergySphere");
+            GameObject newProjectileObject = ObjectPoolManager.Instance.Get(projectilePrefabName);
             Transform projectileTransform = newProjectileObject.transform;
             projectileTransform.position = muzzle.position;
             projectileTransform.rotation = muzzle.rotation;

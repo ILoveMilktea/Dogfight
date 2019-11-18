@@ -106,6 +106,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lastingTime: 1000
-  floorRange: 20
-  floorForce: 200
+  floorRange: 80
+  floorForce: 50
   affectedGameObjectList: []

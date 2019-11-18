@@ -4,4 +4,9 @@ using UnityEngine;
 
 public class EnemyBlue : Enemy
 {
+    override protected void Move()
+    {
+
+    }
+
 }

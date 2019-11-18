@@ -55,23 +55,23 @@ public class FenceGenerator : MonoBehaviour
         switch (stage)
         {
             case 1:
-                fencePrefabName = "Cube_Soil";
+                fencePrefabName = "Stage1_Fence";
                 break;
             case 2:
-                fencePrefabName = "Cube_Stone1";
+                fencePrefabName = "Stage2_Fence";
                 break;
-            //case 3:
-            //    fencePrefabName = "Plane_Rock";
-            //    break;
-            //case 4:
-            //    fencePrefabName = "Plane_Rock";
-            //    break;
-            //case 5:
-            //    fencePrefabName = "Plane_Rock";
-            //    break;
-            //case 6:
-            //    fencePrefabName = "Plane_Rock";
-            //    break;
+            case 3:
+                fencePrefabName = "Stage3_Fence";
+                break;
+            case 4:
+                fencePrefabName = "Stage4_Fence";
+                break;
+            case 5:
+                fencePrefabName = "Stage5_Fence";
+                break;
+            case 6:
+                fencePrefabName = "Stage6_Fence";
+                break;
         }
 
         return fencePrefabName;

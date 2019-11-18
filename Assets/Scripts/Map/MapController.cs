@@ -15,7 +15,9 @@ public class MapController : MonoBehaviour
 
     private void Awake()
     {
+        //영준막음
         PrepareMap(DataManager.Instance.GetPlayInfo.stage);
+        //PrepareMap(1);
     }
 
     // Start is called before the first frame update
@@ -27,20 +29,16 @@ public class MapController : MonoBehaviour
     //게임 켜질때 Map생성 , 게임 상점단계에서 Map생성
     public void PrepareMap(int stage)
     {      
-        floorController.PrepareFloor(mapSize, stage);      
-        fenceGenerator.PrepareFence(mapSize,stage);
+        floorController.PrepareFloor(mapSize, stage);
+        Vector2 mapSizeTmp = new Vector2(mapSize.x+2, mapSize.y+2);
+        fenceGenerator.PrepareFence(mapSizeTmp,stage);
     }
 
     //FightScene 들어갈때 Map활성화
     public void GenerateMap()
-    {       
-        floorController.GenerateFloor(mapSize);       
-        fenceGenerator.GenerateFence(mapSize);
+    {        
+        floorController.GenerateFloor(mapSize);
+        Vector2 mapSizeTmp = new Vector2(mapSize.x+2, mapSize.y+2);
+        fenceGenerator.GenerateFence(mapSizeTmp);
     }
-
-    
-
-
-    
-   
 }

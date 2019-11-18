@@ -23,7 +23,7 @@ public class EnemyStatusTable
         ReadBinaryTable();
     }
 
-    private static Dictionary<int, EnemyStatusInfo> Table = new Dictionary<int, EnemyStatusInfo>();
+    private Dictionary<int, EnemyStatusInfo> Table = new Dictionary<int, EnemyStatusInfo>();
 
     private void ReadBinaryTable()
     {
@@ -46,14 +46,209 @@ public class EnemyStatusTable
         }
     }
 
-    public static Dictionary<int, EnemyStatusInfo> GetTable()
+    public Dictionary<int, EnemyStatusInfo> GetTable()
     {
         return Table;
     }
 
-    public static EnemyStatusInfo GetTuple(int key)
+    public EnemyStatusInfo GetTuple(int key)
     {
         EnemyStatusInfo value;
+
+        if (Table.TryGetValue(key, out value))
+            return value;
+
+        return null;
+    }
+
+}
+public class EnergySphereGunInfo
+{
+    public string m_prevPath { get; private set; }
+    public int m_needParts { get; private set; }
+    public string m_skillName { get; private set; }
+    public string m_description { get; private set; }
+    public int m_value { get; private set; }
+    public string m_spriteName { get; private set; }
+
+    public void SetprevPath(string prevPath) { m_prevPath = prevPath; }
+    public void SetneedParts(int needParts) { m_needParts = needParts; }
+    public void SetskillName(string skillName) { m_skillName = skillName; }
+    public void Setdescription(string description) { m_description = description; }
+    public void Setvalue(int value) { m_value = value; }
+    public void SetspriteName(string spriteName) { m_spriteName = spriteName; }
+}
+
+public class EnergySphereGunTable
+{
+    public EnergySphereGunTable()
+    {
+        ReadBinaryTable();
+    }
+
+    private Dictionary<string, EnergySphereGunInfo> Table = new Dictionary<string, EnergySphereGunInfo>();
+
+    private void ReadBinaryTable()
+    {
+        TextAsset textAsset = Resources.Load("Tables/SkillInfo/EnergySphereGun") as TextAsset;
+        MemoryStream memoryStream = new MemoryStream(textAsset.bytes);
+        BinaryReader binaryReader = new BinaryReader(memoryStream);
+
+        int tupleCount = binaryReader.ReadInt32();
+
+        for( int i = 0; i < tupleCount; i++)
+        {
+            EnergySphereGunInfo info = new EnergySphereGunInfo();
+            string key = binaryReader.ReadString();
+            info.SetprevPath(binaryReader.ReadString());
+            info.SetneedParts(binaryReader.ReadInt32());
+            info.SetskillName(binaryReader.ReadString());
+            info.Setdescription(binaryReader.ReadString());
+            info.Setvalue(binaryReader.ReadInt32());
+            info.SetspriteName(binaryReader.ReadString());
+
+            Table.Add(key, info);
+        }
+    }
+
+    public Dictionary<string, EnergySphereGunInfo> GetTable()
+    {
+        return Table;
+    }
+
+    public EnergySphereGunInfo GetTuple(string key)
+    {
+        EnergySphereGunInfo value;
+
+        if (Table.TryGetValue(key, out value))
+            return value;
+
+        return null;
+    }
+
+}
+public class LinearGunInfo
+{
+    public string m_prevPath { get; private set; }
+    public int m_needParts { get; private set; }
+    public string m_skillName { get; private set; }
+    public string m_description { get; private set; }
+    public int m_value { get; private set; }
+    public string m_spriteName { get; private set; }
+
+    public void SetprevPath(string prevPath) { m_prevPath = prevPath; }
+    public void SetneedParts(int needParts) { m_needParts = needParts; }
+    public void SetskillName(string skillName) { m_skillName = skillName; }
+    public void Setdescription(string description) { m_description = description; }
+    public void Setvalue(int value) { m_value = value; }
+    public void SetspriteName(string spriteName) { m_spriteName = spriteName; }
+}
+
+public class LinearGunTable
+{
+    public LinearGunTable()
+    {
+        ReadBinaryTable();
+    }
+
+    private Dictionary<string, LinearGunInfo> Table = new Dictionary<string, LinearGunInfo>();
+
+    private void ReadBinaryTable()
+    {
+        TextAsset textAsset = Resources.Load("Tables/SkillInfo/LinearGun") as TextAsset;
+        MemoryStream memoryStream = new MemoryStream(textAsset.bytes);
+        BinaryReader binaryReader = new BinaryReader(memoryStream);
+
+        int tupleCount = binaryReader.ReadInt32();
+
+        for( int i = 0; i < tupleCount; i++)
+        {
+            LinearGunInfo info = new LinearGunInfo();
+            string key = binaryReader.ReadString();
+            info.SetprevPath(binaryReader.ReadString());
+            info.SetneedParts(binaryReader.ReadInt32());
+            info.SetskillName(binaryReader.ReadString());
+            info.Setdescription(binaryReader.ReadString());
+            info.Setvalue(binaryReader.ReadInt32());
+            info.SetspriteName(binaryReader.ReadString());
+
+            Table.Add(key, info);
+        }
+    }
+
+    public Dictionary<string, LinearGunInfo> GetTable()
+    {
+        return Table;
+    }
+
+    public LinearGunInfo GetTuple(string key)
+    {
+        LinearGunInfo value;
+
+        if (Table.TryGetValue(key, out value))
+            return value;
+
+        return null;
+    }
+
+}
+public class ShotGunInfo
+{
+    public string m_prevPath { get; private set; }
+    public int m_needParts { get; private set; }
+    public string m_skillName { get; private set; }
+    public string m_description { get; private set; }
+    public int m_value { get; private set; }
+    public string m_spriteName { get; private set; }
+
+    public void SetprevPath(string prevPath) { m_prevPath = prevPath; }
+    public void SetneedParts(int needParts) { m_needParts = needParts; }
+    public void SetskillName(string skillName) { m_skillName = skillName; }
+    public void Setdescription(string description) { m_description = description; }
+    public void Setvalue(int value) { m_value = value; }
+    public void SetspriteName(string spriteName) { m_spriteName = spriteName; }
+}
+
+public class ShotGunTable
+{
+    public ShotGunTable()
+    {
+        ReadBinaryTable();
+    }
+
+    private Dictionary<string, ShotGunInfo> Table = new Dictionary<string, ShotGunInfo>();
+
+    private void ReadBinaryTable()
+    {
+        TextAsset textAsset = Resources.Load("Tables/SkillInfo/ShotGun") as TextAsset;
+        MemoryStream memoryStream = new MemoryStream(textAsset.bytes);
+        BinaryReader binaryReader = new BinaryReader(memoryStream);
+
+        int tupleCount = binaryReader.ReadInt32();
+
+        for( int i = 0; i < tupleCount; i++)
+        {
+            ShotGunInfo info = new ShotGunInfo();
+            string key = binaryReader.ReadString();
+            info.SetprevPath(binaryReader.ReadString());
+            info.SetneedParts(binaryReader.ReadInt32());
+            info.SetskillName(binaryReader.ReadString());
+            info.Setdescription(binaryReader.ReadString());
+            info.Setvalue(binaryReader.ReadInt32());
+            info.SetspriteName(binaryReader.ReadString());
+
+            Table.Add(key, info);
+        }
+    }
+
+    public Dictionary<string, ShotGunInfo> GetTable()
+    {
+        return Table;
+    }
+
+    public ShotGunInfo GetTuple(string key)
+    {
+        ShotGunInfo value;
 
         if (Table.TryGetValue(key, out value))
             return value;
@@ -131,13 +326,19 @@ public class Tables : MonoSingleton<Tables>
     }
 
     public EnemyStatusTable EnemyStatus = null;
+    public EnergySphereGunTable EnergySphereGun = null;
+    public LinearGunTable LinearGun = null;
+    public ShotGunTable ShotGun = null;
     public Dictionary<int, StageEnemyTable> StageEnemyTables = null;
 
     private void Start() 
     {
         EnemyStatus = new EnemyStatusTable();
+        EnergySphereGun = new EnergySphereGunTable();
+        LinearGun = new LinearGunTable();
+        ShotGun = new ShotGunTable();
         StageEnemyTables = new Dictionary<int, StageEnemyTable>();
-        for(int i = 1; i <= 2; i++)
+        for(int i = 1; i <= 6; i++)
         {
             StageEnemyTable table = new StageEnemyTable(i);
             StageEnemyTables.Add(i, table);

@@ -101,6 +101,10 @@ public class DataManager : MonoSingleton<DataManager>
     public PlayerStatusInfo GetPlayerStatus { get { return dataCenter.playerStatusInfo; } }
     public Dictionary<WeaponType, Weapon> GetWeapons { get { return dataCenter.weapons; } }
 
+    public void SetDungeonName(string name)
+    {
+        dataCenter.SetCurDungeon(name);
+    }
     // play time
     public void AddPlayTime(float playtime)
     {

@@ -4,5 +4,8 @@ using UnityEngine;
 
 public class EnemyRed : Enemy
 {
+    override protected void Move()
+    {
 
+    }
 }

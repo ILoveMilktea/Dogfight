@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Test/LEEEE/StartScene/StartScene.unity
     guid: a801fb5538ab3b5488ee2409e7387190
   - enabled: 1
+    path: Assets/Test/LEEEE/WorldMap.unity
+    guid: 9524ce4e874edc04591146782c80ac0a
+  - enabled: 1
     path: Assets/Test/LEEEE/FightScene/FightScene.unity
     guid: a0b58261984f5fa40b622e706f70e08e
   - enabled: 1

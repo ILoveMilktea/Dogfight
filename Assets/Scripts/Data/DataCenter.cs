@@ -18,6 +18,7 @@ public class DataCenter
     public PlayerStatusInfo playerStatusInfo { get; private set; }
     public Dictionary<WeaponType, Weapon> weapons { get; private set; }
     
+    public void SetCurDungeon(string value) { playInfo.curDungeon = value; }
     public void SetPlaytime(float value) { playInfo.playtime = value; }
     public void SetStage(int value) { playInfo.stage = value; }
     public void SetParts(int value) { playInfo.parts = value; }

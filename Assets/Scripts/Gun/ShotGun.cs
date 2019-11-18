@@ -4,32 +4,32 @@ using UnityEngine;
 
 public class ShotGun : Gun
 {
-    //샷건 KnockBack Force
-    public float knockBackforce = 10.0f;   
-    //샷건에서 한번에 나가는 총알 갯수
-    public int projectileCount=3;
-    //샷건에서 총알이 퍼지는 최대 각도
-    public float spreadAngle=45.0f;   
    
-    //projectile들의 회전값을 담을 변수
-    List<Quaternion> projectiles;    
+
+    //샷건 KnockBack Force
+    public float knockBackforce = 10.0f;
+
+    //발사체 날라가는 방향 개수
+    public int directionNumber = 3;
+    //발사체 나가는 최대각도
+    public float projectileMaxAngle = 120.0f;
+
+    //발사체를 발사한 Object
+    private GameObject source;    
 
     // Start is called before the first frame update
     private void Awake()
-    {         
-        projectiles = new List<Quaternion>(projectileCount);
-
-        for(int i=0; i<projectileCount; ++i)
-        {
-            projectiles.Add(Quaternion.Euler(Vector3.zero));
-        }
+    {
+        //SetProjectilePrefabName("ShotgunBullet");
+        source = GameObject.FindGameObjectWithTag("Player");
     }    
 
     override public void Shoot()
     {
-        
+       
         if (Time.time > nextShotTime)
-        {            
+        {
+            Debug.Log("발사");
             //Time.time : 게임이 시작되고 지난 시간(초)
             nextShotTime = Time.time + msBetweenShots / 1000;     
 
@@ -52,28 +52,28 @@ public class ShotGun : Gun
                     return;
                 }
                 --shotsRemainingInBurst;
-            }        
-            
-            for (int i = 0; i < projectiles.Count; ++i)
-            {                
-                projectiles[i] = Random.rotation;
+            }
 
+            float tmpAngle = 0f;
+            if (directionNumber != 1)
+            {
+                tmpAngle = -projectileMaxAngle * 0.5f;
+            }
 
-                //Projectile newProjectile = Instantiate(projectile, muzzle.position, muzzle.rotation) as Projectile;               
-                //newProjectile.transform.rotation = Quaternion.RotateTowards(newProjectile.transform.rotation, projectiles[i], spreadAngle);
-
-                GameObject newProjectileObject = ObjectPoolManager.Instance.Get("Bullet");
+            float variation = projectileMaxAngle / (directionNumber - 1);
+            //날라갈 방향만큼 총알 각도 조절
+            for (int i = 0; i < directionNumber; ++i)
+            {                              
+                GameObject newProjectileObject = ObjectPoolManager.Instance.Get(projectilePrefabName);
                 Transform projectileTransform = newProjectileObject.transform;
                 projectileTransform.position = muzzle.position;
                 projectileTransform.rotation = muzzle.rotation;
                 Projectile newProjectile = newProjectileObject.GetComponent<Projectile>();
-                
-                Quaternion tmp= Quaternion.RotateTowards(newProjectile.transform.rotation, projectiles[i], spreadAngle);
-                Vector3 randomRotation = tmp.eulerAngles;
-                randomRotation.x = 0;
-                tmp = Quaternion.Euler(randomRotation);              
-                newProjectile.transform.rotation = tmp;
-                
+
+                //GameObject source = FindObjectOfType<Player>().gameObject;
+                newProjectile.SetSource(source);                  
+                newProjectile.SetRotation(Quaternion.Euler(newProjectile.transform.eulerAngles + new Vector3(0, tmpAngle, 0)));
+                tmpAngle += variation;
 
 
                 if (skillMode == SkillMode.GENERAL)
@@ -81,17 +81,18 @@ public class ShotGun : Gun
                     newProjectile.SetDamage(damage);
                     newProjectile.SetMaxRange(maxRange);
                     newProjectile.SetSpeed(muzzleVelocity);
-                    newProjectile.SetKnockBackMode(true);
-                    newProjectile.SetKnockBackForce(knockBackforce);
+                    //newProjectile.SetKnockBackMode(true);
+                    //newProjectile.SetKnockBackForce(knockBackforce);
                 }
                 else if (skillMode == SkillMode.SPECIAL)
                 {
                     newProjectile.SetDamage(damage);
                     newProjectile.SetMaxRange(maxRange);
                     newProjectile.SetSpeed(muzzleVelocity);
-                    //p.SetKnockBackMode(true);
-                    //p.SetKnockBackForce(knockBackforce);
-                    newProjectile.SetPentratingActive(true);
+                    newProjectile.SetKnockBackMode(true);
+                    newProjectile.SetKnockBackForce(knockBackforce);
+                    newProjectile.SetKnockBackMuzzlePosition(muzzle.position);
+                    //newProjectile.SetPentratingActive(true);
                 }
                 newProjectileObject.SetActive(true);
             }

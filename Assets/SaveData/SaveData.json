@@ -1,14 +1,15 @@
 {
     "playInfo": {
-        "playtime": 0.0,
+        "curDungeon": "Griffon's Dungeon",
+        "playtime": 3740.810791015625,
         "stage": 1,
-        "parts": 0,
+        "parts": 250,
         "isAct": true
     },
     "playerStatusInfo": {
         "maxHp": 110,
         "remainHp": 110,
-        "atk": 15
+        "atk": 20
     },
     "weaponInfo": {
         "weaponsList": [

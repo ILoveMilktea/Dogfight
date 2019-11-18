@@ -120,8 +120,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7697489609180301893}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf150303179097e48b094e910149167a, type: 3}
+  m_Script: {fileID: 11500000, guid: 6983e8a1c9cbf924f9a359a0456fb43f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   startingHealth: 0
+  target: {fileID: 0}
   moveSpeed: 5
+  turnSpeed: 3
+  muzzle: {fileID: 0}
+  enemyAttack: {fileID: 0}

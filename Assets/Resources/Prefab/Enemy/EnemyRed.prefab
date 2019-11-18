@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4835300298071543356}
   - component: {fileID: 4835300298071543359}
   - component: {fileID: 4835300298071543352}
-  - component: {fileID: 4980031208803917711}
+  - component: {fileID: 2862206650955203430}
   m_Layer: 8
   m_Name: EnemyRed
   m_TagString: Enemy
@@ -111,7 +111,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 4
   m_CollisionDetection: 0
---- !u!114 &4980031208803917711
+--- !u!114 &2862206650955203430
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -120,6 +120,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 4835300298071543358}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d83bb862c55418c46a321d27c7ca7f81, type: 3}
+  m_Script: {fileID: 11500000, guid: 7207041edd84b9a4aae75cdf2af4d73d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startingHealth: 0
+  target: {fileID: 0}
+  moveSpeed: 5
+  turnSpeed: 3
+  muzzle: {fileID: 0}
+  enemyAttack: {fileID: 0}

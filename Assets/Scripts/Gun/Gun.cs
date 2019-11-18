@@ -19,7 +19,7 @@ public abstract class Gun : MonoBehaviour
     //총구
     public Transform muzzle;
     //발사체
-    public Projectile projectile;
+    public string projectilePrefabName;
     //발사시간간격(ms)
     public float msBetweenShots = 500.0f;
     //발사체의 속도
@@ -28,7 +28,7 @@ public abstract class Gun : MonoBehaviour
     public float maxRange=10.0f;
     //총 데미지
     public float damage=1.0f;
-
+    //burst모드일때 한번에 최대 몇개쏠수 있는지
     public int burstCount;
 
     //다음 발사 시간 계산
@@ -49,6 +49,11 @@ public abstract class Gun : MonoBehaviour
     {
         triggerReleasedSinceLastShot = true;
         shotsRemainingInBurst = burstCount;
+    }
+
+    protected void SetProjectilePrefabName(string name)
+    {
+        projectilePrefabName = name;
     }
 
 }

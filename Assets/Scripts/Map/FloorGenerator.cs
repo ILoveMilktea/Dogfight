@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class FloorGenerator : MonoBehaviour
 {
+    public NavMeshSurface navMeshSurface;
+
     private string floorPrefabName;
         
     public void PrepareFloor(Vector2 mapSize, int stage, out List<List<Transform>> floorPrefabList)
@@ -57,6 +60,8 @@ public class FloorGenerator : MonoBehaviour
             //}
         }
 
+       
+
     }
 
     public void GenerateFloor(Vector2 mapSize, ref List<List<Transform>> floorPrefabList)
@@ -69,6 +74,8 @@ public class FloorGenerator : MonoBehaviour
             }
         }
 
+        //Stage에서 맵 활성화할때 NavMesh Bake함
+        navMeshSurface.BuildNavMesh();
     }
 
     public string SetFloorPrefabName(int stage)
@@ -77,22 +84,22 @@ public class FloorGenerator : MonoBehaviour
         switch (stage)
         {
             case 1:
-                floorPrefabName = "Plane_Grass";
+                floorPrefabName = "Stage1_Floor";
                 break;
             case 2:
-                floorPrefabName = "Plane_Rock";
+                floorPrefabName = "Stage2_Floor";
                 break;
             case 3:
-                floorPrefabName = "Plane_Rock";
+                floorPrefabName = "Stage3_Floor";
                 break;
             case 4:
-                floorPrefabName = "Plane_Rock";
+                floorPrefabName = "Stage4_Floor";
                 break;
             case 5:
-                floorPrefabName = "Plane_Rock";
+                floorPrefabName = "Stage5_Floor";
                 break;
             case 6:
-                floorPrefabName = "Plane_Rock";
+                floorPrefabName = "Stage6_Floor";
                 break;
         }
 

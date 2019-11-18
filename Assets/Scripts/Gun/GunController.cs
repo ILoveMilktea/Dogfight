@@ -10,10 +10,10 @@ public class GunController : MonoBehaviour
 
     void Start()
     {
-        //if(startingGun!=null)
-        //{           
-        //    EquipGun(startingGun);
-        //}
+        if(startingGun!=null)
+        {           
+            EquipGun(startingGun);
+        }
     }
 
     public void EquipGun(Gun gunToEquip)
@@ -22,8 +22,8 @@ public class GunController : MonoBehaviour
         {
             Destroy(equippedGun.gameObject);
         }
-        equippedGun = Instantiate(gunToEquip,weaponHold.position,weaponHold.rotation);
-        //parent?
+        //ObjectPool 방식으로 수정해야함
+        equippedGun = Instantiate(gunToEquip,weaponHold.position,weaponHold.rotation);        
         equippedGun.transform.parent = weaponHold;
     }
 

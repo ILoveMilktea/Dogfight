@@ -6,7 +6,12 @@ using UnityEngine;
 public class EnergySphere : Projectile
 {
     //상태
-    public enum EnerySphereState { MOVING, STOP, DESTROY };
+    public enum EnerySphereState
+    { MOVING,
+      STOP,
+      HIT,
+      DESTROY
+    };
     public EnerySphereState state;
 
     //Special모드일때 구 지속시간
@@ -17,128 +22,206 @@ public class EnergySphere : Projectile
     private bool isChildrenDestroyed = false;
 
     //자식 붙어있는거 관리
-    public GameObject[] childAttached;  
+    public GameObject[] childAttached;
 
-    void Update()
-    {       
-        if(state==EnerySphereState.MOVING)
+    private void Awake()
+    {
+        state = EnerySphereState.MOVING;
+        isSpecialMode = true;
+    }
+
+    private void OnEnable()
+    {
+        //ObjectPooling하기위해 활성화된 경우
+        if (isOnObjectPooling == true)
         {
-            float moveDistance = Move();
+            isOnObjectPooling = false;
+        }
+        //실제 플레이안에서 활성화된 경우
+        else
+        {
+            StartCoroutine(CheckState());
+        }
+    }
 
-            if (isArrived==false)
+    private void OnDisable()
+    {
+        ResetValue();
+    }
+
+    IEnumerator CheckState()
+    {
+        while(true)
+        {
+            if (state == EnerySphereState.MOVING)
             {
-                CheckCollision(moveDistance);
-                transform.Translate(Vector3.forward * moveDistance);
-                CheckMoveDistance();
-            }            
-            else
-            {                
-                if(isSpecialMode==false)
+                if (isHit == true) //무엇가에 맞았다면
                 {
+                    state = EnerySphereState.HIT;
+                }
+                else //맞지않았다면
+                {
+                    if (CheckMoveDistance() == true) //사정거리만큼 움직였다면
+                    {
+                        state = EnerySphereState.STOP;
+                    }
+                    else //아직 사정거리만큼 안 움직였다면
+                    {
+                        float moveDistance = Move();
+                        transform.Translate(Vector3.forward * moveDistance);
+                    }
+                }
+            }
+            else if (state == EnerySphereState.HIT)
+            {
+                if (isSpecialMode == false)
+                {                    
+                    //맞았을때 할거 처리하고
                     state = EnerySphereState.DESTROY;
                 }
                 else
                 {
-                    
-                    state = EnerySphereState.STOP;
                     ////DamageFloor 활성화
                     //gameObject.transform.GetChild(0).gameObject.SetActive(true);
                     ////AttractFloor 활성화                                
                     //gameObject.transform.GetChild(1).gameObject.SetActive(true);
-                    for(int i=0; i<childAttached.Length; ++i)
+                    for (int i = 0; i < childAttached.Length; ++i)
                     {
-                        GameObject child = Instantiate(childAttached[i], transform);
-                        child.transform.parent = this.gameObject.transform;
+                        gameObject.transform.GetChild(i).gameObject.SetActive(true);
                     }
+                    StartCoroutine(DestroyTimer());
+                }
+            }
+            else if (state == EnerySphereState.STOP)
+            {
+                if (isSpecialMode == false)
+                {                    
+                    //도착했을때 할거 처리하고
+                    state = EnerySphereState.DESTROY;
+                }
+                else
+                {
+                    ////DamageFloor 활성화
+                    //gameObject.transform.GetChild(0).gameObject.SetActive(true);
+                    ////AttractFloor 활성화                                
+                    //gameObject.transform.GetChild(1).gameObject.SetActive(true);
+
+                    for (int i = 0; i < childAttached.Length; ++i)
+                    {
+                        //GameObject child = Instantiate(childAttached[i], transform);
+                        //child.transform.parent = this.gameObject.transform;
+                        gameObject.transform.GetChild(i).gameObject.SetActive(true);
+                    }
+                    StartCoroutine(DestroyTimer());
+                }
+
+            }
+            else if (state == EnerySphereState.DESTROY)
+            {
+                if (isSpecialMode == false)
+                {                    
+                    ObjectPoolManager.Instance.Free(gameObject);
+                }
+                else
+                {
+                    if (isChildrenDestroyed == false)
+                    {
+
+                        for (int i = 0; i < gameObject.transform.childCount; ++i)
+                        {
+                            if (gameObject.transform.GetChild(i).gameObject.activeSelf == true)
+                            {
+                                //Debug.Log("자식 destroy" + gameObject.transform.GetChild(i).gameObject);                            
+                                gameObject.transform.GetChild(i).gameObject.SetActive(false);
+                            }
+                        }
+                       // gameObject.transform.GetChild(1).gameObject.SetActive(false);
+                        isChildrenDestroyed = true;
+
+                    }
+                    else
+                    {                       
+                        ObjectPoolManager.Instance.Free(gameObject);
+                    }
+
                     
                 }
 
             }
-        }        
-        else if(state==EnerySphereState.STOP)
-        {           
-            StartCoroutine(DestroyTimer());
+            yield return new WaitForEndOfFrame();
         }
-        else if (state == EnerySphereState.DESTROY)
-        {
-            if(isSpecialMode==false)
-            {
-               
-                ResetFreeValue();
-                ObjectPoolManager.Instance.Free(gameObject);
-            }
-            else
-            {
-               
-                if (isChildrenDestroyed == false)
-                {
-                    isChildrenDestroyed = true;
-                    for (int i = 0; i < gameObject.transform.childCount; ++i)
-                    {
-                        if (gameObject.transform.GetChild(i).gameObject.activeSelf == true)
-                        {
-                            //Debug.Log("자식 destroy" + gameObject.transform.GetChild(i).gameObject);                            
-                            Destroy(gameObject.transform.GetChild(i).gameObject);
-                        }
-                    }
-                }
-
-                if (transform.childCount == 0)
-                {
-                    ResetFreeValue();
-                    ObjectPoolManager.Instance.Free(gameObject);
-
-                }
-            }
-                
-        }
-       
-    }
+        
+    }  
 
     private void OnDestroy()
     {        
-        StopAllCoroutines();        
+        //StopAllCoroutines();        
     }  
 
-    private void ResetFreeValue()
+    //ObjectPool에 Free하기 전에 변수 값들 초기화 작업
+    override protected void ResetValue()
     {
-        distanceTotal = 0;
+        base.ResetValue();       
         state = EnerySphereState.MOVING;
         isArrived = false;
         isChildrenDestroyed = false;
     }  
 
-    protected override void CheckCollision(float moveDistance)
-    {        
-        //Ray 생성
-        Ray ray = new Ray(transform.position, transform.forward);
-        RaycastHit hit;
+    //protected override bool CheckCollision(float moveDistance)
+    //{        
+    //    //Ray 생성
+    //    Ray ray = new Ray(transform.position, transform.forward);
+    //    RaycastHit hit;
 
-        //Ray 발사
-        if (Physics.Raycast(ray, out hit, moveDistance, collisionMask, QueryTriggerInteraction.Collide))
-        {
-            //Debug.Log("enemy");
-            isArrived = true;
-            if(isSpecialMode==false)
-            {
-                OnHitObject(hit);
-            }                      
-        }
-    }    
+    //    //Ray 발사
+    //    if (Physics.Raycast(ray, out hit, moveDistance, collisionMask, QueryTriggerInteraction.Collide))
+    //    {
+    //        //Debug.Log("enemy");
+            
+    //        if(isSpecialMode==false)
+    //        {
+    //            OnHitObject(hit);
+    //            return true;
+    //        }                      
+    //    }
+    //    return false;
+    //}    
 
     //일정 거리까지 가서 멈추기
-    override protected void CheckMoveDistance()
+    override protected bool CheckMoveDistance()
     { 
         if (distanceTotal == maxRange)
-        {                    
-            isArrived = true;
+        {            
+            return true;
         }
+        return false;
     }
 
     IEnumerator DestroyTimer()
     {
         yield return new WaitForSeconds(lastingTime);
         state = EnerySphereState.DESTROY;
-    }   
-    
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        for (int i = 0; i < collisionDamageObjectTagList.Length; ++i)
+        {
+            if (collider.CompareTag(collisionDamageObjectTagList[i]))
+            {
+                OnHitObject(collider);
+                if (!isPenetratingActive) //관통모드가 아니라면
+                {
+                    isHit = true;
+                }
+            }
+        }
+
+        if (collider.CompareTag("Fence"))
+        {
+           
+            isHit = true;
+        }
+    }
+
 }

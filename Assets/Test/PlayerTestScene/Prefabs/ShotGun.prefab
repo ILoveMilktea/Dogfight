@@ -76,18 +76,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fireMode: 0
-  skillMode: 0
+  skillMode: 1
   muzzle: {fileID: 4434981280181483699}
-  projectile: {fileID: 1545097402564553592, guid: 8c9b0a08751ab184c899cf50cac12ae8,
-    type: 3}
-  msBetweenShots: 800
+  projectilePrefabName: ShotGunBullet
+  msBetweenShots: 500
   muzzleVelocity: 20
   maxRange: 5
   damage: 1
   burstCount: 3
   knockBackforce: 5
-  projectileCount: 10
-  spreadAngle: 30
+  directionNumber: 5
+  projectileMaxAngle: 70
 --- !u!1 &4434981281481142168
 GameObject:
   m_ObjectHideFlags: 0

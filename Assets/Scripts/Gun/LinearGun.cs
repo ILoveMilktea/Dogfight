@@ -3,7 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class LinearGun : Gun
-{   
+{
+    private void Awake()
+    {
+        SetProjectilePrefabName("Bullet");
+    }
+
     override public void Shoot()
     {
         if (Time.time > nextShotTime)
@@ -33,7 +38,7 @@ public class LinearGun : Gun
                 --shotsRemainingInBurst;
             }
 
-            GameObject newProjectileObject = ObjectPoolManager.Instance.Get("Bullet");
+            GameObject newProjectileObject = ObjectPoolManager.Instance.Get(projectilePrefabName);
             Transform projectileTransform = newProjectileObject.transform;
             //Debug.Log("muzzle position: " + muzzle.position);
             projectileTransform.position = muzzle.position;

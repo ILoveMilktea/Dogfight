@@ -300,7 +300,7 @@ public partial class ExcelReader : MonoBehaviour
 
                     // private static Dictionary<type, NameInfo> Table = new Dictionary<type, NameInfo>();
                     {
-                        stringBuilder.AppendLine(AddTab(@"private static Dictionary<" + tableinfo.Value["type"][0] + ", " + tableinfo.Key.Name + @"Info> " + "Table"
+                        stringBuilder.AppendLine(AddTab(@"private Dictionary<" + tableinfo.Value["type"][0] + ", " + tableinfo.Key.Name + @"Info> " + "Table"
                                                        + @" = new Dictionary<" + tableinfo.Value["type"][0] + ", " + tableinfo.Key.Name + @"Info>();", 1));
                         stringBuilder.AppendLine();
                     }
@@ -387,7 +387,7 @@ public partial class ExcelReader : MonoBehaviour
 
                     // public static Dictionary<type, NameInfo> GetTable(int Key)
                     {
-                        stringBuilder.AppendLine(AddTab(@"public static Dictionary<" + tableinfo.Value["type"][0] + ", " + tableinfo.Key.Name + @"Info> "
+                        stringBuilder.AppendLine(AddTab(@"public Dictionary<" + tableinfo.Value["type"][0] + ", " + tableinfo.Key.Name + @"Info> "
                                                         + "GetTable()", 1));
                         stringBuilder.AppendLine(AddTab("{", 1));
                         stringBuilder.AppendLine(AddTab(@"return Table;", 2));
@@ -397,7 +397,7 @@ public partial class ExcelReader : MonoBehaviour
 
                     // public static NameInfo GetTuple(int Key)
                     {
-                        stringBuilder.AppendLine(AddTab(@"public static " + tableinfo.Key.Name + @"Info "
+                        stringBuilder.AppendLine(AddTab(@"public " + tableinfo.Key.Name + @"Info "
                                                         + @"GetTuple(" + tableinfo.Value["type"][0] + " key)", 1));
                         stringBuilder.AppendLine(AddTab("{", 1));
                         stringBuilder.AppendLine(AddTab(tableinfo.Key.Name + @"Info value;", 2));
