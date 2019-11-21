@@ -133,6 +133,14 @@ public class WeaponWindow : MonoBehaviour
     public void SetUpgradeButton()
     {
         upgrade.gameObject.SetActive(true);
+
+        upgrade.onClick.RemoveAllListeners();
+        //upgrade.onClick.AddListener()
+    }
+
+    private void CheckPartsForUpgrade()
+    {
+
     }
 
     public void SetParts()

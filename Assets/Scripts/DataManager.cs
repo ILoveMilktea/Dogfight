@@ -6,6 +6,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+static class Const_Path
+{
+    public const string playInfoPath = "/PlayInfo.byte";
+    public const string playerStatusInfoPath = "/PlayerStatusInfo.byte";
+    public const string WeaponInfoPath = "/WeaponInfo.byte";
+}
+
 public class DataManager : MonoSingleton<DataManager>
 {
     private string dataPath;
@@ -13,6 +20,8 @@ public class DataManager : MonoSingleton<DataManager>
     private float playtime;
 
     private DataCenter dataCenter;
+    private DataSave dataSave;
+    private DataLoad dataLoad;
 
     private void Awake()
     {
@@ -36,153 +45,96 @@ public class DataManager : MonoSingleton<DataManager>
             Directory.CreateDirectory(dataPath);
         }
 
-        dataPath += "/SaveData.json";
-        //dataPath = dataPath + "/SaveData.json";
+        //dataPath += "/SaveData.json";
 
         dataCenter = new DataCenter();
+        dataSave = new DataSave();
     }
+
+    public PlayInfo GetPlayInfo { get { return dataCenter.playInfo; } }
+    public PlayerStatusInfo GetPlayerStatus { get { return dataCenter.playerStatusInfo; } }
+    public Dictionary<WeaponType, WeaponInfo> GetWeapons { get { return dataCenter.weapons; } }
+
+    public void SetDungeonName(string name)
+    {
+        GetPlayInfo.SetCurDungeon(name);
+    }
+    public void SetPlayTime(float playtime)
+    {
+        GetPlayInfo.SetPlaytime(playtime);
+    }
+    public void SetStage(int stage)
+    {
+        GetPlayInfo.SetStage(stage);
+    }
+    public void SetGainParts(int parts)
+    {
+        GetPlayInfo.SetParts(parts);
+    }
+    public void SetAlreadyAct(bool value)
+    {
+        GetPlayInfo.SetAlreadyAct(value);
+    }
+    
+
+    public void SetMaxHp(int value)
+    {
+        GetPlayerStatus.SetMaxHp(dataCenter.playerStatusInfo.MaxHp + value);
+    }
+    public void SetRemainHp(int value)
+    {
+        if (value > dataCenter.playerStatusInfo.MaxHp)
+        {
+            GetPlayerStatus.SetRemainHp(dataCenter.playerStatusInfo.MaxHp);
+        }
+        else
+        {
+            GetPlayerStatus.SetRemainHp(value);
+        }
+    }
+    public void SetAtk(int value)
+    {
+        GetPlayerStatus.SetAtk(value);
+    }
+    public void SetBuffHp(int value)
+    {
+        GetPlayerStatus.SetBuffHp(value);
+    }
+    public void SetBuffAtk(int value)
+    {
+        GetPlayerStatus.SetBuffAtk(value);
+    }
+    
+    public void AddWeapon(WeaponType type, WeaponInfo info)
+    {
+        GetWeapons.Add(type, info);
+    }
+    public void SetSkillNode(WeaponType type, Dictionary<int,WeaponSkill> tree)
+    {
+        GetWeapons[type].SetSkillTree(tree);
+    }
+
 
     public bool CheckSaveData()
     {
-        if (File.Exists(dataPath))
-        {
-            return IsDataExist();
-        }
-        else
-        {
-            File.Create(dataPath);
-            Save();
-        }
-
-        return false;
-    }
-
-    private bool IsDataExist()
-    {
-        string fromJsonData = File.ReadAllText(dataPath);
-
-        UserData data = JsonUtility.FromJson<UserData>(fromJsonData);
-        if(data.playInfo.playtime != 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return true;
     }
 
     public void Save()
     {
-        UserData data = dataCenter.GetUserData();
+        dataSave.SaveUserData(dataPath);
 
-        string toJsonData = JsonUtility.ToJson(data, true);
-
-        File.WriteAllText(dataPath, toJsonData);
-        Debug.Log("saved");
-
-        if(SceneManager.GetActiveScene().name == "Upgrade")
+        if (SceneManager.GetActiveScene().name == "Upgrade")
         {
             FindObjectOfType<PlayerStatusWindow>().RedrawWindow();
         }
     }
-    
+
     public void Load()
     {
-        string fromJsonData = File.ReadAllText(dataPath);
-
-        UserData data = JsonUtility.FromJson<UserData>(fromJsonData);
-        Debug.Log("loaded");
-
-        dataCenter.SetUserData(data);
-    }
-    
-    public PlayInfo GetPlayInfo { get { return dataCenter.playInfo; } }
-    public PlayerStatusInfo GetPlayerStatus { get { return dataCenter.playerStatusInfo; } }
-    public Dictionary<WeaponType, Weapon> GetWeapons { get { return dataCenter.weapons; } }
-
-    public void SetDungeonName(string name)
-    {
-        dataCenter.SetCurDungeon(name);
-    }
-    // play time
-    public void AddPlayTime(float playtime)
-    {
-        dataCenter.SetPlaytime(dataCenter.playInfo.playtime + playtime);
-    }
-    // parts
-    public void AddGainParts(int parts)
-    {
-        dataCenter.SetParts(dataCenter.playInfo.parts + parts);
-    }
-    // is acted??
-    public void SetIsAct(bool value)
-    {
-        dataCenter.SetIsAct(value);
-    }
-    // player Hp
-    public void UpMaxHp(int value)
-    {
-        dataCenter.SetMaxHp(dataCenter.playerStatusInfo.maxHp + value);
-        dataCenter.SetRemainHp(dataCenter.playerStatusInfo.remainHp + value);
-    }
-    public void UpRemainHp(int value)
-    {
-        int remainHp = dataCenter.playerStatusInfo.remainHp;
-        if(remainHp + value > dataCenter.playerStatusInfo.maxHp)
-        {
-            dataCenter.SetRemainHp(dataCenter.playerStatusInfo.maxHp);
-        }
-        else
-        {
-            dataCenter.SetRemainHp(remainHp + value);
-        }
+        dataLoad.LoadUserData(dataPath);
     }
 
-    public void SetRemainHp(int value)
-    {
-        if (value > dataCenter.playerStatusInfo.maxHp)
-        {
-            dataCenter.SetRemainHp(dataCenter.playerStatusInfo.maxHp);
-        }
-        else
-        {
-            dataCenter.SetRemainHp(value);
-        }
-    }
-    // player Atk
-    public void UpAtk(int value)
-    {
-        dataCenter.SetAtk(dataCenter.playerStatusInfo.atk + value);
-    }
-    // Weapon
-    public void UpWeaponExp(WeaponType type, int value)
-    {
-        Weapon weapon = dataCenter.GetWeaponByType(type);
-        if(weapon.exp + value >= maxExp)
-        {
-            dataCenter.SetWeaponLevel(type, weapon.level + 1);
-            dataCenter.SetWeaponExp(type, weapon.exp + value - maxExp);
-        }
-        else
-        {
-            dataCenter.SetWeaponExp(type, weapon.exp + value);
-        }
-    }
-
-    public void UpStage()
-    {
-        dataCenter.SetStage(dataCenter.playInfo.stage + 1);
-    }
-    // 수치 조정 후 ui 수치 리셋
-    public void DisplayReset()
-    { }
-
-    //datacenter test
-    public void levelup(int val)
-    {
-        dataCenter.SetStage(val);
-    }
 
 
     public void DamageToTarget(GameObject source, GameObject target)
@@ -191,3 +143,4 @@ public class DataManager : MonoSingleton<DataManager>
         //fightSceneHandler.DamageToCharacter(source, damage);
     }
 }
+
