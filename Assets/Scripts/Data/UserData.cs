@@ -1,93 +1,4 @@
-﻿//using System;
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-
-//public class UserData
-//{
-//    public PlayInfo playInfo;
-//    public PlayerStatusInfo playerStatusInfo;
-//    public WeaponInfo weaponInfo;
-
-//    public UserData(PlayInfo p1, PlayerStatusInfo p2, WeaponInfo p3)
-//    {
-//        playInfo = p1;
-//        playerStatusInfo = p2;
-//        weaponInfo = p3;
-//    }
-//}
-//[Serializable]
-//public class PlayInfo
-//{
-//    public string curDungeon;
-//    public float playtime;
-//    public int stage;
-//    public int parts;
-//    public bool isAct;
-
-//    public PlayInfo()
-//    {
-//        playtime = 0;
-//        stage = 1;
-//        parts = 0;
-//        isAct = false;
-//    }
-//}
-//[Serializable]
-//public class PlayerStatusInfo
-//{
-//    public int maxHp;
-//    public int remainHp;
-//    public int atk;
-
-//    public PlayerStatusInfo()
-//    {
-//        maxHp = 100;
-//        remainHp = 100;
-//        atk = 10;
-//    }
-//}
-
-//[Serializable]
-//public class WeaponInfo
-//{
-//    public List<Weapon> weaponsList;
-
-//    public WeaponInfo(List<Weapon> weapons)
-//    {
-//        weaponsList = weapons;
-//    }
-//}
-
-//[Serializable]
-//public class Weapon
-//{
-//    public string name;
-//    public List<WeaponSkill> skillTree;
-
-//    public Weapon(WeaponType type, List<WeaponSkill> tree)
-//    {
-//        name = type.ToString();
-//        skillTree = tree;
-//    }
-//}
-
-//[Serializable]
-//public class WeaponSkill
-//{
-//    public int key;
-//    public bool isActivated;
-//    public int usedParts;
-
-//    public WeaponSkill(int p_key, bool p_isActivated, int p_usedParts)
-//    {
-//        key = p_key;
-//        isActivated = p_isActivated;
-//        usedParts = p_usedParts;
-//    }
-//}
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -152,7 +63,7 @@ public class WeaponInfo
         SkillTree = new Dictionary<int, WeaponSkill>();
     }
 
-    public void SetName(WeaponType value) { Name = value.ToString(); }
+    public void SetName(string value) { Name = value.ToString(); }
     public void SetSkillTree(Dictionary<int, WeaponSkill> value) { SkillTree = value; }
 
 }

@@ -7,6 +7,7 @@ public class PlayerStatusWindow : MonoBehaviour
 {
     public Text dungeonName;
     public Text hp;
+    public Slider hpSlider;
     public Text atk;
     public Text parts;
     public Text time;
@@ -31,14 +32,20 @@ public class PlayerStatusWindow : MonoBehaviour
 
     private void SetWindow()
     {
-        dungeonName.text = DataManager.Instance.GetPlayInfo.curDungeon;
-        hp.text = DataManager.Instance.GetPlayerStatus.remainHp.ToString() + "/" + DataManager.Instance.GetPlayerStatus.maxHp.ToString();
-        atk.text = DataManager.Instance.GetPlayerStatus.atk.ToString();
-        parts.text = DataManager.Instance.GetPlayInfo.parts.ToString();
-        time.text = DataManager.Instance.GetPlayInfo.playtime.ToString("00:00");
+        dungeonName.text = DataManager.Instance.GetPlayInfo.CurDungeon;
+        int remainHp = DataManager.Instance.GetPlayerStatus.RemainHp;
+        int maxHp = DataManager.Instance.GetPlayerStatus.MaxHp;
+        int buffHp = DataManager.Instance.GetPlayerStatus.BuffHp;
+        hp.text = remainHp.ToString() + "/" + maxHp.ToString() + "(+" + buffHp.ToString() + ")";
+        hpSlider.maxValue = maxHp + buffHp;
+        hpSlider.value = remainHp;
+        atk.text = DataManager.Instance.GetPlayerStatus.Atk.ToString() +
+                "(+" + DataManager.Instance.GetPlayerStatus.BuffAtk.ToString() + ")";
+        parts.text = DataManager.Instance.GetPlayInfo.Parts.ToString();
+        time.text = DataManager.Instance.GetPlayInfo.Playtime.ToString("00:00");
         
-        prevStage.text = "Stage " + DataManager.Instance.GetPlayInfo.stage.ToString();
-        nextStage.text = "Stage " + (DataManager.Instance.GetPlayInfo.stage + 1).ToString();
+        prevStage.text = "Stage " + DataManager.Instance.GetPlayInfo.Stage.ToString();
+        nextStage.text = "Stage " + (DataManager.Instance.GetPlayInfo.Stage + 1).ToString();
 
 
         //w1.text = "w1 : " + DataManager.Instance.GetWeapons;

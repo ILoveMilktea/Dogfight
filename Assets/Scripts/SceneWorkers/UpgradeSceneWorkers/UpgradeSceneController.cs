@@ -19,7 +19,7 @@ public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
 {
     // Inactive on awake
     public SelectAct selectAct;
-    public UpgradeWeapon upgradeWeapon;
+    public WeaponWindow weaponWindow;
     public ExitButton exitButton;
     public PopupYN popupYN;
     public PopupResult popupResult;
@@ -47,7 +47,7 @@ public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
         StartCoroutine(UIEffect.FadeIn(loadingImage.GetComponent<Image>()));
 
         // 시작시 할 명령들?
-        if (DataManager.Instance.GetPlayInfo.isAct)
+        if (DataManager.Instance.GetPlayInfo.AlreadyAct)
         {
             actButton.interactable = false;
         }
@@ -58,13 +58,13 @@ public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
     private void AwakeAllUIScript()
     {
         selectAct.gameObject.SetActive(true);
-        //upgradeWeapon.gameObject.SetActive(true);
+        weaponWindow.gameObject.SetActive(true);
         exitButton.gameObject.SetActive(true);
         popupYN.gameObject.SetActive(true);
         popupResult.gameObject.SetActive(true);
 
         selectAct.gameObject.SetActive(false);
-        //upgradeWeapon.gameObject.SetActive(false);
+        weaponWindow.gameObject.SetActive(false);
         exitButton.gameObject.SetActive(false);
         popupYN.gameObject.SetActive(false);
         popupResult.gameObject.SetActive(false);
@@ -107,7 +107,7 @@ public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
     {
         ClosePopupYN();
         CloseSelectActWindow();
-        DataManager.Instance.SetIsAct(true);
+        DataManager.Instance.SetAlreadyAct(true);
         DataManager.Instance.Save();
 
         popupResult.gameObject.SetActive(true);
@@ -130,8 +130,8 @@ public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
 
     public void OnClickUpgradeButton()
     {
-        upgradeWeapon.gameObject.SetActive(true);
-        exitButton.PushUI(upgradeWeapon.gameObject);
+        weaponWindow.gameObject.SetActive(true);
+        exitButton.PushUI(weaponWindow.gameObject);
     }
 
     public void OnClickFightButton()
@@ -142,8 +142,8 @@ public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
     public void EndUpgrade()
     {
         DataManager.Instance.Save();
-        DataManager.Instance.SetIsAct(false);
-        DataManager.Instance.UpStage();
+        DataManager.Instance.SetAlreadyAct(false);
+        DataManager.Instance.SetStage(DataManager.Instance.GetPlayInfo.Stage + 1);
 
         popupYN.gameObject.SetActive(false);
         StartCoroutine(UIEffect.FadeOut(loadingImage.GetComponent<Image>()));

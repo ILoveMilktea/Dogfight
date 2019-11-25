@@ -65,7 +65,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void NewStartGame()
     {
-        DataManager.Instance.Save();
+        DataManager.Instance.RemoveSaveData();
         SceneStart(Constants.WorldMapSceneName, true);
     }
     public void ContinueGame()

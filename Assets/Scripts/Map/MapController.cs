@@ -16,7 +16,7 @@ public class MapController : MonoBehaviour
     private void Awake()
     {
         //영준막음
-        PrepareMap(DataManager.Instance.GetPlayInfo.stage);
+        PrepareMap(DataManager.Instance.GetPlayInfo.Stage);
         //PrepareMap(1);
     }
 

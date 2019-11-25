@@ -11,9 +11,9 @@ using UnityEngine;
 /// 읽고, 쓰는 부분
 /// 다 했는데 에러처리나 null값에 대한 것은 신경을 안썼음
 /// </summary>
-public partial class ExcelReader : MonoBehaviour
+public partial class ExcelReader_MergeMode : MonoBehaviour
 {
-    public static string m_ExcelPath = @"Assets/SaveData/ExcelFiles/";
+    public static string m_ExcelPath = @"Assets/SaveData/ExcelFiles/MergeMode/";
     public static string m_ScriptPath = @"Assets/Scripts/Common/ExcelReader/TableScript/";
     public static string m_TablePath = @"Assets/Resources/Tables/";
 
@@ -23,9 +23,11 @@ public partial class ExcelReader : MonoBehaviour
     public static Dictionary<ExcelWorksheet, string> m_BinaryFolders =
         new Dictionary<ExcelWorksheet, string>();
 
+    public static string m_FileName;
 
-    public static void SetTables()
+    public static void SetTables(string fileName)
     {
+        m_FileName = fileName;
         RemoveOldData();
 
         SetWorkSheets();
@@ -56,7 +58,7 @@ public partial class ExcelReader : MonoBehaviour
     public static void SetWorkSheets()
     {
         // 경로 내의 엑셀 파일 '이름'들
-        List<string> excelFiles = new List<string>(Directory.GetFiles(m_ExcelPath, "*.xlsx"));
+        List<string> excelFiles = new List<string>(Directory.GetFiles(m_ExcelPath, m_FileName + ".xlsx"));
         // 각 엑셀 파일들
         List<ExcelPackage> excelPackages = new List<ExcelPackage>();
         // 각 엑셀 내의 Worksheet

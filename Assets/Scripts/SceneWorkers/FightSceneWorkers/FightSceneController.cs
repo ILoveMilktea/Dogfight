@@ -136,14 +136,14 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     private void SetPlayerOnStage()
     {
         PlayerStatusInfo statusFromData = DataManager.Instance.GetPlayerStatus;
-        CharacterStatus status = new CharacterStatus("Player", statusFromData.maxHp, statusFromData.remainHp, statusFromData.atk);
+        CharacterStatus status = new CharacterStatus("Player", statusFromData.MaxHp + statusFromData.BuffHp, statusFromData.RemainHp, statusFromData.Atk + statusFromData.BuffAtk);
 
         fightStatus.SetPlayerStatus(status);
     }
     // stage에 해당하는 몹 생성, 위치지정
     private void SetEnemyOnStage()
     {
-        int stageNumber = DataManager.Instance.GetPlayInfo.stage;
+        int stageNumber = DataManager.Instance.GetPlayInfo.Stage;
         int enemyCount = 0;
 
         StageEnemyTable stageTable = Tables.Instance.StageEnemyTables[stageNumber];
@@ -397,7 +397,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         // save playtime
         DataManager.Instance.AddPlayTime(playTimer.GetPlaytime());
         // save gain parts
-        DataManager.Instance.AddGainParts(fightStatus.gainParts);
+        DataManager.Instance.AddParts(fightStatus.gainParts);
         // save player reaminHp
         DataManager.Instance.SetRemainHp(fightStatus.playerStatus.remainHp);
 

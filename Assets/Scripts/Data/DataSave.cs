@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using System.IO;
 using System.Collections;
@@ -23,7 +24,7 @@ public class DataSave
 
         foreach (PropertyInfo item in properties)
         {
-            binaryWriter = FindTypeAndWrite(binaryWriter, item.GetValue(info));
+            binaryWriter = FindTypeAndWrite(binaryWriter, item.PropertyType, item.GetValue(info));
         }
 
         // 생성된 Tuple List를 각 Name.bytes 파일로 저장
@@ -42,7 +43,7 @@ public class DataSave
 
         foreach (PropertyInfo item in properties)
         {
-            binaryWriter = FindTypeAndWrite(binaryWriter, item.GetValue(info));
+            binaryWriter = FindTypeAndWrite(binaryWriter, item.PropertyType, item.GetValue(info));
         }
 
         // 생성된 Tuple List를 각 Name.bytes 파일로 저장
@@ -57,9 +58,11 @@ public class DataSave
         BinaryWriter binaryWriter = new BinaryWriter(memoryStream);
 
         Dictionary<WeaponType, WeaponInfo> weapons = DataManager.Instance.GetWeapons;
+        binaryWriter.Write(weapons.Count);
 
         foreach(var weapon in weapons)
         {
+            binaryWriter.Write(weapon.Key.ToString());
             binaryWriter = SaveWeapon(binaryWriter, weapon.Value);
         }
 
@@ -75,10 +78,11 @@ public class DataSave
 
         foreach (PropertyInfo item in properties)
         {
-            if (item.Equals(typeof(Dictionary<int, WeaponSkill>)))
+            if (item.PropertyType == typeof(Dictionary<int, WeaponSkill>))
             {
                 Dictionary<int, WeaponSkill> skillList = (Dictionary<int, WeaponSkill>)item.GetValue(weapon);
-                
+                note.Write(skillList.Count);
+
                 foreach(var skill in skillList)
                 {
                     note.Write(skill.Key);
@@ -87,7 +91,7 @@ public class DataSave
             }
             else
             {
-                note = FindTypeAndWrite(note, item.GetValue(weapon));
+                note = FindTypeAndWrite(note, item.PropertyType, item.GetValue(weapon));
             }
 
         }
@@ -99,31 +103,31 @@ public class DataSave
 
         foreach (PropertyInfo item in properties)
         {
-            FindTypeAndWrite(note, item.GetValue(skillList));
+            FindTypeAndWrite(note, item.PropertyType, item.GetValue(skillList));
         }
 
         return note;
     }
 
-    private BinaryWriter FindTypeAndWrite(BinaryWriter note, object item)
+    private BinaryWriter FindTypeAndWrite(BinaryWriter note, Type propertyType, object item)
     {
-        if (item.Equals(typeof(int)))
+        if (propertyType == typeof(int))
         {
             note.Write((int)item);
         }
-        else if (item.Equals(typeof(float)))
+        else if (propertyType == typeof(float))
         {
             note.Write((float)item);
         }
-        else if (item.Equals(typeof(bool)))
+        else if (propertyType == typeof(bool))
         {
             note.Write((bool)item);
         }
-        else if (item.Equals(typeof(string)))
+        else if (propertyType == typeof(string))
         {
             note.Write((string)item);
         }
-        else if (item.Equals(typeof(byte)))
+        else if (propertyType == typeof(byte))
         {
             note.Write((byte)item);
         }

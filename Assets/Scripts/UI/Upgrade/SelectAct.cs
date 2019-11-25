@@ -64,8 +64,8 @@ public class SelectAct: MonoBehaviour
     private void ActRest()
     {
         // 휴식, 체력증가 소, 체력회복 대
-        DataManager.Instance.UpMaxHp(30);
-        DataManager.Instance.UpRemainHp(10);
+        DataManager.Instance.AddBuffHp(30);
+        DataManager.Instance.AddRemainHp(10);
 
         UpgradeSceneController.Instance.OpenPopupResult("rest", UpgradeSceneController.Instance.ClosePopupResult);
     }
@@ -73,9 +73,8 @@ public class SelectAct: MonoBehaviour
     private void ActEat()
     {
         // 식사, 체력증가 소, 체력회복 중, atk증가 소
-        DataManager.Instance.UpMaxHp(10);
-        DataManager.Instance.UpRemainHp(30);
-        DataManager.Instance.UpAtk(5);
+        DataManager.Instance.AddBuffHp(10);
+        DataManager.Instance.AddRemainHp(30);
         
         UpgradeSceneController.Instance.OpenPopupResult("eat", UpgradeSceneController.Instance.ClosePopupResult);
     }
@@ -83,8 +82,8 @@ public class SelectAct: MonoBehaviour
     private void ActTraining()
     {
         // 단련, 체력증가 중, atk증가 소 || 체력증가 소, atk증가 중
-        DataManager.Instance.UpMaxHp(10);
-        DataManager.Instance.UpAtk(10);
+        DataManager.Instance.AddBuffHp(10);
+        DataManager.Instance.AddBuffAtk(5);
         
         UpgradeSceneController.Instance.OpenPopupResult("training", UpgradeSceneController.Instance.ClosePopupResult);
     }

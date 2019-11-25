@@ -49,75 +49,139 @@ public class DataManager : MonoSingleton<DataManager>
 
         dataCenter = new DataCenter();
         dataSave = new DataSave();
+        dataLoad = new DataLoad();
     }
 
     public PlayInfo GetPlayInfo { get { return dataCenter.playInfo; } }
     public PlayerStatusInfo GetPlayerStatus { get { return dataCenter.playerStatusInfo; } }
     public Dictionary<WeaponType, WeaponInfo> GetWeapons { get { return dataCenter.weapons; } }
 
-    public void SetDungeonName(string name)
+    public void SetPlayInfo(PlayInfo info)
     {
-        GetPlayInfo.SetCurDungeon(name);
+        SetDungeonName(info.CurDungeon);
+        SetPlayTime(info.Playtime);
+        SetStage(info.Stage);
+        SetParts(info.Parts);
+        SetAlreadyAct(info.AlreadyAct);
+    }
+    public void SetDungeonName(string curDungeon)
+    {
+        GetPlayInfo.SetCurDungeon(curDungeon);
     }
     public void SetPlayTime(float playtime)
     {
         GetPlayInfo.SetPlaytime(playtime);
     }
+    public void AddPlayTime(float playtime)
+    {
+        SetPlayTime(GetPlayInfo.Playtime + playtime);
+    }
     public void SetStage(int stage)
     {
         GetPlayInfo.SetStage(stage);
     }
-    public void SetGainParts(int parts)
+    public void AddStage(int value)
+    {
+        SetStage(GetPlayInfo.Stage + value);
+    }
+    public void SetParts(int parts)
     {
         GetPlayInfo.SetParts(parts);
+    }
+    public void AddParts(int parts)
+    {
+        SetParts(GetPlayInfo.Parts + parts);
     }
     public void SetAlreadyAct(bool value)
     {
         GetPlayInfo.SetAlreadyAct(value);
     }
-    
 
+    public void SetPlayerStatusInfo(PlayerStatusInfo info)
+    {
+        SetMaxHp(info.MaxHp);
+        SetRemainHp(info.RemainHp);
+        SetAtk(info.Atk);
+        SetBuffHp(info.BuffHp);
+        SetBuffAtk(info.BuffAtk);
+    }
     public void SetMaxHp(int value)
     {
-        GetPlayerStatus.SetMaxHp(dataCenter.playerStatusInfo.MaxHp + value);
+        GetPlayerStatus.SetMaxHp(value);
+    }
+    public void AddMaxHp(int value)
+    {
+        SetMaxHp(GetPlayerStatus.MaxHp + value);
     }
     public void SetRemainHp(int value)
     {
         if (value > dataCenter.playerStatusInfo.MaxHp)
         {
-            GetPlayerStatus.SetRemainHp(dataCenter.playerStatusInfo.MaxHp);
+            GetPlayerStatus.SetRemainHp(GetPlayerStatus.MaxHp);
         }
         else
         {
             GetPlayerStatus.SetRemainHp(value);
         }
     }
+    public void AddRemainHp(int value)
+    {
+        SetRemainHp(GetPlayerStatus.RemainHp + value);
+    }
     public void SetAtk(int value)
     {
         GetPlayerStatus.SetAtk(value);
+    }
+    public void AddAtk(int value)
+    {
+        SetAtk(GetPlayerStatus.Atk + value);
     }
     public void SetBuffHp(int value)
     {
         GetPlayerStatus.SetBuffHp(value);
     }
+    public void AddBuffHp(int value)
+    {
+        SetBuffHp(GetPlayerStatus.BuffHp + value);
+    }
     public void SetBuffAtk(int value)
     {
         GetPlayerStatus.SetBuffAtk(value);
     }
-    
+    public void AddBuffAtk(int value)
+    {
+        SetBuffAtk(GetPlayerStatus.BuffAtk + value);
+    }
+
+    public void SetWeapons(Dictionary<WeaponType, WeaponInfo> weapons)
+    {
+        dataCenter.SetWeapons(weapons);
+    }
     public void AddWeapon(WeaponType type, WeaponInfo info)
     {
         GetWeapons.Add(type, info);
     }
-    public void SetSkillNode(WeaponType type, Dictionary<int,WeaponSkill> tree)
+    public void SetSkillTree(WeaponType type, Dictionary<int,WeaponSkill> tree)
     {
         GetWeapons[type].SetSkillTree(tree);
     }
-
-
+    
     public bool CheckSaveData()
     {
-        return true;
+        if(File.Exists(dataPath+Const_Path.playInfoPath))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    public void RemoveSaveData()
+    {
+        File.Delete(dataPath + Const_Path.playInfoPath);
+        File.Delete(dataPath + Const_Path.playerStatusInfoPath);
+        File.Delete(dataPath + Const_Path.WeaponInfoPath);
     }
 
     public void Save()
@@ -134,8 +198,6 @@ public class DataManager : MonoSingleton<DataManager>
     {
         dataLoad.LoadUserData(dataPath);
     }
-
-
 
     public void DamageToTarget(GameObject source, GameObject target)
     {
