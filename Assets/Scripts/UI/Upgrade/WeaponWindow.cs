@@ -39,6 +39,9 @@ public class WeaponWindow : MonoBehaviour
     public Button upgrade;
     public Text upgradeButtonText;
 
+    private string curWeaponName;
+    private string curSkillKey;
+
     private void Awake()
     {
         skillDict = new Dictionary<string, SkillTexts>();
@@ -54,6 +57,7 @@ public class WeaponWindow : MonoBehaviour
             skillNodes.Add(button.gameObject.name, button);
         }
 
+        exit.onClick.AddListener(CloseWindow);
         SetParts();
         SetOnAwake();
     }
@@ -67,9 +71,16 @@ public class WeaponWindow : MonoBehaviour
     {
         selectedWeapon = weapons[0];
         selectedWeapon.interactable = false;
+        curWeaponName = selectedWeapon.image.name;
 
         skillTextWindow.SetActive(false);
         upgrade.gameObject.SetActive(false);
+    }
+
+    public void SetParts()
+    {
+        int value = DataManager.Instance.GetPlayInfo.Parts;
+        parts.text = value.ToString();
     }
 
     public void OnClickWeaponButton()
@@ -80,6 +91,7 @@ public class WeaponWindow : MonoBehaviour
 
         // replace background image
         weaponImage.sprite = Resources.Load<Sprite>("Image/Weapon/" + selectedWeapon.image.name);
+        curWeaponName = selectedWeapon.image.name;
         SetSkillTree();
     }
 
@@ -96,44 +108,15 @@ public class WeaponWindow : MonoBehaviour
         // replace all nodes
         foreach (var node in skillNodes)
         {
-            if(weaponImage.sprite.name == "LinearGun")
+            WeaponSkillInfo skill = WeaponSkillTable.Instance.GetTuple(curWeaponName, node.Key);
+            // skill image
+            node.Value.button.image.sprite = Resources.Load<Sprite>("Image/Skill/" + skill.m_spriteName);
+            // skill text
+            SetSkillTexts(node.Key, skill.m_skillName, skill.m_description);
+            // skill path
+            if (node.Key != "0")
             {
-                LinearGunInfo skill = Tables.Instance.LinearGun.GetTuple(node.Key);
-                // skill image
-                node.Value.button.image.sprite = Resources.Load<Sprite>("Image/Skill/" + skill.m_spriteName);
-                // skill text
-                SetSkillTexts(node.Key, skill.m_skillName, skill.m_description);
-                // skill path
-                if(node.Key != "0")
-                {
-                    SetSkillNode(skill.m_prevPath, node.Value);
-                }
-            }
-            else if(weaponImage.sprite.name == "Shotgun")
-            {
-                ShotGunInfo skill = Tables.Instance.ShotGun.GetTuple(node.Key);
-                node.Value.button.image.sprite = Resources.Load<Sprite>("Image/Skill/" + skill.m_spriteName);
-
-                SetSkillTexts(node.Key, skill.m_skillName, skill.m_description);
-                if (node.Key != "0")
-                {
-                    SetSkillNode(skill.m_prevPath, node.Value);
-                }
-            }
-            else if(weaponImage.sprite.name == "EnergySphereGun")
-            {
-                EnergySphereGunInfo skill = Tables.Instance.EnergySphereGun.GetTuple(node.Key);
-                node.Value.button.image.sprite = Resources.Load<Sprite>("Image/Skill/" + skill.m_spriteName);
-
-                SetSkillTexts(node.Key, skill.m_skillName, skill.m_description);
-                if (node.Key != "0")
-                {
-                    SetSkillNode(skill.m_prevPath, node.Value);
-                }
-            }
-            else
-            {
-                Debug.Log("no weapon");
+                SetSkillNode(skill.m_prevPath, node.Value);
             }
 
             node.Value.button.onClick.AddListener(SetSkillDescription);
@@ -146,11 +129,10 @@ public class WeaponWindow : MonoBehaviour
         skillDict.Add(key, skillTexts);
     }
 
-    private void SetSkillNode(string prevPath, SkillNode node)
+    private void SetSkillNode(string prevNodeKey, SkillNode node)
     {
         WeaponType weaponType = (WeaponType)Enum.Parse(typeof(WeaponType), weaponImage.sprite.name);
-        int prevNodeKey = int.Parse(prevPath);
-        int curNodeKey = int.Parse(node.gameObject.name);
+        string curNodeKey = node.gameObject.name;
 
         if (DataManager.Instance.GetWeapons[weaponType].SkillTree[prevNodeKey].IsActivated)
         {
@@ -178,22 +160,30 @@ public class WeaponWindow : MonoBehaviour
         skillName.text = skillDict[selectedSkill.gameObject.name].name;
         skillDescription.text = skillDict[selectedSkill.gameObject.name].description;
 
+        curSkillKey = selectedSkill.gameObject.name;
         SetUpgradeButton();
     }
 
     public void SetUpgradeButton()
     {
-        WeaponType weaponType = (WeaponType)Enum.Parse(typeof(WeaponType), weaponImage.sprite.name);
-        int curNodeKey = int.Parse(selectedSkill.gameObject.name);
+        WeaponType weaponType = (WeaponType)Enum.Parse(typeof(WeaponType), curWeaponName);
 
-        if (DataManager.Instance.GetWeapons[weaponType].SkillTree[curNodeKey].IsActivated)
+        if (DataManager.Instance.GetWeapons[weaponType].SkillTree[curSkillKey].IsActivated)
         {
             upgrade.gameObject.SetActive(false);
         }
         else
         {
-            upgrade.gameObject.SetActive(true);
-            upgradeButtonText.text = Tables.Instance.LinearGun.GetTuple(selectedSkill.gameObject.name).m_needParts.ToString();
+            string prevSkillKey = WeaponSkillTable.Instance.GetTuple(curWeaponName, curSkillKey).m_prevPath;
+            if(DataManager.Instance.GetWeapons[weaponType].SkillTree[prevSkillKey].IsActivated)
+            {
+                upgrade.gameObject.SetActive(true);
+                upgradeButtonText.text = WeaponSkillTable.Instance.GetTuple(curWeaponName, curSkillKey).m_needParts.ToString();
+            }
+            else
+            {
+                upgrade.gameObject.SetActive(false);
+            }
         }
 
         upgrade.onClick.RemoveAllListeners();
@@ -207,12 +197,13 @@ public class WeaponWindow : MonoBehaviour
 
         if(have > need)
         {
-            WeaponType weaponType = (WeaponType)Enum.Parse(typeof(WeaponType), weaponImage.sprite.name);
-            int curNodeKey = int.Parse(selectedSkill.gameObject.name);
+            WeaponType weaponType = (WeaponType)Enum.Parse(typeof(WeaponType), curWeaponName);
 
             DataManager.Instance.AddParts(-need);
-            DataManager.Instance.GetWeapons[weaponType].SkillTree[curNodeKey].SetIsActivated(true);
-            skillNodes[selectedSkill.gameObject.name].LightOn();
+            DataManager.Instance.GetWeapons[weaponType].SkillTree[curSkillKey].SetIsActivated(true);
+            DataManager.Instance.Save();
+            SetParts();
+            skillNodes[curSkillKey].LightOn();
         }
         else
         {
@@ -220,9 +211,8 @@ public class WeaponWindow : MonoBehaviour
         }
     }
     
-    public void SetParts()
+    private void CloseWindow()
     {
-        int value = DataManager.Instance.GetPlayInfo.Parts;
-        parts.text = value.ToString();
+        UpgradeSceneController.Instance.CloseSelectWeaponWindow();
     }
 }

@@ -18,6 +18,7 @@ public static class ConstDecriptions
 public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
 {
     // Inactive on awake
+    public PlayerStatusWindow statusWindow;
     public SelectAct selectAct;
     public WeaponWindow weaponWindow;
     public ExitButton exitButton;
@@ -32,6 +33,7 @@ public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
     private void Awake()
     {
         actButton.onClick.AddListener(OnClickActButton);
+        upgradeButton.onClick.AddListener(OnClickUpgradeButton);
         fightButton.onClick.AddListener(OnClickFightButton);
 
         AwakeAllUIScript();
@@ -85,6 +87,11 @@ public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
     //    SetStateChangeCallback(FightState.Pause, pauseGroup.ActiveAllMembers);
     //    SetStateChangeCallback(FightState.Fight, pauseGroup.InactiveAllMembers);
     //}
+
+    public void RedrawStatusWindow()
+    {
+        statusWindow.RedrawWindow();
+    }
     
     public void ActiveExitButton(GameObject targetUI)
     {
@@ -127,11 +134,15 @@ public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
         exitButton.ClearStack();
         actButton.interactable = false;
     }
+    public void CloseSelectWeaponWindow()
+    {
+        weaponWindow.gameObject.SetActive(false);
+    }
+
 
     public void OnClickUpgradeButton()
     {
         weaponWindow.gameObject.SetActive(true);
-        exitButton.PushUI(weaponWindow.gameObject);
     }
 
     public void OnClickFightButton()

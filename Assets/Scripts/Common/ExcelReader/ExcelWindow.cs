@@ -8,39 +8,42 @@ using UnityEditor;
 /// </summary>
 public class ExcelWindow : EditorWindow
 {
+    string fileName = "";
+
     [MenuItem("Tool/ExcelReader")]
     static public void CreateWindow()
     {
-        EditorWindow window = EditorWindow.GetWindow(typeof(ExcelWindow));
-        window.minSize = new Vector2(80f, 60f);
-        window.maxSize = new Vector2(100f, 100f);
+        EditorWindow window = (ExcelWindow)EditorWindow.GetWindow(typeof(ExcelWindow));
     }
 
     private void OnGUI()
     {
-        //Repaint();
 
-        GUILayout.BeginArea(new Rect(10, 10, 80, 60));
+        if (GUILayout.Button("Set Tables", GUILayout.Height(30)))
         {
-            if (GUILayout.Button("Set Tables", GUILayout.Height(30)))
-            {
-                ExcelReader.SetTables();
-            }
-
-            GUILayout.BeginVertical();
-            {
-                foreach (var worksheet in ExcelReader.m_Worksheets)
-                {
-
-                }
-            }
-
+            ExcelReader.SetTables();
+            Repaint();
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            AssetDatabase.SaveAssets();
         }
-        GUILayout.EndArea();
 
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
-        AssetDatabase.SaveAssets();
+        fileName = GUILayout.TextField(fileName, GUILayout.Height(30));
+
+        if (GUILayout.Button("Set Table in Merge Mode", GUILayout.Height(30)))
+        {
+            ExcelReader_MergeMode.SetTables(fileName);
+            Repaint();
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            AssetDatabase.SaveAssets();
+        }
+        //GUILayout.BeginArea(new Rect(10, 10, 600, 400));
+        //{
+            
+        //}
+        //GUILayout.EndArea();
+
     }
 
 }

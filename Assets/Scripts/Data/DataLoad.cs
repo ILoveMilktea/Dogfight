@@ -71,14 +71,14 @@ public class DataLoad
 
         foreach (PropertyInfo item in properties)
         {
-            if (item.PropertyType == typeof(Dictionary<int, WeaponSkill>))
+            if (item.PropertyType == typeof(Dictionary<string, WeaponSkill>))
             {
-                Dictionary<int, WeaponSkill> skillList = new Dictionary<int, WeaponSkill>();
+                Dictionary<string, WeaponSkill> skillList = new Dictionary<string, WeaponSkill>();
                 int count = note.ReadInt32();
 
                 for (int i = 0; i < count; i++)
                 {
-                    int key = note.ReadInt32();
+                    string key = note.ReadString();
                     WeaponSkill skill = new WeaponSkill();
                     skill = (WeaponSkill)SerializeReadData(note, skill);
                     skillList.Add(key, skill);

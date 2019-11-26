@@ -9,28 +9,32 @@ public class SkillNode : MonoBehaviour
     public Image prevPathLine;
 
 
-    //private RectTransform imageRectTransform;
-    //public float lineWidth = 1.0f;
-    //public Vector3 pointA;
-    //public Vector3 pointB;
-    //// Use this for initialization
-    //void Start()
-    //{
-    //    imageRectTransform = GetComponent<RectTransform>();
-    //}
+    private RectTransform lineRectTransform;
+    public float lineWidth = 5.0f;
 
-    //// Update is called once per frame
-    //void Update()
-    //{
-    //    Vector3 differenceVector = pointB - pointA;
+    public RectTransform startPos;
+    public RectTransform endPos;
+    // Use this for initialization
+    void Start()
+    {
+        lineRectTransform = prevPathLine.rectTransform;
+    }
 
-    //    imageRectTransform.sizeDelta = new Vector2(differenceVector.magnitude, lineWidth);
-    //    imageRectTransform.pivot = new Vector2(0, 0.5f);
-    //    imageRectTransform.position = pointA;
-    //    float angle = Mathf.Atan2(differenceVector.y, differenceVector.x) * Mathf.Rad2Deg;
-    //    imageRectTransform.rotation = Quaternion.Euler(0, 0, angle);
-    //}
-    
+    // Update is called once per frame
+    void Update()
+    {
+        Vector2 startPoint = startPos.anchoredPosition;
+        Vector2 endPoint = endPos.anchoredPosition;
+
+        Vector2 differenceVector = endPoint - startPoint;
+
+        lineRectTransform.sizeDelta = new Vector2(differenceVector.magnitude, lineWidth);
+        //lineRectTransform.pivot = new Vector2(0, 0.5f);
+        lineRectTransform.anchoredPosition = (startPoint - endPoint) * 0.5f;
+        float angle = Mathf.Atan2(differenceVector.y, differenceVector.x) * Mathf.Rad2Deg;
+        lineRectTransform.rotation = Quaternion.Euler(0, 0, angle);
+    }
+
     public void LightOn()
     {
         prevPathLine.color = Color.white;
@@ -39,7 +43,7 @@ public class SkillNode : MonoBehaviour
     
     public void LightOff()
     {
-        prevPathLine.color = Color.gray;
-        button.image.color = Color.gray;
+        prevPathLine.color = new Color(0.25f, 0.25f, 0.25f);
+        button.image.color = new Color(0.25f, 0.25f, 0.25f);
     }
 }

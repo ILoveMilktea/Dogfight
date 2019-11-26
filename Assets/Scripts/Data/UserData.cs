@@ -55,33 +55,33 @@ public class PlayerStatusInfo
 public class WeaponInfo
 {
     public string Name { get; private set; }
-    public Dictionary<int, WeaponSkill> SkillTree { get; private set; }
+    public Dictionary<string, WeaponSkill> SkillTree { get; private set; }
 
     public WeaponInfo()
     {
         Name = "";
-        SkillTree = new Dictionary<int, WeaponSkill>();
+        SkillTree = new Dictionary<string, WeaponSkill>();
     }
 
     public void SetName(string value) { Name = value.ToString(); }
-    public void SetSkillTree(Dictionary<int, WeaponSkill> value) { SkillTree = value; }
+    public void SetSkillTree(Dictionary<string, WeaponSkill> value) { SkillTree = value; }
 
 }
 
 public class WeaponSkill
 {
-    public int ParentKey { get; private set; }
+    //public int ParentKey { get; private set; }
     public bool IsActivated { get; private set; }
     public int UsedParts { get; private set; }
 
     public WeaponSkill()
     {
-        ParentKey = 0;
+        //ParentKey = 0;
         IsActivated = false;
         UsedParts = 0;
     }
 
-    public void SetParentKey(int value) { ParentKey = value; }
+    //public void SetParentKey(int value) { ParentKey = value; }
     public void SetIsActivated(bool value) { IsActivated = value; }
     public void SetUsedParts(int value) { UsedParts = value; }
 }

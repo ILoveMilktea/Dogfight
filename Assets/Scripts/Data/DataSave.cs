@@ -78,9 +78,9 @@ public class DataSave
 
         foreach (PropertyInfo item in properties)
         {
-            if (item.PropertyType == typeof(Dictionary<int, WeaponSkill>))
+            if (item.PropertyType == typeof(Dictionary<string, WeaponSkill>))
             {
-                Dictionary<int, WeaponSkill> skillList = (Dictionary<int, WeaponSkill>)item.GetValue(weapon);
+                Dictionary<string, WeaponSkill> skillList = (Dictionary<string, WeaponSkill>)item.GetValue(weapon);
                 note.Write(skillList.Count);
 
                 foreach(var skill in skillList)

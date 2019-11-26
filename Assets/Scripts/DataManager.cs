@@ -46,7 +46,10 @@ public class DataManager : MonoSingleton<DataManager>
         }
 
         //dataPath += "/SaveData.json";
+    }
 
+    private void Start()
+    {
         dataCenter = new DataCenter();
         dataSave = new DataSave();
         dataLoad = new DataLoad();
@@ -161,7 +164,7 @@ public class DataManager : MonoSingleton<DataManager>
     {
         GetWeapons.Add(type, info);
     }
-    public void SetSkillTree(WeaponType type, Dictionary<int,WeaponSkill> tree)
+    public void SetSkillTree(WeaponType type, Dictionary<string,WeaponSkill> tree)
     {
         GetWeapons[type].SetSkillTree(tree);
     }
@@ -190,7 +193,7 @@ public class DataManager : MonoSingleton<DataManager>
 
         if (SceneManager.GetActiveScene().name == "Upgrade")
         {
-            FindObjectOfType<PlayerStatusWindow>().RedrawWindow();
+            UpgradeSceneController.Instance.RedrawStatusWindow();
         }
     }
 
