@@ -28,9 +28,10 @@ public class FenceGenerator : MonoBehaviour
                     {
                         continue;
                     }
-                }                
+                }
 
-                Vector3 fencePosition = new Vector3((-mapSize.x / 2 + 0.5f + x)*fenceLocalScale.x, 0, (mapSize.y / 2 - 0.5f - y)*fenceLocalScale.z);
+                //Vector3 fencePosition = new Vector3((-mapSize.x / 2 + 0.5f + x)*fenceLocalScale.x, 0, (mapSize.y / 2 - 0.5f - y)*fenceLocalScale.z);
+                Vector3 fencePosition = new Vector3(x * fenceLocalScale.x, 0, y * fenceLocalScale.z);
 
                 Transform prefabTmp = fencePrefabListFromObjectPool[count].transform;
                 prefabTmp.position = fencePosition;

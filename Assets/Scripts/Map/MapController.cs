@@ -8,10 +8,13 @@ public class MapController : MonoBehaviour
     public Vector2 mapSize;
 
     //Floor 생성 관련
-       public FloorController floorController;
+    public FloorController floorController;
 
     //Fence 생성 관련    
     public FenceGenerator fenceGenerator;
+
+    //
+    public WallGenerator wallGenerator;
 
     private void Awake()
     {
@@ -36,9 +39,14 @@ public class MapController : MonoBehaviour
 
     //FightScene 들어갈때 Map활성화
     public void GenerateMap()
-    {        
+    {
+        // 벽 생성
+        wallGenerator.GenerateWalls(DataManager.Instance.GetPlayInfo.Stage);
+
         floorController.GenerateFloor(mapSize);
         Vector2 mapSizeTmp = new Vector2(mapSize.x+2, mapSize.y+2);
         fenceGenerator.GenerateFence(mapSizeTmp);
     }
+    
+
 }

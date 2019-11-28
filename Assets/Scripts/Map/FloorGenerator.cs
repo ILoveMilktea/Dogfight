@@ -35,7 +35,8 @@ public class FloorGenerator : MonoBehaviour
                
                 floorPrefabList.Add(new List<Transform>());
 
-                Vector3 floorPosition = new Vector3((-mapSize.x / 2 + 0.5f + x)*floorLocalScale.x, 0, (mapSize.y/2 - 0.5f - y)*floorLocalScale.z);
+                //Vector3 floorPosition = new Vector3((-mapSize.x / 2 + 0.5f + x)*floorLocalScale.x, 0, (mapSize.y/2 - 0.5f - y)*floorLocalScale.z);
+                Vector3 floorPosition = new Vector3((x + 1.0f) * floorLocalScale.x, 0, (y + 1.0f) * floorLocalScale.z);
 
                 Transform prefabTmp = floorPrefabListFromObjectPool[count].transform;
                 prefabTmp.position = floorPosition;

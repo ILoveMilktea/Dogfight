@@ -112,18 +112,30 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         int stageNumber = DataManager.Instance.GetPlayInfo.Stage;
         int enemyCount = 0;
 
-        StageEnemyTable stageTable = Tables.Instance.StageEnemyTables[stageNumber];
-        foreach(var stageEnemyInfo in stageTable.GetTable())
+        Dictionary<int, StageEnemyInfo> stageTable = StageEnemyTable.Instance.GetTable("Stage" + stageNumber.ToString());
+        foreach(var stageEnemyInfo in stageTable.Values)
         {
-            EnemyStatusInfo enemyInfo = Tables.Instance.EnemyStatus.GetTuple(stageEnemyInfo.Value.m_serialNumber);
+            EnemyStatusInfo enemyInfo = Tables.Instance.EnemyStatus.GetTuple(stageEnemyInfo.m_serialNumber);
+
+            //영준수정시작
+            //원래코드시작
             GameObject enemy = ObjectPoolManager.Instance.Get(enemyInfo.m_name);
             //GameObject enemy = Instantiate(Resources.Load("Prefab/Enemy/" + enemyInfo.m_name)) as GameObject;
-            enemy.SetActive(true);
+            //원래코드끝
+
+            //GameObject enemy = ObjectPoolManager.Instance.Get("Panther_Real");
+            //영준수정끝
+            
             EnemyCharacterStatus status = new EnemyCharacterStatus(enemyInfo.m_name, enemyInfo.m_hp, enemyInfo.m_hp, enemyInfo.m_atk, enemyInfo.m_dropParts);
 
             fightStatus.AddEnemyInstance(enemy, status);
-            enemy.transform.position = new Vector3(stageEnemyInfo.Value.m_posX, 0, stageEnemyInfo.Value.m_posY);
+            enemy.transform.position = new Vector3(stageEnemyInfo.m_posX, 0, stageEnemyInfo.m_posY);
             enemyCount++;
+
+            //영준수정 - SetActive 이때해야 Searching제대로 작동됨
+            enemy.SetActive(true);
+            ////영준뺄거
+            //break;
         }
 
         fightStatus.SetRemainEnemy(enemyCount);

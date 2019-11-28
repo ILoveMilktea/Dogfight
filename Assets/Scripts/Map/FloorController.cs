@@ -114,7 +114,7 @@ public class FloorController : MonoBehaviour
                     //플레이어가 공격받을수 없는 경우(플레이어의 위치와 바닥이 일치하는게 없다면)
                     if (targetFloorIndex.x == -1 || targetFloorIndex.y == -1)
                     {
-                        Debug.Log("안됨");
+
                     }
                     //플레이어가 공격받을수 있는 경우
                     else

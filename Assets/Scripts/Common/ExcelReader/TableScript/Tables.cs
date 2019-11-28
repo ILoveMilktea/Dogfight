@@ -27,7 +27,7 @@ public class EnemyStatusTable
 
     private void ReadBinaryTable()
     {
-        TextAsset textAsset = Resources.Load("Tables/EnemyInfo/EnemyStatus") as TextAsset;
+        TextAsset textAsset = Resources.Load("Tables/PrefabInfo/EnemyStatus") as TextAsset;
         MemoryStream memoryStream = new MemoryStream(textAsset.bytes);
         BinaryReader binaryReader = new BinaryReader(memoryStream);
 
@@ -62,32 +62,25 @@ public class EnemyStatusTable
     }
 
 }
-public class StageEnemyInfo
+public class WallStatusInfo
 {
-    public int m_serialNumber { get; private set; }
-    public int m_level { get; private set; }
-    public float m_posX { get; private set; }
-    public float m_posY { get; private set; }
+    public string m_name { get; private set; }
 
-    public void SetserialNumber(int serialNumber) { m_serialNumber = serialNumber; }
-    public void Setlevel(int level) { m_level = level; }
-    public void SetposX(float posX) { m_posX = posX; }
-    public void SetposY(float posY) { m_posY = posY; }
+    public void Setname(string name) { m_name = name; }
 }
 
-public class StageEnemyTable
+public class WallStatusTable
 {
-    public StageEnemyTable(int stageNumber)
+    public WallStatusTable()
     {
-        ReadBinaryTable(stageNumber);
+        ReadBinaryTable();
     }
 
-    private Dictionary<int, StageEnemyInfo> Table = new Dictionary<int, StageEnemyInfo>();
+    private Dictionary<int, WallStatusInfo> Table = new Dictionary<int, WallStatusInfo>();
 
-    private void ReadBinaryTable(int stageNumber)
+    private void ReadBinaryTable()
     {
-        string resourceName = "Stage_" + stageNumber.ToString() + "_Enemy";
-        TextAsset textAsset = Resources.Load("Tables/EnemyInfo/" + resourceName) as TextAsset;
+        TextAsset textAsset = Resources.Load("Tables/PrefabInfo/WallStatus") as TextAsset;
         MemoryStream memoryStream = new MemoryStream(textAsset.bytes);
         BinaryReader binaryReader = new BinaryReader(memoryStream);
 
@@ -95,25 +88,22 @@ public class StageEnemyTable
 
         for( int i = 0; i < tupleCount; i++)
         {
-            StageEnemyInfo info = new StageEnemyInfo();
+            WallStatusInfo info = new WallStatusInfo();
             int key = binaryReader.ReadInt32();
-            info.SetserialNumber(binaryReader.ReadInt32());
-            info.Setlevel(binaryReader.ReadInt32());
-            info.SetposX(binaryReader.ReadSingle());
-            info.SetposY(binaryReader.ReadSingle());
+            info.Setname(binaryReader.ReadString());
 
             Table.Add(key, info);
         }
     }
 
-    public Dictionary<int, StageEnemyInfo> GetTable()
+    public Dictionary<int, WallStatusInfo> GetTable()
     {
         return Table;
     }
 
-    public StageEnemyInfo GetTuple(int key)
+    public WallStatusInfo GetTuple(int key)
     {
-        StageEnemyInfo value;
+        WallStatusInfo value;
 
         if (Table.TryGetValue(key, out value))
             return value;
@@ -125,23 +115,18 @@ public class StageEnemyTable
 
 public class Tables : MonoSingleton<Tables>
 {
-    protected override void Init()
+    protected override void Init() 
     {
         DontDestroyOnLoad(gameObject);
     }
 
     public EnemyStatusTable EnemyStatus = null;
-    public Dictionary<int, StageEnemyTable> StageEnemyTables = null;
+    public WallStatusTable WallStatus = null;
 
     private void Start() 
     {
         EnemyStatus = new EnemyStatusTable();
-        StageEnemyTables = new Dictionary<int, StageEnemyTable>();
-        for(int i = 1; i <= 6; i++)
-        {
-            StageEnemyTable table = new StageEnemyTable(i);
-            StageEnemyTables.Add(i, table);
-        }
+        WallStatus = new WallStatusTable();
     }
 }
 

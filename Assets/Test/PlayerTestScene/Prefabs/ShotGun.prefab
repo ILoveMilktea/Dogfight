@@ -86,7 +86,7 @@ MonoBehaviour:
   burstCount: 3
   knockBackforce: 5
   directionNumber: 5
-  projectileMaxAngle: 70
+  projectileMaxAngle: 60
 --- !u!1 &4434981281481142168
 GameObject:
   m_ObjectHideFlags: 0

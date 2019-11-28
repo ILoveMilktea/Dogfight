@@ -8,9 +8,8 @@ public class LinearShootingNoMovingEnemy : Enemy
     private enum LinearShootingNoMovingEnemyState
     {
         IDLE,
-        SEARCHING,
-        CHASING,
-        ATTACKING_SHOOTING,
+        ATTACKING_SHOOOTING_NOT_FOUND,
+        ATTACKING_SHOOTING_FOUND,
         DEAD
     };
 
@@ -18,7 +17,7 @@ public class LinearShootingNoMovingEnemy : Enemy
     private LinearShootingNoMovingEnemyState linearShootingNoMovingEnemyState;
 
     //공격할 범위
-    public float attackDistance = 5.0f;
+    public float lockOnAttackDistance = 5.0f;
     //공격간 간격
     public float timeBetweenAttack = 2.0f;
     //발사공격 코루틴
@@ -31,6 +30,9 @@ public class LinearShootingNoMovingEnemy : Enemy
     //게임시작할때 몇초동안 기다렸다 Enemy상태 갱신하기
     private float waitTimeForStart = 2.0f;
 
+    //원래 Enemy가 보고있던 각도
+    private Quaternion originalAngle;
+
     private void OnEnable()
     {
         //ObjectPooling하기위해 활성화된 경우
@@ -41,6 +43,8 @@ public class LinearShootingNoMovingEnemy : Enemy
         //실제 플레이안에서 활성화된 경우
         else
         {
+            originalAngle = transform.rotation;
+
             animator = this.gameObject.GetComponent<Animator>();
             target = FindObjectOfType<Player>().gameObject;
             SetHealth();
@@ -52,10 +56,10 @@ public class LinearShootingNoMovingEnemy : Enemy
             StartCoroutine(EnemyAction());
             StartCoroutine(CheckEnemyState());
         }
-    }   
+    }
 
     protected override void Move()
-    {      
+    {
 
     }
 
@@ -68,16 +72,16 @@ public class LinearShootingNoMovingEnemy : Enemy
         {
             float distance = Vector3.Distance(target.transform.position, transform.position);
 
-            if (distance <= attackDistance)
+            if (distance <= lockOnAttackDistance)
             {
-               
+
                 //Debug.Log("적과의거리" + Vector3.Distance(transform.position, target.transform.position));
                 transform.position = transform.position;
-                linearShootingNoMovingEnemyState = LinearShootingNoMovingEnemyState.ATTACKING_SHOOTING;
+                linearShootingNoMovingEnemyState = LinearShootingNoMovingEnemyState.ATTACKING_SHOOTING_FOUND;
             }
             else
-            {                
-                linearShootingNoMovingEnemyState = LinearShootingNoMovingEnemyState.CHASING;
+            {
+                linearShootingNoMovingEnemyState = LinearShootingNoMovingEnemyState.ATTACKING_SHOOOTING_NOT_FOUND;
             }
             yield return new WaitForEndOfFrame();
         }
@@ -96,23 +100,26 @@ public class LinearShootingNoMovingEnemy : Enemy
             {
                 //Debug.Log("상태" + linearShootingEnemyState);
             }
-            else if (linearShootingNoMovingEnemyState == LinearShootingNoMovingEnemyState.SEARCHING)
+            else if (linearShootingNoMovingEnemyState == LinearShootingNoMovingEnemyState.ATTACKING_SHOOOTING_NOT_FOUND)
             {
-                if (shootingCoroutine != null)
+                TurnBack();
+
+                if (shootingCoroutine == null)
                 {
-                    StopCoroutine(shootingCoroutine);
-                    shootingCoroutine = null;
+                    SetAllAnimationFalse();
+                    animator.SetBool("isAttacking", true);
+                    shootingCoroutine = StartCoroutine(Shooting());
                 }
-                LockOnTarget();
-            }           
-            else if (linearShootingNoMovingEnemyState == LinearShootingNoMovingEnemyState.ATTACKING_SHOOTING)
+            }
+            else if (linearShootingNoMovingEnemyState == LinearShootingNoMovingEnemyState.ATTACKING_SHOOTING_FOUND)
             {
-                SetAllAnimationFalse();
-                animator.SetBool("isAttacking", true);
+
 
                 LockOnTarget();
                 if (shootingCoroutine == null)
                 {
+                    SetAllAnimationFalse();
+                    animator.SetBool("isAttacking", true);
                     shootingCoroutine = StartCoroutine(Shooting());
                 }
                 //Debug.Log("상태" + linearShootingEnemyState);
@@ -136,18 +143,26 @@ public class LinearShootingNoMovingEnemy : Enemy
 
     IEnumerator Shooting()
     {
+
         //Debug.Log("shooting코루틴");
-        while (!isDead)
-        {
-            enemyAttack.LinearShooting(muzzle);
-            yield return new WaitForSeconds(timeBetweenAttack);
-        }
+
+        enemyAttack.LinearShooting(muzzle);
+        yield return new WaitForSeconds(timeBetweenAttack);
+        shootingCoroutine = null;
+
     }
 
     //모든 Animator 변수 false하기
     private void SetAllAnimationFalse()
     {
         animator.SetBool("isWalking", false);
-        animator.SetBool("isAttacking", false);        
+        animator.SetBool("isAttacking", false);
+    }
+
+    //원래 Enemy가 보고있던 각도로 돌아가기
+    private void TurnBack()
+    {
+        transform.rotation = Quaternion.Lerp(transform.rotation, originalAngle, Time.deltaTime * turnSpeed);
+
     }
 }

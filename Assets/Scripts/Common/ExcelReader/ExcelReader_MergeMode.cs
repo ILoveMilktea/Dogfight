@@ -271,9 +271,9 @@ public partial class ExcelReader_MergeMode : MonoBehaviour
                 stringBuilder.AppendLine();
             }
 
-            // private void Awake()
+            // protected override void Init()
             {
-                stringBuilder.AppendLine(AddTab(@"private void Awake() ", 1));
+                stringBuilder.AppendLine(AddTab(@"protected override void Init() ", 1));
                 stringBuilder.AppendLine(AddTab("{", 1));
                 stringBuilder.AppendLine(AddTab("DontDestroyOnLoad(gameObject);", 2));
                 stringBuilder.AppendLine(AddTab("}", 1));
@@ -288,18 +288,7 @@ public partial class ExcelReader_MergeMode : MonoBehaviour
                 stringBuilder.AppendLine(AddTab(@"ReadBinaryTable();", 2));
                 stringBuilder.AppendLine(AddTab("}", 1));
             }
-
-            // public NameTable() ---- 생성자
-            {
-                //stringBuilder.AppendLine(AddTab(@"public " + m_FileName + "Table" + @"()", 1));
-                //stringBuilder.AppendLine(AddTab("{", 1));
-                //stringBuilder.AppendLine(AddTab(@"ReadBinaryTable();", 2));
-                //stringBuilder.AppendLine(AddTab("}", 1));
-                //stringBuilder.AppendLine();
-            }
-
             
-
             // private void ReadBinaryTable()
             {
                 string sheetNames = "";
@@ -324,7 +313,7 @@ public partial class ExcelReader_MergeMode : MonoBehaviour
                 stringBuilder.AppendLine(AddTab("TextAsset textAsset = Resources.Load(\"Tables/" + m_FileName + "/\" + name) as TextAsset;", 3));
                 stringBuilder.AppendLine(AddTab("MemoryStream memoryStream = new MemoryStream(textAsset.bytes);", 3));
                 stringBuilder.AppendLine(AddTab("BinaryReader binaryReader = new BinaryReader(memoryStream);", 3));
-                stringBuilder.AppendLine(AddTab("Dictionary<string, " + m_FileName + "Info> table = new Dictionary<string, " + m_FileName + "Info>();", 3));
+                stringBuilder.AppendLine(AddTab("Dictionary<" + sampleInfo.Value["type"][0] + ", " + m_FileName + "Info> table = new Dictionary<" + sampleInfo.Value["type"][0] + ", " + m_FileName + "Info>();", 3));
                 stringBuilder.AppendLine();
                 stringBuilder.AppendLine(AddTab("int tupleCount = binaryReader.ReadInt32();", 3));
                 stringBuilder.AppendLine();
@@ -403,9 +392,9 @@ public partial class ExcelReader_MergeMode : MonoBehaviour
             // public static Dictionary<type, NameInfo> GetTable(int Key)
             {
                 stringBuilder.AppendLine(AddTab(@"public Dictionary<" + sampleInfo.Value["type"][0] + ", " + m_FileName + "Info> "
-                                                + "GetTable(string weaponName)", 1));
+                                                + "GetTable(string sheetName)", 1));
                 stringBuilder.AppendLine(AddTab("{", 1));
-                stringBuilder.AppendLine(AddTab(@"return Tables[weaponName];", 2));
+                stringBuilder.AppendLine(AddTab(@"return Tables[sheetName];", 2));
                 stringBuilder.AppendLine(AddTab("}", 1));
                 stringBuilder.AppendLine();
             }
@@ -413,11 +402,11 @@ public partial class ExcelReader_MergeMode : MonoBehaviour
             // public static NameInfo GetTuple(int Key)
             {
                 stringBuilder.AppendLine(AddTab(@"public " + m_FileName + "Info "
-                                                + @"GetTuple(string weaponName, " + sampleInfo.Value["type"][0] + " key)", 1));
+                                                + @"GetTuple(string sheetName, " + sampleInfo.Value["type"][0] + " key)", 1));
                 stringBuilder.AppendLine(AddTab("{", 1));
                 stringBuilder.AppendLine(AddTab(m_FileName + "Info value;", 2));
                 stringBuilder.AppendLine();
-                stringBuilder.AppendLine(AddTab(@"if (Tables[weaponName].TryGetValue(key, out value))", 2));
+                stringBuilder.AppendLine(AddTab(@"if (Tables[sheetName].TryGetValue(key, out value))", 2));
                 stringBuilder.AppendLine(AddTab(@"return value;", 3));
                 stringBuilder.AppendLine();
                 stringBuilder.AppendLine(AddTab(@"return null;", 2));

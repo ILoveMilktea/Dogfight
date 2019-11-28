@@ -184,7 +184,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 50
-    m_Alignment: 3
+    m_Alignment: 1
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -210,6 +210,8 @@ GameObject:
   - component: {fileID: 106101080}
   - component: {fileID: 106101079}
   - component: {fileID: 106101081}
+  - component: {fileID: 106101083}
+  - component: {fileID: 106101082}
   m_Layer: 0
   m_Name: DataTable
   m_TagString: Untagged
@@ -253,6 +255,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e1be0f037055bc244a3d53015bb84ae4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &106101082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 106101078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b107d80f186e6144b190ac49081646a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &106101083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 106101078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e59c013a3e943a4c8661eb6c34fec17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &165192922
@@ -632,15 +658,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.5882353}
+  m_Color: {r: 0.5377358, g: 0.1570689, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: b7d245916891cca47a0144e12a82e086, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -699,6 +725,7 @@ GameObject:
   - component: {fileID: 876707039}
   - component: {fileID: 876707038}
   - component: {fileID: 876707041}
+  - component: {fileID: 876707042}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -767,13 +794,13 @@ MonoBehaviour:
   - {fileID: 1295462230422698, guid: 13048acbe385bd14293b922ebc9ad23f, type: 3}
   - {fileID: 1604930414042214, guid: ef3876e08addb7b449c6786db0638239, type: 3}
   - {fileID: 2540961892683625476, guid: 1e9139090b9112b4eb98ba9c5b4f9e69, type: 3}
-  - {fileID: 5243600939986625890, guid: c874abf596d05784b80a4c586409dabd, type: 3}
-  - {fileID: 6097861112940731227, guid: 15caa2c935962144f8febde812ceb866, type: 3}
-  - {fileID: 7119188627640885808, guid: 5887654def8f8c842a9f7d6f863275ab, type: 3}
-  - {fileID: 6370124063683038811, guid: 2c014d3372c7c234b8bc08b3d61db0e6, type: 3}
+  - {fileID: 6618358285595298807, guid: d64d0ae6094e4644b842fcd50cdfa705, type: 3}
+  - {fileID: 5663483294702951592, guid: 62802b91b1e546e46b00faca5651cb74, type: 3}
+  - {fileID: 3859684631353268219, guid: 65a5792328d38d743807ee6b3ba0ba15, type: 3}
+  - {fileID: 1814048755675125687, guid: cf1d7d235ba56194b9948993e3fb3bea, type: 3}
   - {fileID: 1545097402564553599, guid: 02c08b99c57f6c148adf8746878e3b41, type: 3}
-  - {fileID: 1781065274991804, guid: ab3ab12a02686f74e93a18da4604effc, type: 3}
-  - {fileID: 1505501896405044, guid: b8c3bba5015579b4392db9799bf08c0c, type: 3}
+  - {fileID: 1896491389295096, guid: f183a2f0724621146a830b856999bbaf, type: 3}
+  - {fileID: 1415888352172932, guid: a1f04258654d8f54b8bc84f5db07fa13, type: 3}
   - {fileID: 1781065274991804, guid: 59e802e168edd1c4e9314f525eb12571, type: 3}
   - {fileID: 1505501896405044, guid: 0b5ba3311dde60e44a485bc882ca355f, type: 3}
   - {fileID: 1781065274991804, guid: 834fe8cdcc2050140b050e72f04991f6, type: 3}
@@ -782,7 +809,25 @@ MonoBehaviour:
   - {fileID: 1505501896405044, guid: 15e60e67e6dddaf46a47da67544962c3, type: 3}
   - {fileID: 1366086724270930, guid: 94fee409d4927e748845d7226b7ad17b, type: 3}
   - {fileID: 1193039705364994, guid: 0135702d3d6a60c43a006bd3d9715587, type: 3}
-  poolAmount: 0a000000140000002003000020030000c8000000c8000000c8000000c8000000060000000a00000005000000030000002c01000021030000210300002103000021030000210300002103000021030000210300002103000021030000
+  - {fileID: 1989060081637774, guid: ba4544b1a50b9604586635d8220fe914, type: 3}
+  - {fileID: 1745447707790088, guid: f5a07b591c57ebe45829868affda1a1c, type: 3}
+  poolAmount: 0a000000140000002003000020030000c8000000c8000000c8000000c8000000060000000a00000005000000030000002c01000021030000210300002103000021030000210300002103000021030000210300002103000021030000e803000064000000
+--- !u!114 &876707042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 876707037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63ae1d4bc8db5ce4f93ed19a063dcfba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  muteSound: 0
+  objectPoolLength: 20
+  soundDistance: 7
+  logSounds: 0
 --- !u!1 &1035538898
 GameObject:
   m_ObjectHideFlags: 0
@@ -922,7 +967,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 50
-    m_Alignment: 3
+    m_Alignment: 1
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -1034,15 +1079,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.5882353}
+  m_Color: {r: 0.5377358, g: 0.1570689, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: b7d245916891cca47a0144e12a82e086, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4

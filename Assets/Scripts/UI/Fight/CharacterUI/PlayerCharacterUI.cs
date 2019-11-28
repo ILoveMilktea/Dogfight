@@ -29,14 +29,14 @@ public class PlayerCharacterUI : CharacterUI
         float characterWidth = (targetRightHandPos.x - targetPos.x);
 
         // resize name
-        RectTransform nameRT = characterName.rectTransform;
-        float nameWidth = nameRT.sizeDelta.x;
-        float sizeRatio = characterWidth / nameWidth;
-        nameRT.sizeDelta = new Vector2(nameRT.sizeDelta.x * sizeRatio, nameRT.sizeDelta.y);
+        //RectTransform nameRT = characterName.rectTransform;
+        //float nameWidth = nameRT.sizeDelta.x;
+        //float sizeRatio = characterWidth / nameWidth;
+        //nameRT.sizeDelta = new Vector2(nameRT.sizeDelta.x * sizeRatio, nameRT.sizeDelta.y);
         // resize Hp
         RectTransform hpRT = characterHp.GetComponent<RectTransform>();
         float HpWidth = hpRT.sizeDelta.x;
-        sizeRatio = characterWidth / HpWidth;
+        float sizeRatio = characterWidth / HpWidth;
         hpRT.sizeDelta = new Vector2(hpRT.sizeDelta.x * sizeRatio, hpRT.sizeDelta.y);
         // resize reloadGauge
         RectTransform reloadRT = reloadGauge.GetComponent<RectTransform>();

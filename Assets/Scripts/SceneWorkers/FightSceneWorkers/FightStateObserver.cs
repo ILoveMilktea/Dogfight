@@ -17,7 +17,7 @@ public class FightStateObserver : MonoBehaviour
 
     private FightState prevFightState;
     public FightState curFightState { get; private set; }
-    
+
     void Start()
     {
         prevFightState = FightState.Standby;
@@ -71,7 +71,7 @@ public class FightStateObserver : MonoBehaviour
     {
         if (stateChangeCallback.ContainsKey(fightState))
         {
-            if(stateChangeCallback[fightState].Contains(function))
+            if (stateChangeCallback[fightState].Contains(function))
             {
                 stateChangeCallback[fightState].Remove(function);
             }

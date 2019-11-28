@@ -19,7 +19,7 @@ public class CameraTest : MonoBehaviour
     {
         Vector3 v = player.transform.position - prevPlayerPos;
         v += distance;
-        v.x = 0;
+        v.x = distance.x;
         transform.position = Vector3.Lerp(transform.position, v, Time.deltaTime * 3);   
     }
 }

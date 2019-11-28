@@ -49,7 +49,7 @@ MonoBehaviour:
   skillMode: 0
   muzzle: {fileID: 4766618024441617197}
   projectilePrefabName: EnergySphere
-  msBetweenShots: 500
+  msBetweenShots: 1000
   muzzleVelocity: 20
   maxRange: 5
   damage: 1

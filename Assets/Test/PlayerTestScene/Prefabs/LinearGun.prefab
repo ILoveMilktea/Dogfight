@@ -48,7 +48,8 @@ MonoBehaviour:
   fireMode: 0
   skillMode: 0
   muzzle: {fileID: 3898110433157598704}
-  msBetweenShots: 500
+  projectilePrefabName: 
+  msBetweenShots: 100
   muzzleVelocity: 10
   maxRange: 10
   damage: 1
