@@ -60,6 +60,16 @@ public class RushEnemy : Enemy
 
     public NavMeshAgent navMeshAgent;
 
+    //게임시작할때 몇초동안 기다렸다 Enemy상태 갱신하기
+    private float waitTimeForStart = 2.0f;
+
+    //Rushing Miss상태일때 Searching상태로 바로 넘어가는 거 방지
+    private bool isRushTimerOn=false;
+
+    //[Animator관련 변수]
+    //Animator 변수
+    private Animator animator;
+
     private void OnEnable()
     {
         //ObjectPooling하기위해 활성화된 경우
@@ -72,6 +82,7 @@ public class RushEnemy : Enemy
         {
             target = FindObjectOfType<Player>().gameObject;
             navMeshAgent = GetComponent<NavMeshAgent>();
+            animator = this.gameObject.GetComponent<Animator>();
 
             SetHealth();
             isDead = false;
@@ -83,16 +94,17 @@ public class RushEnemy : Enemy
 
             //영준수정- 매니저에서 Map Size 받아오는걸로 변경
             mapSize = new Vector2(20, 20);
-            //처음에 Search활성화 해주기위한 것
-            searchingDestination = transform.position;
+            
             //searching관련 값 미리 계산
             searchingRangeMaxX = mapSize.x * 0.5f - searchingOffset;
             searchingRangeMinX = mapSize.x * -0.5f + searchingOffset;
             searchingRangeMaxZ = mapSize.y * 0.5f - searchingOffset;
             searchingRangeMinZ = mapSize.y * -0.5f + searchingOffset;
 
-            StartCoroutine(EnemyAction());
+            animator.SetBool("IsDead", false);
+
             StartCoroutine(CheckEnemyState());
+            StartCoroutine(EnemyAction());            
         }               
 
     }
@@ -113,8 +125,8 @@ public class RushEnemy : Enemy
     }
 
     private void Searching()
-    {        
-       
+    {
+        
         Vector3 toSearchPosition = transform.position;
         toSearchPosition.y = 0;
         float randomX = Random.Range(searchRangeMin, searchRangeMax);
@@ -138,7 +150,13 @@ public class RushEnemy : Enemy
 
     IEnumerator CheckEnemyState()
     {
-        yield return new WaitForSeconds(3.0f);
+        //맵 완전히 켜질때까지 기다리기
+        yield return new WaitForSeconds(waitTimeForStart);
+
+        //처음에 Search활성화 해주기위한 것
+        searchingDestination = transform.position;
+        
+       
         while (!isDead)
         {
             
@@ -162,11 +180,10 @@ public class RushEnemy : Enemy
                     isOnRush = true;
                     rushEnemyState = RushEnemyState.RUSHING_START;
 
-
                 }
                 else if (distance <= attackDistance && isRushAvailable == false)
                 {
-                    if (isOnRush == true)
+                    if (isOnRush == true && isRushTimerOn == false)
                     {
                         rushEnemyState = RushEnemyState.RUSHING;
                         //if (isRushHit == true)
@@ -181,10 +198,9 @@ public class RushEnemy : Enemy
                         {
                             rushEnemyState = RushEnemyState.RUSHING_MISS;
                         }
-
                     }
                 }                
-                else
+                else if(isRushTimerOn==false)
                 {
                     navMeshAgent.speed = moveSpeed;
                     //searchingDestination = transform.position;
@@ -200,18 +216,20 @@ public class RushEnemy : Enemy
 
     IEnumerator EnemyAction()
     {
-        //영준 수정 - 나중에 코드 합쳤을때는 이거 없애도됨
-        yield return new WaitForSeconds(3.0f);
+        //맵 완전히 켜질때까지 기다리기
+        yield return new WaitForSeconds(waitTimeForStart);
 
         while (!isDead)
         {
-            //Debug.Log("상태" + rushEnemyState);
+            Debug.Log("상태" + rushEnemyState);
             if (rushEnemyState == RushEnemyState.IDLE)
             {
-                
+                SetAllAnimationFalse();
             }
             else if (rushEnemyState == RushEnemyState.SEARCHING)
             {
+                SetAllAnimationFalse();
+                animator.SetBool("isWalking", true);
                 Vector3 curPosition = transform.position;
                 curPosition.y = 0;
 
@@ -227,7 +245,7 @@ public class RushEnemy : Enemy
                     searchPosition.y = 0;
                 }
 
-
+                
                 if (curPosition == searchPosition)
                 {                   
                     Searching();
@@ -235,12 +253,15 @@ public class RushEnemy : Enemy
             }
             else if (rushEnemyState == RushEnemyState.CHASING)
             {
-                Move();
-                LockOnTarget();
+                //Chasing은 안쓸거
+                //Move();
+                //LockOnTarget();
 
             }
             else if (rushEnemyState == RushEnemyState.RUSHING_START) //Rush시작할때
             {
+                SetAllAnimationFalse();
+                animator.SetBool("isRunning", true);
                 LockOnTarget();
                 Rush();
             }
@@ -248,7 +269,7 @@ public class RushEnemy : Enemy
             {
                 Vector3 enemyPosition = transform.position;
                 enemyPosition.y = 0;
-
+                Debug.Log("헤매기" + enemyPosition + "/" + rushDestination);
                 //만약 적이 Rush목표지점에 도착했다면                
                 if (enemyPosition == rushDestination)
                 { 
@@ -260,6 +281,8 @@ public class RushEnemy : Enemy
             }
             else if (rushEnemyState == RushEnemyState.RUSHING_MISS) //Rush했는데 아무것도 안 부딪혔을때
             {
+                SetAllAnimationFalse();
+                animator.SetBool("isStanding", true);
                 LockOnTarget();
                 if (rushTimerCoroutine == null)
                 {
@@ -278,10 +301,16 @@ public class RushEnemy : Enemy
             }
             else if (rushEnemyState == RushEnemyState.DEAD)
             {
+                
                 isDead = true;
-                //영준수정- 나중에 Destroy되는거 ObjectPool로 바꿔야함
-                //ObjectPoolManager.Instance.Free(gameObject);   
-                Destroy(gameObject);
+                //죽기전 애니메이션
+                SetAllAnimationFalse();
+                animator.SetBool("isDead", true);
+                //죽는 애니메이션 3초동안 유지하고 없어짐
+                yield return new WaitForSeconds(3.0f);
+                
+                ObjectPoolManager.Instance.Free(gameObject);   
+                //Destroy(gameObject);
             }
             yield return new WaitForEndOfFrame();
         }
@@ -297,7 +326,7 @@ public class RushEnemy : Enemy
     public void RushHit()
     {        
         IDamageable damageableObject = target.GetComponent<IDamageable>();
-        //이거 나중에 인자 없애줘야함
+        //영준수정-이거 나중에 인자 없애줘야함
         damageableObject.TakeHit(2);
         enemyAttack.KnockBack(target);
         isRushHit = true;
@@ -306,11 +335,13 @@ public class RushEnemy : Enemy
 
     IEnumerator RushTimer()
     {
+        isRushTimerOn = true;
         yield return new WaitForSeconds(timeBetweenAttack);        
         isRushAvailable = true;
         //isRushHit = false;
         isOnRush = false;
         rushTimerCoroutine = null;
+        isRushTimerOn = false;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -329,10 +360,20 @@ public class RushEnemy : Enemy
 
     private void ResetValue()
     {
-        isRushAvailable = true;
         isOnRush = false;
+        isRushAvailable = true;        
         isRushHit = false;
         rushTimerCoroutine = null;
+    }
+
+    //모든 Animator 변수 false하기
+    private void SetAllAnimationFalse()
+    {
+        animator.SetBool("isWalking", false);
+        animator.SetBool("isStanding", false);
+        animator.SetBool("isRunning", false);
+        animator.SetBool("isDead", false);
+        animator.SetBool("isAttacking", false);
     }
 
 }

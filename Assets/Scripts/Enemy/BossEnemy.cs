@@ -36,17 +36,22 @@ public class BossEnemy : Enemy
     //상태
     private BossEnemyState bossEnemyState;
 
+    //게임시작할때 몇초동안 기다렸다 Enemy상태 갱신하기
+    private float waitTimeForStart = 2.0f;
+
+    //[Animator관련 변수]
+    //Animator 변수
+    private Animator animator;
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.A))
-        {
-            Debug.Log("나 눌렀다고");
+        {            
             health = 1;
         }
 
         if (Input.GetKeyDown(KeyCode.D))
-        {
-            Debug.Log("나 눌렀다고");
+        {           
             health = 0;
         }
     }
@@ -63,6 +68,8 @@ public class BossEnemy : Enemy
         else
         {
             target = FindObjectOfType<Player>().gameObject;
+            animator = this.gameObject.GetComponent<Animator>();
+
             SetHealth();
             isDead = false;
             bossEnemyState = BossEnemyState.IDLE;
@@ -86,6 +93,9 @@ public class BossEnemy : Enemy
 
     IEnumerator CheckEnemyState()
     {
+        //맵 완전히 켜질때까지 기다리기
+        yield return new WaitForSeconds(waitTimeForStart);
+
         float halfHealth = startingHealth * 0.5f;
         //시작하고 3초간 가만히 있기
         yield return new WaitForSeconds(3.0f);
@@ -120,18 +130,21 @@ public class BossEnemy : Enemy
     }
 
     IEnumerator EnemyAction()
-    {       
+    {
+        //맵 완전히 켜질때까지 기다리기
+        yield return new WaitForSeconds(waitTimeForStart);
 
         while (!isDead)
-        {
-            
-            Debug.Log("상태" + bossEnemyState);
+        {              
             if (bossEnemyState == BossEnemyState.IDLE)
             {                
+
                 LockOnTarget();               
             }
             else if (bossEnemyState == BossEnemyState.ATTACKING_SHOOTING)
-            {               
+            {
+                SetAllAnimationFalse();
+                animator.SetBool("isWalking", true);
                 if (attackSkillCoroutine==null)
                 {
                     attackSkillCoroutine=StartCoroutine(SpreadShooting());                   
@@ -139,7 +152,9 @@ public class BossEnemy : Enemy
             }
             else if(bossEnemyState==BossEnemyState.ATTACKING_ROTATING)
             {
-                if(attackSkillCoroutine==null)
+                SetAllAnimationFalse();
+                animator.SetBool("isJumping", true);
+                if (attackSkillCoroutine==null)
                 {
                     attackSkillCoroutine = StartCoroutine(RotatingAttack());                    
                 }
@@ -147,9 +162,12 @@ public class BossEnemy : Enemy
             else if(bossEnemyState==BossEnemyState.DEAD)
             {
                 isDead = true;
-                //영준수정- 나중에 Destroy되는거 ObjectPool로 바꿔야함
-                //ObjectPoolManager.Instance.Free(gameObject);   
-                Destroy(gameObject);
+                SetAllAnimationFalse();
+                animator.SetBool("isDead", true);
+                //죽는 애니메이션 3초동안 유지하고 없어짐
+                yield return new WaitForSeconds(3.0f);
+
+                ObjectPoolManager.Instance.Free(gameObject);  
             }           
            
             yield return new WaitForEndOfFrame();
@@ -211,6 +229,17 @@ public class BossEnemy : Enemy
         isAttackWait = false;
         isAttackAvailable = true;
         attackSkillCoroutine = null;
+    }
+
+    //모든 Animator 변수 false하기
+    private void SetAllAnimationFalse()
+    {
+        animator.SetBool("isWalking", false);
+        animator.SetBool("isJumping", false);
+        animator.SetBool("isRunning", false);
+        animator.SetBool("isAttacking", false);
+        animator.SetBool("isGetHitting", false);
+        animator.SetBool("isDead", false);        
     }
 
 }

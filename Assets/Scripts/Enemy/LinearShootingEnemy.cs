@@ -51,6 +51,13 @@ public class LinearShootingEnemy : Enemy
     private float searchingRangeMaxZ;
     private float searchingRangeMinZ;
 
+    //게임시작할때 몇초동안 기다렸다 Enemy상태 갱신하기
+    private float waitTimeForStart = 2.0f;
+
+    //[Animator관련 변수]
+    //Animator 변수
+    private Animator animator;
+
     private void OnEnable()
     {
         //ObjectPooling하기위해 활성화된 경우
@@ -64,6 +71,7 @@ public class LinearShootingEnemy : Enemy
         {
             target = FindObjectOfType<Player>().gameObject;
             navMeshAgent = GetComponent<NavMeshAgent>();
+            animator = this.gameObject.GetComponent<Animator>();
 
             SetHealth();
             isDead = false;
@@ -83,6 +91,8 @@ public class LinearShootingEnemy : Enemy
             searchingRangeMinX = mapSize.x * -0.5f + searchingOffset;
             searchingRangeMaxZ = mapSize.y * 0.5f - searchingOffset;
             searchingRangeMinZ = mapSize.y * -0.5f + searchingOffset;
+
+            animator.SetBool("IsDead", false);
 
             StartCoroutine(EnemyAction());
             StartCoroutine(CheckEnemyState());
@@ -132,7 +142,10 @@ public class LinearShootingEnemy : Enemy
 
     IEnumerator CheckEnemyState()
     {
-        while(!isDead)
+        //맵 완전히 켜질때까지 기다리기
+        yield return new WaitForSeconds(waitTimeForStart);
+
+        while (!isDead)
         {
             Debug.Log("상태" + linearShootingEnemyState);
             float distance = Vector3.Distance(target.transform.position, transform.position);
@@ -167,17 +180,21 @@ public class LinearShootingEnemy : Enemy
 
     IEnumerator EnemyAction()
     {
+        //맵 완전히 켜질때까지 기다리기
+        yield return new WaitForSeconds(waitTimeForStart);
+
         while (!isDead)
         {
             
 
             if (linearShootingEnemyState == LinearShootingEnemyState.IDLE)
             {
-                //Debug.Log("상태" + linearShootingEnemyState);
-
+                
             }
             else if (linearShootingEnemyState == LinearShootingEnemyState.SEARCHING)
             {
+                SetAllAnimationFalse();
+                animator.SetBool("isWalking", true);
 
                 Vector3 curPosition = transform.position;
                 curPosition.y = 0;
@@ -193,7 +210,10 @@ public class LinearShootingEnemy : Enemy
             }
             else if (linearShootingEnemyState == LinearShootingEnemyState.CHASING)
             {
-                if(shootingCoroutine!=null)
+                SetAllAnimationFalse();
+                animator.SetBool("isRunning", true);
+
+                if (shootingCoroutine!=null)
                 {
                     StopCoroutine(shootingCoroutine);
                     shootingCoroutine = null;
@@ -204,7 +224,9 @@ public class LinearShootingEnemy : Enemy
             }
             else if (linearShootingEnemyState == LinearShootingEnemyState.ATTACKING_SHOOTING)
             {
-               
+                SetAllAnimationFalse();
+                animator.SetBool("isShaking", true);
+
                 LockOnTarget();
                 if(shootingCoroutine==null)
                 {
@@ -214,10 +236,14 @@ public class LinearShootingEnemy : Enemy
             }
             else if (linearShootingEnemyState == LinearShootingEnemyState.DEAD)
             {
+
                 isDead = true;
-                //영준수정- 나중에 Destroy되는거 ObjectPool로 바꿔야함
-                //ObjectPoolManager.Instance.Free(gameObject);   
-                Destroy(gameObject);
+                SetAllAnimationFalse();
+                animator.SetBool("isDead", true);
+                //죽는 애니메이션 3초동안 유지하고 없어짐
+                yield return new WaitForSeconds(3.0f);
+
+                ObjectPoolManager.Instance.Free(gameObject);
                 break;
             }
             yield return new WaitForEndOfFrame();
@@ -237,5 +263,14 @@ public class LinearShootingEnemy : Enemy
     private void ResetValue()
     {
         isSearchRestart = false;
+    }
+
+    //모든 Animator 변수 false하기
+    private void SetAllAnimationFalse()
+    {
+        animator.SetBool("isWalking", false);
+        animator.SetBool("isShaking", false);
+        animator.SetBool("isRunning", false);
+        animator.SetBool("isDead", false);        
     }
 }
