@@ -51,7 +51,8 @@ public class EnergySphere : Projectile
 
     IEnumerator CheckState()
     {
-        while(true)
+        FightSceneController.Instance.AddBulletToList(gameObject);
+        while (true)
         {
             if (state == EnerySphereState.MOVING)
             {
@@ -119,7 +120,8 @@ public class EnergySphere : Projectile
             else if (state == EnerySphereState.DESTROY)
             {
                 if (isSpecialMode == false)
-                {                    
+                {
+                    FightSceneController.Instance.RemoveBulletFromList(gameObject);
                     ObjectPoolManager.Instance.Free(gameObject);
                 }
                 else
@@ -140,7 +142,8 @@ public class EnergySphere : Projectile
 
                     }
                     else
-                    {                       
+                    {
+                        FightSceneController.Instance.RemoveBulletFromList(gameObject);
                         ObjectPoolManager.Instance.Free(gameObject);
                     }
 

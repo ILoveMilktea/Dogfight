@@ -290,8 +290,8 @@ Camera:
   m_GameObject: {fileID: 165192922}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -782,7 +782,7 @@ MonoBehaviour:
   - {fileID: 1505501896405044, guid: 15e60e67e6dddaf46a47da67544962c3, type: 3}
   - {fileID: 1366086724270930, guid: 94fee409d4927e748845d7226b7ad17b, type: 3}
   - {fileID: 1193039705364994, guid: 0135702d3d6a60c43a006bd3d9715587, type: 3}
-  poolAmount: 0a000000140000002003000020030000c8000000c8000000c8000000c8000000060000000a00000005000000030000002c010000f4010000f4010000f4010000f4010000f4010000f4010000f4010000f4010000f4010000f4010000
+  poolAmount: 0a000000140000002003000020030000c8000000c8000000c8000000c8000000060000000a00000005000000030000002c01000021030000210300002103000021030000210300002103000021030000210300002103000021030000
 --- !u!1 &1035538898
 GameObject:
   m_ObjectHideFlags: 0
@@ -840,7 +840,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 4d6ba342fbb009d4bb692860fb5ea909, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 90a2dde0942123c4ebb9c4af580c5818, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

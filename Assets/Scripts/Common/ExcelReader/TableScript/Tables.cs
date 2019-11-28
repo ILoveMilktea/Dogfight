@@ -125,7 +125,7 @@ public class StageEnemyTable
 
 public class Tables : MonoSingleton<Tables>
 {
-    private void Awake() 
+    protected override void Init()
     {
         DontDestroyOnLoad(gameObject);
     }

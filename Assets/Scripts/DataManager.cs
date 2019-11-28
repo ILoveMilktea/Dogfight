@@ -22,11 +22,10 @@ public class DataManager : MonoSingleton<DataManager>
     private DataCenter dataCenter;
     private DataSave dataSave;
     private DataLoad dataLoad;
-
-    private void Awake()
+    protected override void Init()
     {
         DontDestroyOnLoad(gameObject);
-        
+
 #if UNITY_IPHONE
         dataPath = Application.dataPath + "/Raw";
 #endif

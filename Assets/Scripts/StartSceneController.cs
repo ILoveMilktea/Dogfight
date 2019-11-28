@@ -8,11 +8,12 @@ public class StartSceneController : MonoSingleton<StartSceneController>
     public Button newButton;
     public Button continueButton;
 
-    private void Awake()
+    protected override void Init()
     {
         newButton.onClick.AddListener(OnClickNewButton);
         continueButton.onClick.AddListener(OnClickContinueButton);
     }
+
     // Start is called before the first frame update
     void Start()
     {

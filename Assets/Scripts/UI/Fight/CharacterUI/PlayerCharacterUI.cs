@@ -8,6 +8,8 @@ public class PlayerCharacterUI : CharacterUI
     private Slider reloadGauge;
     protected override void Awake()
     {
+        floatingText = Resources.Load("Prefab/UI/FloatingText") as GameObject;
+
         characterName = GetComponentInChildren<Text>();
         Slider[] sliders = GetComponentsInChildren<Slider>();
         characterHp = sliders[0];
@@ -41,5 +43,10 @@ public class PlayerCharacterUI : CharacterUI
         float reloadWidth = reloadRT.sizeDelta.x;
         sizeRatio = characterWidth / reloadWidth;
         reloadRT.sizeDelta = new Vector2(reloadRT.sizeDelta.x * sizeRatio, reloadRT.sizeDelta.y);
+    }
+
+    public void SetRemainHp(int value)
+    {
+        characterHp.value = value;
     }
 }

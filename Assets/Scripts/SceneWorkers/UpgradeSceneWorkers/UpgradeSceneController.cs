@@ -30,7 +30,7 @@ public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
     public Button upgradeButton;
     public Button fightButton;
 
-    private void Awake()
+    protected override void Init()
     {
         actButton.onClick.AddListener(OnClickActButton);
         upgradeButton.onClick.AddListener(OnClickUpgradeButton);
@@ -46,7 +46,7 @@ public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
 
     public void StartUpgradeScene()
     {
-        StartCoroutine(UIEffect.FadeIn(loadingImage.GetComponent<Image>()));
+        StartCoroutine(UIEffect.AlphaOut(loadingImage.GetComponent<Image>()));
 
         // 시작시 할 명령들?
         if (DataManager.Instance.GetPlayInfo.AlreadyAct)
@@ -157,7 +157,7 @@ public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
         DataManager.Instance.SetStage(DataManager.Instance.GetPlayInfo.Stage + 1);
 
         popupYN.gameObject.SetActive(false);
-        StartCoroutine(UIEffect.FadeOut(loadingImage.GetComponent<Image>()));
+        StartCoroutine(UIEffect.AlphaIn(loadingImage.GetComponent<Image>()));
         GameManager.Instance.SceneStart(Constants.FightSceneName);
     }
 

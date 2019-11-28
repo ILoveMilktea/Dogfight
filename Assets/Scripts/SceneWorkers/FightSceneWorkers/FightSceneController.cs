@@ -6,44 +6,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIGroup
-{
-    // 여러 UI를 한번에 동작시키기 위한 class
-    private List<GameObject> members = new List<GameObject>();
-
-    public void SetMember(GameObject member)
-    {
-        if (!members.Contains(member))
-        {
-            members.Add(member);
-        }
-    }
-
-    public void RemoveMember(GameObject member)
-    {
-        if (members.Contains(member))
-        {
-            members.Remove(member);
-        }
-    }
-
-    public void ActiveAllMembers()
-    {
-        foreach (var member in members)
-        {
-            member.SetActive(true);
-        }
-    }
-
-    public void InactiveAllMembers()
-    {
-        foreach (var member in members)
-        {
-            member.SetActive(false);
-        }
-    }
-}
-
 public class FightSceneController : MonoSingleton<FightSceneController>
 {
     private FightStatus fightStatus;
@@ -52,6 +14,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     private FightStateObserver fightStateObserver;
     private FightScheduler fightScheduler;
     private Player player;
+    private List<GameObject> curUsingBullets;
 
     // UI 관련
     private PlayerCharacterUI playerCharacterUI;
@@ -60,6 +23,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     private JoystickMove joystickMove;
 
     public ResultWindow resultWindow;
+    public DeadWindow deadWindow;
 
     public Transform characterUIGroup;
     public GameObject standbyImage;
@@ -68,17 +32,18 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     public Button pauseButton;
     public Text parts;
 
-
     private UIGroup fightGroup = new UIGroup();
     private UIGroup pauseGroup = new UIGroup();
+    private UIGroup statusGroup = new UIGroup();
 
-    private void Awake()
+    protected override void Init()
     {
         playTimer = FindObjectOfType<PlayTimer>();
-        
+
         fightStateObserver = FindObjectOfType<FightStateObserver>();
         fightScheduler = FindObjectOfType<FightScheduler>();
         player = FindObjectOfType<Player>();
+        curUsingBullets = new List<GameObject>();
 
         enemyCharacterUIs = new Dictionary<GameObject, CharacterUI>();
         joystickAttack = FindObjectOfType<JoystickAttack>();
@@ -108,7 +73,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     public void StartFightScene()
     {
         loadingImage.SetActive(true);
-        StartCoroutine(UIEffect.FadeIn(loadingImage.GetComponent<Image>()));
+        StartCoroutine(UIEffect.AlphaOut(loadingImage.GetComponent<Image>()));
 
         SetTimer();
         SetStage();
@@ -127,11 +92,12 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     {
         playTimer.StartTimer();
 
-        SetStateChangeCallback(FightState.Standby, playTimer.FreezeTimer);
+        SetStateChangeCallback(FightState.Standby, playTimer.StandbyTimer);
         SetStateChangeCallback(FightState.Fight, playTimer.ReleaseTimer);
         SetStateChangeCallback(FightState.Pause, playTimer.FreezeTimer);
-        SetStateChangeCallback(FightState.Standby, playTimer.FreezeTimer);
+        SetStateChangeCallback(FightState.Dead, playTimer.StandbyTimer);
     }
+
     // player status 등록
     private void SetPlayerOnStage()
     {
@@ -171,6 +137,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
 
         playerCharacterUI.SetName(fightStatus.playerStatus.name);
         playerCharacterUI.SetMaxHp(fightStatus.playerStatus.maxHp);
+        playerCharacterUI.SetRemainHp(fightStatus.playerStatus.remainHp);
         playerCharacterUI.SetTarget(player);
         playerCharacterUI.ResizeUI();
 
@@ -197,12 +164,20 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         // 일시정지 중 active한 UI들
         pauseGroup.SetMember(pauseImage.gameObject);
 
+        // status UI들
+        statusGroup.SetMember(parts.gameObject);
+        statusGroup.SetMember(playTimer.gameObject);
+        statusGroup.SetMember(pauseButton.gameObject);
+
 
         SetStateChangeCallback(FightState.Pause, fightGroup.InactiveAllMembers);
-        SetStateChangeCallback(FightState.Fight, fightGroup.ActiveAllMembers);
-
         SetStateChangeCallback(FightState.Pause, pauseGroup.ActiveAllMembers);
+
+        SetStateChangeCallback(FightState.Fight, fightGroup.ActiveAllMembers);
         SetStateChangeCallback(FightState.Fight, pauseGroup.InactiveAllMembers);
+
+        SetStateChangeCallback(FightState.Dead, fightGroup.InactiveAllMembers);
+        SetStateChangeCallback(FightState.Dead, statusGroup.InactiveAllMembers);
     }
 
 
@@ -302,6 +277,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     }
     public void DamageToCharacter(GameObject source, GameObject target)
     {
+        Debug.Log(source.name + " hit " + target.name);
         if (target == player.gameObject)
         {
             int damage = fightStatus.enemies[source].atk;
@@ -360,8 +336,12 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     
     public void PlayerDead()
     {
-        // 게임정지, 
+        ChangeFightState(FightState.Dead);
+        OffAllEnemy();
+        OffAllBullets();
+        StartCoroutine(deadWindow.DeadHandler());
     }
+
     public void EnemyDead(GameObject enemy)
     {
         // gain parts
@@ -382,10 +362,45 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         return fightStatus.remainEnemy;
     }
 
+    public void AddBulletToList(GameObject bullet)
+    {
+        curUsingBullets.Add(bullet);
+    }
+
+    public void RemoveBulletFromList(GameObject bullet)
+    {
+        if(curUsingBullets.Contains(bullet))
+        {
+            curUsingBullets.Remove(bullet);
+        }
+    }
+
+    public void OffAllBullets()
+    {
+        foreach(var bullet in curUsingBullets)
+        {
+            ObjectPoolManager.Instance.Free(bullet);
+        }
+
+        curUsingBullets.Clear();
+    }
+
+    public void OffAllEnemy()
+    {
+        foreach(var enemy in fightStatus.enemies.Keys)
+        {
+            enemy.SetActive(false);
+            OffCharacterUI(enemy);
+        }
+        OffCharacterUI(player.gameObject);
+    }
+
     public void ShowResult()
     {
+        OffAllBullets();
         ChangeFightState(FightState.Standby);
         playTimer.StopTimer();
+        player.StopMove();
         DataManager.Instance.Save();
 
         //resultWindow.ShowResult(EndFight);
@@ -401,7 +416,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         // save player reaminHp
         DataManager.Instance.SetRemainHp(fightStatus.playerStatus.remainHp);
 
-        StartCoroutine(UIEffect.FadeOut(loadingImage.GetComponent<Image>()));
+        StartCoroutine(UIEffect.AlphaIn(loadingImage.GetComponent<Image>()));
         GameManager.Instance.SceneStart(Constants.UpgradeSceneName);
     }
 }

@@ -28,7 +28,7 @@ public static class UIEffect
         target.transform.localScale = originalScale;
     }
 
-    public static IEnumerator FadeOut(Image target)
+    public static IEnumerator AlphaIn(Image target)
     {
         Color originalColor = target.color;
         Color alpha0 = new Color(originalColor.r, originalColor.g, originalColor.b, 0);
@@ -50,7 +50,7 @@ public static class UIEffect
         target.color = originalColor;
     }
 
-    public static IEnumerator FadeIn(Image target)
+    public static IEnumerator AlphaOut(Image target)
     {
         Color originalColor = target.color;
         Color alpha0 = new Color(originalColor.r, originalColor.g, originalColor.b, 0);

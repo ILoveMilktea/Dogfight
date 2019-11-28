@@ -28,15 +28,13 @@ public class GameManager : MonoSingleton<GameManager>
     
     private bool IsUIEffectEnd;
 
-    private void Awake()
+    protected override void Init()
     {
-        
         DontDestroyOnLoad(Instance);
 
         SceneManager.sceneLoaded += OnLoadCallback;
         OnLoadCallback(SceneManager.GetActiveScene(), LoadSceneMode.Single);
     }
-
 
     void OnLoadCallback(Scene scene, LoadSceneMode sceneMode)
     {

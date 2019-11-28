@@ -7,14 +7,36 @@ public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         get
         {
-            instance = FindObjectOfType(typeof(T)) as T;
 
             if (instance == null)
             {
-                instance = new GameObject("@" + typeof(T).ToString(), typeof(T)).GetComponent<T>();
+                instance = FindObjectOfType(typeof(T)) as T;
             }
+            
             return instance;
         }
+    }
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this as T;
+        }
+        else
+        {
+            if (instance != this as T)
+            {
+                Destroy(gameObject);
+                return;
+            }
+        }
+        Init();
+    }
+
+    protected virtual void Init()
+    {
+
     }
 }
 

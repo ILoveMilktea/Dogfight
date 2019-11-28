@@ -13,12 +13,19 @@ public class ObjectPoolManager : MonoSingleton<ObjectPoolManager>
     public int[] poolAmount;
     private Dictionary<string,ObjectPool> objectPoolList;
 
-    private void Awake()
+    protected override void Init()
     {
         objectPoolList = new Dictionary<string, ObjectPool>();
         DontDestroyOnLoad(Instance);
         InitObjectPool();
-    } 
+    }
+    //private void Awake()
+    //{
+    //    objectPoolList = new Dictionary<string, ObjectPool>();
+    //    DontDestroyOnLoad(Instance);
+    //    InitObjectPool();
+    //} 
+    // --------> MonoSingleton 변경으로 Init함수가 Awake 대신합니다.
 
     public void InitObjectPool()
     {

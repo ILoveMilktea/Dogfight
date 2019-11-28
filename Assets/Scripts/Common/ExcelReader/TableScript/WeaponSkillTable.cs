@@ -24,7 +24,7 @@ public class WeaponSkillTable : MonoSingleton<WeaponSkillTable>
 {
     private Dictionary<string, Dictionary<string, WeaponSkillInfo>> Tables = new Dictionary<string, Dictionary<string, WeaponSkillInfo>>();
 
-    private void Awake() 
+    protected override void Init()
     {
         DontDestroyOnLoad(gameObject);
     }

@@ -105,6 +105,7 @@ public class CharacterUI : MonoBehaviour
         }
         else
         {
+            Debug.Log(gameObject.name + "hit");
             characterHp.value -= value;
         }
         

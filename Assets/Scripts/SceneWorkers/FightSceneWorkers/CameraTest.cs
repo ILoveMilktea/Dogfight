@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraTest : MonoBehaviour
 {
     Vector3 prevPlayerPos;
-    Vector3 distance = new Vector3(0, 13, -15);
+    public Vector3 distance;
     public Transform player;
 
     // Start is called before the first frame update
@@ -19,6 +19,7 @@ public class CameraTest : MonoBehaviour
     {
         Vector3 v = player.transform.position - prevPlayerPos;
         v += distance;
+        v.x = 0;
         transform.position = Vector3.Lerp(transform.position, v, Time.deltaTime * 3);   
     }
 }

@@ -42,7 +42,7 @@ public class FightScheduler : MonoBehaviour
         FightSceneController.Instance.ChangeFightState(FightState.Fight);
         while(FightSceneController.Instance.RemainEnemyNumber() > 0)
         {
-            Debug.Log(FightSceneController.Instance.RemainEnemyNumber());
+
             yield return new WaitForEndOfFrame();
         }
 

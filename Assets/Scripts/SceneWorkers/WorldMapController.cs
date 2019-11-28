@@ -11,7 +11,7 @@ public class WorldMapController : MonoSingleton<WorldMapController>
 
     public PopupYN popupYN;
 
-    private void Awake()
+    protected override void Init()
     {
         Dungeon_Griffon.onClick.AddListener(OnClickDungeon_Griffon);
         Dungeon_2.interactable = false;

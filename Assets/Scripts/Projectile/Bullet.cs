@@ -38,8 +38,9 @@ public class Bullet : Projectile
     }
 
     IEnumerator CheckState()
-    {        
-        while(true)
+    {
+        FightSceneController.Instance.AddBulletToList(gameObject);
+        while (true)
         {            
             if (state == BulletSphereState.MOVING)
             {
@@ -63,10 +64,12 @@ public class Bullet : Projectile
             else if (state == BulletSphereState.STOP)
             {
                 //도착했을때 할거 처리하고
+                FightSceneController.Instance.RemoveBulletFromList(gameObject);
                 ObjectPoolManager.Instance.Free(gameObject);
             }
             else if (state == BulletSphereState.HIT)
             {
+                FightSceneController.Instance.RemoveBulletFromList(gameObject);
                 ObjectPoolManager.Instance.Free(gameObject);
             }
 

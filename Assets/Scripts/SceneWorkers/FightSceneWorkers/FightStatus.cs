@@ -86,7 +86,7 @@ public class FightStatus
     {
         if (enemies.ContainsKey(enemy))
         {
-            enemies.Remove(enemy);
+            //enemies.Remove(enemy);
             remainEnemy--;
         }
     }

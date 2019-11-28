@@ -24,7 +24,7 @@ public class SkillInfoTable : MonoSingleton<SkillInfoTable>
 {
     private Dictionary<string, SkillInfoInfo> Table = new Dictionary<string, SkillInfoInfo>();
 
-    private void Awake() 
+    protected override void Init()
     {
         DontDestroyOnLoad(gameObject);
     }

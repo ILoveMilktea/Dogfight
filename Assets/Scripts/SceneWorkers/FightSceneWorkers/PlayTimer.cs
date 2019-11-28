@@ -20,27 +20,34 @@ public class PlayTimer : MonoBehaviour
 
     public IEnumerator Timer()
     {
-        while(true)
+        while (true)
         {
             yield return new WaitForEndOfFrame();
 
-            if(isFight)
+            if (isFight)
             {
                 playtime += Time.deltaTime * 100;
             }
-            
+
             debugTimer.text = playtime.ToString("00:00");
         }
     }
 
+
+    public void StandbyTimer()
+    {
+        isFight = false;
+    }
     public void FreezeTimer()
     {
         isFight = false;
+        Time.timeScale = 0f;
     }
 
     public void ReleaseTimer()
     {
         isFight = true;
+        Time.timeScale = 1f;
     }
 
     public float GetPlaytime()
