@@ -48,7 +48,7 @@ public class JoystickSkill : JoystickBase
         if (moveAmount > 0.5f)
         {
             // joystick handle의 이동 범위가 반을 넘어가야 움직이는거
-            FightSceneController.Instance.PlayerAttack(moveDirection3D);
+            FightSceneController.Instance.PlayerSkill(moveDirection3D);
         }
 
     }

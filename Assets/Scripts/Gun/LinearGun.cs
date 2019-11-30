@@ -60,9 +60,18 @@ public class LinearGun : Gun
 
             GameObject source = FindObjectOfType<Player>().gameObject;
             newProjectile.SetSource(source);
+            //newProjectile.SetDamage(damage);
             newProjectile.SetMaxRange(maxRange);
-            newProjectile.SetDamage(damage);
             newProjectile.SetSpeed(muzzleVelocity);
+
+            //------------- critical 적용
+            float criticalDamage = damage + FightSceneController.Instance.GetPlayerATK();
+            if(Random.Range(0,100) <= criticalChance)
+            {
+                criticalDamage = criticalDamage * criticalDamageRate;
+            }
+            newProjectile.SetDamage(criticalDamage);
+            //------------- critical 적용
 
             //Debug.Log("projectile position: " + newProjectileObject.transform.position);
 
@@ -70,5 +79,11 @@ public class LinearGun : Gun
            
         }
 
+    }
+
+    public override void SkillShoot()
+    {
+        // special, burst 모드로 한번 쏘게 해주십셔
+        Shoot();
     }
 }

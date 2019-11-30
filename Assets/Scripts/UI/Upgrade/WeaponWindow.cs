@@ -195,7 +195,7 @@ public class WeaponWindow : MonoBehaviour
         int need = int.Parse(upgradeButtonText.text);
         int have = int.Parse(parts.text);
 
-        if(have > need)
+        if(have >= need)
         {
             WeaponType weaponType = (WeaponType)Enum.Parse(typeof(WeaponType), curWeaponName);
 

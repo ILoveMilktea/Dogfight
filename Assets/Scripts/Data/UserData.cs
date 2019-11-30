@@ -40,7 +40,7 @@ public class PlayerStatusInfo
     {
         MaxHp = 100;
         RemainHp = 100;
-        Atk = 10;
+        Atk = 5;
         BuffHp = 0;
         BuffAtk = 0;
     }

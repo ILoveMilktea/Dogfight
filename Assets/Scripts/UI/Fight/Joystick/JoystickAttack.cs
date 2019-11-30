@@ -53,6 +53,7 @@ public class JoystickAttack : JoystickBase
         {
             isSwap = false;
             // joystick handle의 이동 범위가 반을 넘어가야 움직이는거
+            FightSceneController.Instance.LookMoveRotate();
             FightSceneController.Instance.PlayerAttack(moveDirection3D);
         }
         else
@@ -64,6 +65,7 @@ public class JoystickAttack : JoystickBase
     private void Standby()
     {
         FightSceneController.Instance.PlayerStandby();
+        FightSceneController.Instance.UnLookMoveRotate();
     }
 
     private void CheckSwap()

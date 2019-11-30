@@ -45,8 +45,7 @@ public class EnergySphereGun : Gun
 
             if (skillMode == SkillMode.GENERAL)
             {
-
-                newProjectile.SetDamage(damage);
+                //newProjectile.SetDamage(damage);
                 newProjectile.SetMaxRange(maxRange);                
                 newProjectile.SetSpeed(muzzleVelocity);
                 
@@ -55,18 +54,34 @@ public class EnergySphereGun : Gun
             {
                 if(newProjectile is EnergySphere)
                 {
-                    newProjectile.SetDamage(damage);
+                    //newProjectile.SetDamage(damage);
                     newProjectile.SetMaxRange(maxRange);
                     newProjectile.SetSpeed(muzzleVelocity);
                     (newProjectile as EnergySphere).SetSpecialMode(true);
                 }
                 
             }
+            //------------- critical 적용
+            float criticalDamage = damage + FightSceneController.Instance.GetPlayerATK();
+            if (Random.Range(0, 100) <= criticalChance)
+            {
+                criticalDamage = criticalDamage * criticalDamageRate;
+            }
+            newProjectile.SetDamage(criticalDamage);
+            //------------- critical 적용
+
+            //source
+            GameObject source = FindObjectOfType<Player>().gameObject;
+            newProjectile.SetSource(source);
 
             newProjectileObject.SetActive(true);
            
 
         }
-
+    }
+    public override void SkillShoot()
+    {
+        // special 모드로 한번 쏘게 해주십셔
+        Shoot();
     }
 }

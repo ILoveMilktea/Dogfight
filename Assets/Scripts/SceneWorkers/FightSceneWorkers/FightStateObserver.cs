@@ -9,6 +9,7 @@ public enum FightState
     Fight,
     Pause,
     Dead,
+    End
 }
 
 public class FightStateObserver : MonoBehaviour

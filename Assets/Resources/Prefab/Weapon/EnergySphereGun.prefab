@@ -47,13 +47,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fireMode: 0
   skillMode: 0
+  isSkillEquiped: 0
+  skillKey: 
   muzzle: {fileID: 4766618024441617197}
   projectilePrefabName: EnergySphere
   msBetweenShots: 1000
-  muzzleVelocity: 20
-  maxRange: 5
-  damage: 1
-  burstCount: 0
+  muzzleVelocity: 40
+  maxRange: 7
+  damage: 10
+  burstCount: 2
+  knockBackForce: 0
+  directionNumber: 1
+  projectileMaxAngle: 0
+  criticalChance: 0
+  criticalDamageRate: 1.5
 --- !u!1 &4766618024441617198
 GameObject:
   m_ObjectHideFlags: 0

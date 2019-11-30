@@ -5,14 +5,14 @@ using UnityEngine;
 public class ShotGun : Gun
 {
    
+    ////샷건 KnockBack Force
+    //public float knockBackforce = 10.0f;
 
-    //샷건 KnockBack Force
-    public float knockBackforce = 10.0f;
-
-    //발사체 날라가는 방향 개수
-    public int directionNumber = 3;
-    //발사체 나가는 최대각도
-    public float projectileMaxAngle = 120.0f;
+    ////발사체 날라가는 방향 개수
+    //public int directionNumber = 3;
+    ////발사체 나가는 최대각도
+    //public float projectileMaxAngle = 120.0f;
+    // -----------> Gun으로 이동
 
     //발사체를 발사한 Object
     private GameObject source;    
@@ -78,7 +78,7 @@ public class ShotGun : Gun
 
                 if (skillMode == SkillMode.GENERAL)
                 {
-                    newProjectile.SetDamage(damage);
+                    //newProjectile.SetDamage(damage);
                     newProjectile.SetMaxRange(maxRange);
                     newProjectile.SetSpeed(muzzleVelocity);
                     //newProjectile.SetKnockBackMode(true);
@@ -86,18 +86,34 @@ public class ShotGun : Gun
                 }
                 else if (skillMode == SkillMode.SPECIAL)
                 {
-                    newProjectile.SetDamage(damage);
+                    //newProjectile.SetDamage(damage);
                     newProjectile.SetMaxRange(maxRange);
                     newProjectile.SetSpeed(muzzleVelocity);
                     newProjectile.SetKnockBackMode(true);
-                    newProjectile.SetKnockBackForce(knockBackforce);
+                    newProjectile.SetKnockBackForce(knockBackForce);
                     newProjectile.SetKnockBackMuzzlePosition(muzzle.position);
                     //newProjectile.SetPentratingActive(true);
                 }
+
+                //------------- critical 적용
+                float criticalDamage = damage + FightSceneController.Instance.GetPlayerATK();
+                if (Random.Range(0, 100) <= criticalChance)
+                {
+                    criticalDamage = criticalDamage * criticalDamageRate;
+                }
+                newProjectile.SetDamage(criticalDamage);
+                //------------- critical 적용
+
                 newProjectileObject.SetActive(true);
             }
                     
         }
+    }
+
+    public override void SkillShoot()
+    {
+        // special, burst 모드로 한번 쏘게 해주십셔
+        Shoot();
     }
 
     //아직 지우지 마세요~

@@ -9,14 +9,16 @@ public class Player : LivingEntity
 {
     //플레이어 상태
     public enum State { Idle, Attacking, Attacked, KnockBack };
-    public float moveSpeed = 5;
+    public float moveSpeed = 8;
+    public bool isAttacking = false;
 
     PlayerController controller;
     GunController gunController;
     Camera viewCamera;
+    CooldownTimer cooldownTimer; // 스킬 쿨타임
+
 
     int count = 0;
-    private WeaponType equipingWeapon;
 
     // Start is called before the first frame update
     public void Start()
@@ -24,8 +26,8 @@ public class Player : LivingEntity
         controller = GetComponent<PlayerController>();
         gunController = GetComponent<GunController>();
         viewCamera = Camera.main;
-
-        equipingWeapon = WeaponType.LinearGun;
+        cooldownTimer = FindObjectOfType<CooldownTimer>(); // 스킬 쿨타임
+        SetCooldownTimer();
     }
 
 
@@ -61,11 +63,21 @@ public class Player : LivingEntity
 
     }
 
+    private void SetCooldownTimer()
+    {
+        cooldownTimer.SetCooldownTime(5); // 임시 5초
+        cooldownTimer.StartFight();
+    }
+
     public void Move(Vector3 direction, float amount)
     {
         Vector3 moveVelocity = direction.normalized * moveSpeed;
         controller.Move(moveVelocity);
-        controller.LookAt(transform.position + direction);
+        if(!isAttacking)
+        {
+            controller.LookAt(transform.position + direction);
+        }
+        
         //Debug.Log("move" + direction);
 
         GetComponent<Animator>().SetBool("isMove", true); //임시 애니메이팅, 나중에 지움
@@ -90,7 +102,11 @@ public class Player : LivingEntity
     {
         controller.LookAt(transform.position + direction);
         // 여기서 guncontroller로 접속해서 스킬모드로 한방 쏴야하는데~~~
-        gunController.OnTirggerHold();
+        if (cooldownTimer.IsSkillReady())
+        {
+            gunController.OnSkillTriggerHold();
+            cooldownTimer.SkillUse();
+        }
     }
 
     public void Standby()
@@ -98,20 +114,34 @@ public class Player : LivingEntity
         gunController.OnTriggerRelease();
     }
 
-    // swappppp
     public WeaponType SwapWeapon()
     {
-        if (equipingWeapon == WeaponType.ShotGun)
-        {
-            equipingWeapon = WeaponType.EnergySphereGun;
-        }
-        else
-        {
-            equipingWeapon++;
-        }
+        return gunController.SwapWeapon();
+    }
 
-        gunController.EquipGun(Resources.Load<Gun>("Prefab/Weapon/" + equipingWeapon.ToString()));
+    // 더미데이터
+    private void SetGunStatus(Gun gun)
+    {
+        gun.fireMode = Gun.FireMode.AUTO;
+        gun.skillMode = Gun.SkillMode.GENERAL;
+        //발사시간간격(ms)
+        gun.msBetweenShots = 500.0f;
+        //발사체의 속도
+        gun.muzzleVelocity = 20.0f;
+        //총 사정거리
+        gun.maxRange = 10.0f;
+        //총 데미지
+        gun.damage = 1;
+        //burst모드일때 한번에 최대 몇개쏠수 있는지
+        //gun.burstCount;
 
-        return equipingWeapon;
+        // ------------> shotgun에서 이동
+        //샷건 KnockBack Force
+        gun.knockBackForce = 10.0f;
+
+        //발사체 날라가는 방향 개수
+        gun.directionNumber = 3;
+        //발사체 나가는 최대각도
+        gun.projectileMaxAngle = 120.0f;
     }
 }

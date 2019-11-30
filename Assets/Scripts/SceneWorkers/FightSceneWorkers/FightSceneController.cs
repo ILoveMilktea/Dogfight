@@ -96,6 +96,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         SetStateChangeCallback(FightState.Fight, playTimer.ReleaseTimer);
         SetStateChangeCallback(FightState.Pause, playTimer.FreezeTimer);
         SetStateChangeCallback(FightState.Dead, playTimer.StandbyTimer);
+        SetStateChangeCallback(FightState.End, playTimer.StandbyTimer);
     }
 
     // player status 등록
@@ -191,8 +192,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         SetStateChangeCallback(FightState.Dead, fightGroup.InactiveAllMembers);
         SetStateChangeCallback(FightState.Dead, statusGroup.InactiveAllMembers);
     }
-
-
+    
     // pause
     public void OnClickPauseButton()
     {
@@ -223,6 +223,15 @@ public class FightSceneController : MonoSingleton<FightSceneController>
 
 
     // player control
+    public Player GetPlayerScript()
+    {
+        return player;
+    }
+        
+    public int GetPlayerATK()
+    {
+        return fightStatus.playerStatus.atk;
+    }
     // 플레이어 이동
     public void MovePlayer(Vector3 dir, float amount)
     {
@@ -247,6 +256,14 @@ public class FightSceneController : MonoSingleton<FightSceneController>
             player.Attack(dir);
         }
     }
+    // 플레이어 스킬
+    public void PlayerSkill(Vector3 dir)
+    {
+        if (fightStateObserver.curFightState == FightState.Fight)
+        {
+            player.SkillAttack(dir);
+        }
+    }
     // 플레이어 공격 대기
     public void PlayerStandby()
     {
@@ -261,8 +278,16 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         WeaponType weapon = player.SwapWeapon();
         joystickAttack.WeaponImageSwap(weapon);
     }
+    public void LookMoveRotate()
+    {
+        player.isAttacking = true;
+    }
+    public void UnLookMoveRotate()
+    {
+        player.isAttacking = false;
+    }
 
-    // hp
+    // ---- hp
     public void DamageToCharacter(GameObject character, int damage)
     {
         if(character == player.gameObject)
@@ -287,7 +312,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
             }
         }
     }
-    public void DamageToCharacter(GameObject source, GameObject target)
+    public void DamageToCharacter(GameObject source, GameObject target, float gunDamage)
     {
         Debug.Log(source.name + " hit " + target.name);
         if (target == player.gameObject)
@@ -301,10 +326,9 @@ public class FightSceneController : MonoSingleton<FightSceneController>
                 PlayerDead();
             }
         }
-        else if (fightStatus.enemies.ContainsKey(target))
+        else if (source == player.gameObject)
         {
-            int damage = fightStatus.playerStatus.atk;
-
+            int damage = (int)gunDamage;
             if (enemyCharacterUIs.ContainsKey(target))
             {
                 enemyCharacterUIs[target].HpDown(damage);
@@ -316,7 +340,6 @@ public class FightSceneController : MonoSingleton<FightSceneController>
             }
         }
     }
-
     public void HealToCharacter(GameObject character, int value)
     {
         if (character.tag == "Player")
@@ -331,21 +354,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
             }
         }
     }
-    public void OffCharacterUI(GameObject character) // 죽었을 때
-    {
-        if (character.tag == "Player")
-        {
-            playerCharacterUI.gameObject.SetActive(false);
-        }
-        else if (character.tag == "Enemy")
-        {
-            if (enemyCharacterUIs.ContainsKey(character))
-            {
-                enemyCharacterUIs[character].gameObject.SetActive(false);
-            }
-        }
-    }
-    
+   
     public void PlayerDead()
     {
         ChangeFightState(FightState.Dead);
@@ -353,7 +362,6 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         OffAllBullets();
         StartCoroutine(deadWindow.DeadHandler());
     }
-
     public void EnemyDead(GameObject enemy)
     {
         // gain parts
@@ -369,34 +377,6 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         enemy.SetActive(false);
     }
 
-    public int RemainEnemyNumber()
-    {
-        return fightStatus.remainEnemy;
-    }
-
-    public void AddBulletToList(GameObject bullet)
-    {
-        curUsingBullets.Add(bullet);
-    }
-
-    public void RemoveBulletFromList(GameObject bullet)
-    {
-        if(curUsingBullets.Contains(bullet))
-        {
-            curUsingBullets.Remove(bullet);
-        }
-    }
-
-    public void OffAllBullets()
-    {
-        foreach(var bullet in curUsingBullets)
-        {
-            ObjectPoolManager.Instance.Free(bullet);
-        }
-
-        curUsingBullets.Clear();
-    }
-
     public void OffAllEnemy()
     {
         foreach(var enemy in fightStatus.enemies.Keys)
@@ -406,11 +386,59 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         }
         OffCharacterUI(player.gameObject);
     }
+    public void OffCharacterUI(GameObject character) // 죽었을 때
+    {
+        if (character.tag == "Player")
+        {
+            playerCharacterUI.gameObject.SetActive(false);
+        }
+        else if (character.tag == "Enemy")
+        {
+            if (enemyCharacterUIs.ContainsKey(character))
+            {
+                enemyCharacterUIs[character].gameObject.SetActive(false);
+            }
+        }
+    }
+    // ---- hp
 
+
+    //----- bullet
+    public void AddBulletToList(GameObject bullet)
+    {
+        curUsingBullets.Add(bullet);
+    }
+    public void RemoveBulletFromList(GameObject bullet)
+    {
+        if(curUsingBullets.Contains(bullet))
+        {
+            curUsingBullets.Remove(bullet);
+        }
+    }
+    public void OffAllBullets()
+    {
+        foreach(var bullet in curUsingBullets)
+        {
+            ObjectPoolManager.Instance.Free(bullet);
+        }
+
+        curUsingBullets.Clear();
+    }
+    //----- bullet
+
+
+    public int RemainEnemyNumber()
+    {
+        return fightStatus.remainEnemy;
+    }
+    public FightState GetCurrentFightState()
+    {
+        return fightStateObserver.curFightState;
+    }
     public void ShowResult()
     {
         OffAllBullets();
-        ChangeFightState(FightState.Standby);
+        ChangeFightState(FightState.End);
         playTimer.StopTimer();
         player.StopMove();
         DataManager.Instance.Save();

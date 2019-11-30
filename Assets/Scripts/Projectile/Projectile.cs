@@ -181,8 +181,8 @@ public abstract class Projectile : MonoBehaviour
         if (damageableObject != null)
         {            
             GameObject target = collider.gameObject;
-            damageableObject.TakeHit(damage);
-            FightSceneController.Instance.DamageToCharacter(source, target);
+            //damageableObject.TakeHit(damage);
+            FightSceneController.Instance.DamageToCharacter(source, target, damage);
         }
     }
 
