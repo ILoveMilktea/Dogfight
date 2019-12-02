@@ -25,7 +25,6 @@ public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
     public PopupYN popupYN;
     public PopupResult popupResult;
 
-    public GameObject loadingImage;
     public Button actButton;
     public Button upgradeButton;
     public Button fightButton;
@@ -45,9 +44,7 @@ public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
     }
 
     public void StartUpgradeScene()
-    {
-        StartCoroutine(UIEffect.AlphaOut(loadingImage.GetComponent<Image>()));
-
+    { 
         // 시작시 할 명령들?
         if (DataManager.Instance.GetPlayInfo.AlreadyAct)
         {
@@ -157,8 +154,7 @@ public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
         DataManager.Instance.SetStage(DataManager.Instance.GetPlayInfo.Stage + 1);
 
         popupYN.gameObject.SetActive(false);
-        StartCoroutine(UIEffect.AlphaIn(loadingImage.GetComponent<Image>()));
-        GameManager.Instance.SceneStart(Constants.FightSceneName);
+        GameManager.Instance.LoadNextScene(Constants.UpgradeSceneName, Constants.FightSceneName);
     }
 
     public void ClosePopupYN()

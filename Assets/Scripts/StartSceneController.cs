@@ -17,25 +17,22 @@ public class StartSceneController : MonoSingleton<StartSceneController>
     // Start is called before the first frame update
     void Start()
     {
+        GameManager.Instance.SceneStart(Constants.StartSceneName);
         if(!DataManager.Instance.CheckSaveData())
         {
             continueButton.interactable = false;
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void OnClickNewButton()
     {
-        GameManager.Instance.NewStartGame();
+        DataManager.Instance.RemoveSaveData();
+        GameManager.Instance.LoadNextScene(Constants.StartSceneName, Constants.WorldMapSceneName);
     }
 
     public void OnClickContinueButton()
     {
-        GameManager.Instance.ContinueGame();
+        DataManager.Instance.Load();
+        GameManager.Instance.LoadNextScene(Constants.StartSceneName, Constants.UpgradeSceneName);
     }
 }

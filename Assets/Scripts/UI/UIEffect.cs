@@ -6,8 +6,9 @@ using UnityEngine.UI;
 
 public static class UIEffect
 {
+    public static bool IsEffectEnd = true;
 
-    public static IEnumerator Expand(GameObject target)
+    public static IEnumerator Expand(GameObject target, Action EndCallback)
     {
         Vector3 originalScale = target.transform.localScale;
         target.transform.localScale = Vector3.zero;
@@ -26,79 +27,123 @@ public static class UIEffect
         }
 
         target.transform.localScale = originalScale;
+        EndCallback.Invoke();
     }
 
-    public static IEnumerator AlphaIn(Image target)
+    public static IEnumerator AlphaIn(Image target, Action EndCallback)
     {
-        Color originalColor = target.color;
-        Color alpha0 = new Color(originalColor.r, originalColor.g, originalColor.b, 0);
-        target.color = alpha0;
+        target.gameObject.SetActive(true);
 
-        if (target.gameObject.activeSelf == false)
-        {
-            target.gameObject.SetActive(true);
-        }
+        Color alpha255 = new Color(target.color.r, target.color.g, target.color.b, 1);
+        Color alpha0 = new Color(target.color.r, target.color.g, target.color.b, 0);
 
         float timer = 0f;
         while (timer < 1.0f)
         {
-            target.color = Color.Lerp(alpha0, originalColor, timer);
+            target.color = Color.Lerp(alpha0, alpha255, timer);
             yield return new WaitForEndOfFrame();
             timer += Time.deltaTime;
         }
 
-        target.color = originalColor;
+        //target.color = originalColor;
+        EndCallback.Invoke();
     }
 
-    public static IEnumerator AlphaOut(Image target)
+    public static IEnumerator AlphaOut(Image target, Action EndCallback)
     {
-        Color originalColor = target.color;
-        Color alpha0 = new Color(originalColor.r, originalColor.g, originalColor.b, 0);
+        Color alpha255 = new Color(target.color.r, target.color.g, target.color.b, 1);
+        Color alpha0 = new Color(target.color.r, target.color.g, target.color.b, 0);
 
         float timer = 0f;
         while (timer < 1.0f)
         {
-            target.color = Color.Lerp(originalColor, alpha0, timer);
+            target.color = Color.Lerp(alpha255, alpha0, timer);
             yield return new WaitForEndOfFrame();
             timer += Time.deltaTime;
         }
 
+        //target.color = originalColor;
         target.gameObject.SetActive(false);
-        target.color = originalColor;
+        EndCallback.Invoke();
     }
 
-    public static IEnumerator CutOut(Material target)
+    public static IEnumerator CutOut(Image target, Action EndCallback)
     {
-        float startRadius = target.GetFloat("_DefaultRadius");
+        target.gameObject.SetActive(true);
+        Material material = target.material;
+
+        float startRadius = material.GetFloat("_DefaultRadius");
         float lerpRadius = startRadius;
 
         float timer = 0f;
         while(lerpRadius > 0)
         {
             lerpRadius = Mathf.Lerp(startRadius, 0, timer);
-            target.SetFloat("_Radius", lerpRadius);
+            material.SetFloat("_Radius", lerpRadius);
             yield return new WaitForEndOfFrame();
             timer += Time.deltaTime;
         }
 
-        target.SetFloat("_Radius", 0);
-        GameManager.Instance.EndUIEffect();
+        material.SetFloat("_Radius", 0);
+        target.gameObject.SetActive(false);
+        EndCallback.Invoke();
     }
 
-    public static IEnumerator CutIn(Material target)
+    public static IEnumerator CutIn(Image target, Action EndCallback)
     {
-        float destinationRadius = target.GetFloat("_DefaultRadius");
+        target.gameObject.SetActive(true);
+        Material material = target.material;
+
+        float destinationRadius = material.GetFloat("_DefaultRadius");
         float lerpRadius = 0;
 
         float timer = 0f;
         while (lerpRadius < destinationRadius)
         {
             lerpRadius = Mathf.Lerp(0, destinationRadius, timer);
-            target.SetFloat("_Radius", lerpRadius);
+            material.SetFloat("_Radius", lerpRadius);
             yield return new WaitForEndOfFrame();
             timer += Time.deltaTime;
         }
-        target.SetFloat("_Radius", destinationRadius);
-        GameManager.Instance.EndUIEffect();
+        material.SetFloat("_Radius", destinationRadius);
+        target.gameObject.SetActive(false);
+        EndCallback.Invoke();
+    }
+
+    public static IEnumerator SlideDownIn(Image target, Action EndCallback)
+    {
+        Vector2 startPos = target.rectTransform.anchoredPosition;
+        Vector2 endPos = startPos;
+        endPos.y -= target.rectTransform.rect.height;
+
+        float timer = 0f;
+        while (timer < 1.0f)
+        {
+            target.rectTransform.anchoredPosition = Vector2.Lerp(startPos, endPos, timer);
+            yield return new WaitForEndOfFrame();
+            timer += Time.deltaTime;
+        }
+
+        target.rectTransform.anchoredPosition = endPos;
+        EndCallback.Invoke();
+    }
+
+    public static IEnumerator SlideDownOut(Image target, Action EndCallback)
+    {
+        Vector2 startPos = target.rectTransform.anchoredPosition;
+        Vector2 endPos = startPos;
+        endPos.y -= target.rectTransform.rect.height;
+
+        float timer = 0f;
+        while (timer < 1.0f)
+        {
+            target.rectTransform.anchoredPosition = Vector2.Lerp(startPos, endPos, timer);
+            yield return new WaitForEndOfFrame();
+            timer += Time.deltaTime;
+        }
+
+        startPos.y += target.rectTransform.rect.height;
+        target.rectTransform.anchoredPosition = startPos;
+        EndCallback.Invoke();
     }
 }

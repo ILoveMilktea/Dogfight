@@ -24,7 +24,7 @@ public class WeaponSkillTable : MonoSingleton<WeaponSkillTable>
 {
     private Dictionary<string, Dictionary<string, WeaponSkillInfo>> Tables = new Dictionary<string, Dictionary<string, WeaponSkillInfo>>();
 
-    protected override void Init()
+    protected override void Init() 
     {
         DontDestroyOnLoad(gameObject);
     }
@@ -63,16 +63,16 @@ public class WeaponSkillTable : MonoSingleton<WeaponSkillTable>
         }
     }
 
-    public Dictionary<string, WeaponSkillInfo> GetTable(string weaponName)
+    public Dictionary<string, WeaponSkillInfo> GetTable(string sheetName)
     {
-        return Tables[weaponName];
+        return Tables[sheetName];
     }
 
-    public WeaponSkillInfo GetTuple(string weaponName, string key)
+    public WeaponSkillInfo GetTuple(string sheetName, string key)
     {
         WeaponSkillInfo value;
 
-        if (Tables[weaponName].TryGetValue(key, out value))
+        if (Tables[sheetName].TryGetValue(key, out value))
             return value;
 
         return null;

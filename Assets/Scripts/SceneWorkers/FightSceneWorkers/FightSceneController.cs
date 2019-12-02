@@ -28,7 +28,6 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     public Transform characterUIGroup;
     public GameObject standbyImage;
     public GameObject pauseImage;
-    public GameObject loadingImage;
     public Button pauseButton;
     public Text parts;
 
@@ -72,9 +71,6 @@ public class FightSceneController : MonoSingleton<FightSceneController>
 
     public void StartFightScene()
     {
-        loadingImage.SetActive(true);
-        StartCoroutine(UIEffect.AlphaOut(loadingImage.GetComponent<Image>()));
-
         SetTimer();
         SetStage();
         fightScheduler.StageStart();
@@ -456,7 +452,6 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         // save player reaminHp
         DataManager.Instance.SetRemainHp(fightStatus.playerStatus.remainHp);
 
-        StartCoroutine(UIEffect.AlphaIn(loadingImage.GetComponent<Image>()));
-        GameManager.Instance.SceneStart(Constants.UpgradeSceneName);
+        GameManager.Instance.LoadNextScene(Constants.FightSceneName, Constants.UpgradeSceneName);
     }
 }

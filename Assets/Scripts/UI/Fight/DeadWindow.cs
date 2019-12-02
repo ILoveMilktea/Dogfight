@@ -12,7 +12,7 @@ public class DeadWindow : MonoBehaviour
     public IEnumerator DeadHandler()
     {
         background.gameObject.SetActive(true);
-        StartCoroutine(UIEffect.AlphaIn(background));
+        StartCoroutine(UIEffect.AlphaIn(background, null));
         while(background.color.a <1.0f)
         {
             yield return new WaitForEndOfFrame();
@@ -25,6 +25,6 @@ public class DeadWindow : MonoBehaviour
 
     private void BackToStartScene()
     {
-        GameManager.Instance.SceneStart(Constants.StartSceneName);
+        GameManager.Instance.LoadNextScene(Constants.FightSceneName, Constants.StartSceneName);
     }
 }

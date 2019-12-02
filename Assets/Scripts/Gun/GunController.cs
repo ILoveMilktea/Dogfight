@@ -9,7 +9,8 @@ public static class Const_PassiveSkill
     public const string AttackSpeedUp = "ASup";
     public const string AttackRangeUp = "ARup";
     public const string AttackAngleUp = "AAup";
-    public const string CriticalChanceUp = "Criticalup";
+    public const string CriticalChanceUp = "CCup";
+    public const string CriticalRateUp = "CRup";
 }
 
 public static class Const_ActiveSkill_1st
@@ -17,7 +18,7 @@ public static class Const_ActiveSkill_1st
     public const string PanetratingShot = "U_PanetratingShot";
     public const string KnockBack = "U_KnockBack";
     public const string GravityField = "U_GravityField";
-    public const string NodeKey = "4_1";
+    public const string NodeKey = "3_1";
 }
 
 public class GunController : MonoBehaviour

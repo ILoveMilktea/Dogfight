@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 static class Constants
@@ -24,84 +25,94 @@ public enum SceneType
 
 public class GameManager : MonoSingleton<GameManager>
 {
-    public Material spriteCutOut;
-    
+    public Image cutEffectImage;
+    public Image fadeEffectImage;
+    public Image slideEffectImage;
+
     private bool IsUIEffectEnd;
 
     protected override void Init()
     {
         DontDestroyOnLoad(Instance);
-
-        SceneManager.sceneLoaded += OnLoadCallback;
-        OnLoadCallback(SceneManager.GetActiveScene(), LoadSceneMode.Single);
     }
 
-    void OnLoadCallback(Scene scene, LoadSceneMode sceneMode)
-    {
-        switch (scene.name)
-        {
-            case Constants.StartSceneName:
-                //IsUIEffectEnd = false;
-                //StartCoroutine(UIEffect.CutIn(spriteCutOut));
-                break;
-            case Constants.WorldMapSceneName:
-                IsUIEffectEnd = false;
-                StartCoroutine(UIEffect.CutIn(spriteCutOut));
-                break;
-            case Constants.FightSceneName:
-                //FightSceneController.Instance.StartFightScene();
-                break;
-            case Constants.UpgradeSceneName:
-                break;
-        }
-    }
-    
     public void EndUIEffect()
     {
         IsUIEffectEnd = true;
     }
-
-    public void NewStartGame()
-    {
-        DataManager.Instance.RemoveSaveData();
-        SceneStart(Constants.WorldMapSceneName, true);
-    }
-    public void ContinueGame()
-    {
-        DataManager.Instance.Load();
-        SceneStart(Constants.UpgradeSceneName);
-    }
-
+    
     public void SceneStart(string sceneName)
-    {
-        IsUIEffectEnd = true;
-        StartCoroutine(LoadScene(sceneName));
-    }
-    public void SceneStart(string sceneName, bool cutoutEffect)
-    {
-        if(cutoutEffect)
-        {
-            IsUIEffectEnd = false;
-            SceneEndCallback(SceneManager.GetActiveScene().name);
-        }
-        StartCoroutine(LoadScene(sceneName));
-    }
-
-    private void SceneEndCallback(string sceneName)
     {
         switch (sceneName)
         {
             case Constants.StartSceneName:
-                StartCoroutine(UIEffect.CutOut(spriteCutOut));
+                IsUIEffectEnd = false;
+                StartCoroutine(UIEffect.CutIn(cutEffectImage, UIEffectEndListener));
                 break;
             case Constants.WorldMapSceneName:
-                StartCoroutine(UIEffect.CutOut(spriteCutOut));
+                IsUIEffectEnd = false;
+                StartCoroutine(UIEffect.CutIn(cutEffectImage, UIEffectEndListener));
                 break;
             case Constants.FightSceneName:
-                //FightSceneController.Instance.StartFightScene();
+                IsUIEffectEnd = false;
+                StartCoroutine(UIEffect.SlideDownOut(slideEffectImage, UIEffectEndListener));
                 break;
             case Constants.UpgradeSceneName:
+                IsUIEffectEnd = false;
+                StartCoroutine(UIEffect.SlideDownOut(slideEffectImage, UIEffectEndListener));
                 break;
+        }
+    }
+
+    public void LoadNextScene(string curSceneName, string nextSceneName)
+    {
+        Button[] buttons = FindObjectsOfType<Button>();
+        foreach(var button in buttons)
+        {
+            button.interactable = false;
+        }
+
+        switch (curSceneName)
+        {
+            case Constants.StartSceneName:
+                IsUIEffectEnd = false;
+                StartCoroutine(UIEffect.CutOut(cutEffectImage, UIEffectEndListener));
+                break;
+            case Constants.WorldMapSceneName:
+                IsUIEffectEnd = false;
+                StartCoroutine(UIEffect.CutOut(cutEffectImage, UIEffectEndListener));
+                break;
+            case Constants.FightSceneName:
+                IsUIEffectEnd = false;
+                StartCoroutine(UIEffect.SlideDownIn(slideEffectImage, UIEffectEndListener));
+                //StartCoroutine(UIEffect.AlphaIn(fadeEffectImage, UIEffectEndListener));
+                break;
+            case Constants.UpgradeSceneName:
+                IsUIEffectEnd = false;
+                StartCoroutine(UIEffect.SlideDownIn(slideEffectImage, UIEffectEndListener));
+                //StartCoroutine(UIEffect.AlphaIn(fadeEffectImage, UIEffectEndListener));
+                break;
+        }
+
+        StartCoroutine(LoadScene(nextSceneName));
+    }
+
+
+    public void UIEffectEndListener()
+    {
+        IsUIEffectEnd = true;
+    }
+    public void SetSlideImagePos(string sceneName)
+    {
+        if(sceneName == Constants.FightSceneName || sceneName == Constants.UpgradeSceneName)
+        {
+            RectTransform rt = slideEffectImage.rectTransform;
+            rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, 0);
+        }
+        else
+        {
+            RectTransform rt = slideEffectImage.rectTransform;
+            rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, rt.rect.height);
         }
     }
 
@@ -115,8 +126,9 @@ public class GameManager : MonoSingleton<GameManager>
         {
             yield return new WaitForEndOfFrame();
 
-            if(operation.progress >= 0.9f && IsUIEffectEnd && timer > 2f)
+            if(operation.progress >= 0.9f && IsUIEffectEnd && timer > 1f)
             {
+                SetSlideImagePos(sceneName);
                 operation.allowSceneActivation = true;
             }
             timer += Time.deltaTime;
@@ -138,10 +150,12 @@ public class GameManager : MonoSingleton<GameManager>
             //    }
             //}
         }
+
+        SceneStart(sceneName);
     }
 
     private void OnDestroy()
     {
-        spriteCutOut.SetFloat("_Radius", spriteCutOut.GetFloat("_DefaultRadius"));
+        cutEffectImage.material.SetFloat("_Radius", cutEffectImage.material.GetFloat("_DefaultRadius"));
     }
 }

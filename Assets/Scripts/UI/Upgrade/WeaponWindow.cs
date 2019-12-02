@@ -73,7 +73,7 @@ public class WeaponWindow : MonoBehaviour
         selectedWeapon.interactable = false;
         curWeaponName = selectedWeapon.image.name;
 
-        skillTextWindow.SetActive(false);
+        ResetSkillDescription();
         upgrade.gameObject.SetActive(false);
     }
 
@@ -93,12 +93,20 @@ public class WeaponWindow : MonoBehaviour
         weaponImage.sprite = Resources.Load<Sprite>("Image/Weapon/" + selectedWeapon.image.name);
         curWeaponName = selectedWeapon.image.name;
         SetSkillTree();
+        ResetSkillDescription();
     }
 
     public void ResetSkillWindow()
     {
-        skillTextWindow.SetActive(false);
+        ResetSkillDescription();
         upgrade.gameObject.SetActive(false);
+    }
+
+    private void ResetSkillDescription()
+    {
+        WeaponSkillInfo weaponSkillInfo = WeaponSkillTable.Instance.GetTuple(selectedWeapon.image.name, "0");
+        skillName.text = weaponSkillInfo.m_skillName;
+        skillDescription.text = weaponSkillInfo.m_description;
     }
 
     public void SetSkillTree()
@@ -153,7 +161,7 @@ public class WeaponWindow : MonoBehaviour
     
     public void SetSkillDescription()
     {
-        skillTextWindow.SetActive(true);
+        //skillTextWindow.SetActive(true);
 
         selectedSkill = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
 

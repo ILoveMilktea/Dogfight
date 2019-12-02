@@ -36,7 +36,7 @@ public class WorldMapController : MonoSingleton<WorldMapController>
     {
         ClosePopupYN();
         DataManager.Instance.SetDungeonName(Dungeon_Griffon.gameObject.name);
-        GameManager.Instance.SceneStart(Constants.FightSceneName, true);
+        GameManager.Instance.LoadNextScene(Constants.WorldMapSceneName, Constants.FightSceneName);
     }
 
     public void OpenPopupYN(string description, Action yesFunc, Action noFunc)

@@ -29,7 +29,7 @@ public class ResultWindow : MonoBehaviour
 
         disableTouchArea.SetActive(true);
 
-        StartCoroutine(UIEffect.Expand(background.gameObject));
+        //StartCoroutine(UIEffect.Expand(background.gameObject));
         // 왼쪽에 player figure on
         // stage name on
         //StartCoroutine(UIEffect.Expand(stageName.gameObject));
