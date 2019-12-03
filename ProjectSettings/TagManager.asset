@@ -19,8 +19,8 @@ TagManager:
   - Enemy
   - Player
   - UI_SkillNode
-  - 
-  - 
+  - UI_Dead
+  - Object_Dead
   - 
   - 
   - 

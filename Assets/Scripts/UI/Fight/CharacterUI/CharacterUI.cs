@@ -6,9 +6,7 @@ using UnityEngine.UI;
 public class CharacterUI : MonoBehaviour
 {
     protected GameObject floatingText;
-    private int xTextStack;
-    private int yTextStack;
-
+    
     protected Text characterName;
     protected Slider characterHp;
 
@@ -24,14 +22,10 @@ public class CharacterUI : MonoBehaviour
         characterHp = GetComponentInChildren<Slider>();
 
         rectTransform = GetComponent<RectTransform>();
+
+        characterName.resizeTextForBestFit = true;
     }
 
-    // Start is called before the first frame update
-    protected void Start()
-    {
-        xTextStack = 0;
-        yTextStack = 0;
-    }
 
     // Update is called once per frame
     // Late 안쓰면 ui가 먼저 가버려서 떨림 현상 생김
@@ -97,7 +91,7 @@ public class CharacterUI : MonoBehaviour
         DisplayDamage(value);
     }
 
-    public void HpDown(int value)
+    public virtual void HpDown(int value)
     {
         if(characterHp.value < value)
         {
@@ -105,7 +99,6 @@ public class CharacterUI : MonoBehaviour
         }
         else
         {
-            Debug.Log(gameObject.name + "hit");
             characterHp.value -= value;
         }
         
@@ -114,25 +107,18 @@ public class CharacterUI : MonoBehaviour
 
     private void DisplayDamage(int value)
     {
-        GameObject damageText = Instantiate(floatingText, transform) as GameObject;
-        //yTextStack++;
-        //if (yTextStack > 3)
-        //{
-        //    xTextStack++;
-        //    yTextStack = 1;
-        //}
+        Vector3 headPos = Camera.main.WorldToScreenPoint(target.transform.position + new Vector3(0, target.transform.lossyScale.y, 0));
+        Vector3 midPos = Camera.main.WorldToScreenPoint(target.transform.position);
 
-        // stack으로 약간 뎀지 입으면 순서대로 뜨게 좀 하고싶은데
-        StartCoroutine(damageText.GetComponent<FloatingText>().DisplayDamage(value, rectTransform, RemoveFloatingText));
-    }
+        //rectTransform.anchoredPosition = new Vector2(UIScreenPos.x, UIScreenPos.y);
 
-    public void RemoveFloatingText()
-    {
-        //yTextStack--;
-        //if(yTextStack < 1)
-        //{
-        //    xTextStack--;
-        //    yTextStack = 3;
-        //}
+        //GameObject damageText = ObjectPoolManager.Instance.Get("FloatingText");
+        //damageText.transform.parent = rectTransform;
+
+        GameObject damageText = Instantiate(floatingText, rectTransform) as GameObject;
+        RectTransform rt = damageText.GetComponent<RectTransform>();
+        rt.anchoredPosition = rt.anchoredPosition - new Vector2(0f, (headPos.y - midPos.y) * 2);
+
+        StartCoroutine(damageText.GetComponent<FloatingText>().DisplayDamage(value, rectTransform));
     }
 }

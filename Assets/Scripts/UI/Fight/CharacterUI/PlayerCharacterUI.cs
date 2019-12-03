@@ -5,18 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerCharacterUI : CharacterUI
 {
-    private Slider reloadGauge;
-    protected override void Awake()
-    {
-        floatingText = Resources.Load("Prefab/UI/FloatingText") as GameObject;
-
-        characterName = GetComponentInChildren<Text>();
-        Slider[] sliders = GetComponentsInChildren<Slider>();
-        characterHp = sliders[0];
-        reloadGauge = sliders[1];
-
-        rectTransform = GetComponent<RectTransform>();
-    }
+    public Text remainHp;
     
     public override void ResizeUI()
     {
@@ -38,15 +27,17 @@ public class PlayerCharacterUI : CharacterUI
         float HpWidth = hpRT.sizeDelta.x;
         float sizeRatio = characterWidth / HpWidth;
         hpRT.sizeDelta = new Vector2(hpRT.sizeDelta.x * sizeRatio, hpRT.sizeDelta.y);
-        // resize reloadGauge
-        RectTransform reloadRT = reloadGauge.GetComponent<RectTransform>();
-        float reloadWidth = reloadRT.sizeDelta.x;
-        sizeRatio = characterWidth / reloadWidth;
-        reloadRT.sizeDelta = new Vector2(reloadRT.sizeDelta.x * sizeRatio, reloadRT.sizeDelta.y);
     }
 
     public void SetRemainHp(int value)
     {
         characterHp.value = value;
+        remainHp.text = value.ToString();
+    }
+
+    public override void HpDown(int value)
+    {
+        base.HpDown(value);
+        remainHp.text = characterHp.value.ToString();
     }
 }

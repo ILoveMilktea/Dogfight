@@ -11,6 +11,7 @@ public class Player : LivingEntity
     public enum State { Idle, Attacking, Attacked, KnockBack };
     public float moveSpeed = 8;
     public bool isAttacking = false;
+    public Animator animator;
 
     PlayerController controller;
     GunController gunController;
@@ -80,14 +81,14 @@ public class Player : LivingEntity
         
         //Debug.Log("move" + direction);
 
-        GetComponent<Animator>().SetBool("isMove", true); //임시 애니메이팅, 나중에 지움
+        animator.SetBool("isMove", true); 
     }
 
     public void StopMove()
     {
         controller.Move(Vector3.zero);
 
-        GetComponent<Animator>().SetBool("isMove", false); //임시 애니메이팅, 나중에 지움
+        animator.SetBool("isMove", false); 
     }
 
     public void Attack(Vector3 direction)
@@ -119,29 +120,12 @@ public class Player : LivingEntity
         return gunController.SwapWeapon();
     }
 
-    // 더미데이터
-    private void SetGunStatus(Gun gun)
+
+    public void PlayerDead()
     {
-        gun.fireMode = Gun.FireMode.AUTO;
-        gun.skillMode = Gun.SkillMode.GENERAL;
-        //발사시간간격(ms)
-        gun.msBetweenShots = 500.0f;
-        //발사체의 속도
-        gun.muzzleVelocity = 20.0f;
-        //총 사정거리
-        gun.maxRange = 10.0f;
-        //총 데미지
-        gun.damage = 1;
-        //burst모드일때 한번에 최대 몇개쏠수 있는지
-        //gun.burstCount;
+        StopMove();
+        Standby();
 
-        // ------------> shotgun에서 이동
-        //샷건 KnockBack Force
-        gun.knockBackForce = 10.0f;
-
-        //발사체 날라가는 방향 개수
-        gun.directionNumber = 3;
-        //발사체 나가는 최대각도
-        gun.projectileMaxAngle = 120.0f;
+        animator.SetTrigger("isDead");
     }
 }

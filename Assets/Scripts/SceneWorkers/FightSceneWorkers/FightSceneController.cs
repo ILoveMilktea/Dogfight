@@ -21,6 +21,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     private Dictionary<GameObject, CharacterUI> enemyCharacterUIs;
     private JoystickAttack joystickAttack;
     private JoystickMove joystickMove;
+    private JoystickSkill joystickSkill;
 
     public ResultWindow resultWindow;
     public DeadWindow deadWindow;
@@ -47,6 +48,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         enemyCharacterUIs = new Dictionary<GameObject, CharacterUI>();
         joystickAttack = FindObjectOfType<JoystickAttack>();
         joystickMove = FindObjectOfType<JoystickMove>();
+        joystickSkill = FindObjectOfType<JoystickSkill>();
 
         resultWindow = FindObjectOfType<ResultWindow>();
         pauseButton.onClick.AddListener(OnClickPauseButton);
@@ -169,6 +171,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         // 전투 중 active한 UI들
         fightGroup.SetMember(joystickAttack.gameObject);
         fightGroup.SetMember(joystickMove.gameObject);
+        fightGroup.SetMember(joystickSkill.gameObject);
 
         // 일시정지 중 active한 UI들
         pauseGroup.SetMember(pauseImage.gameObject);
@@ -354,9 +357,10 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     public void PlayerDead()
     {
         ChangeFightState(FightState.Dead);
-        OffAllEnemy();
+        OffAllCharacterUI();
         OffAllBullets();
-        StartCoroutine(deadWindow.DeadHandler());
+        player.PlayerDead();
+        StartCoroutine(deadWindow.DeadHandler(OffAllEnemy));
     }
     public void EnemyDead(GameObject enemy)
     {
@@ -378,23 +382,18 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         foreach(var enemy in fightStatus.enemies.Keys)
         {
             enemy.SetActive(false);
-            OffCharacterUI(enemy);
         }
-        OffCharacterUI(player.gameObject);
     }
-    public void OffCharacterUI(GameObject character) // 죽었을 때
+    public void OffAllCharacterUI() // 죽었을 때
     {
-        if (character.tag == "Player")
+        foreach (var enemy in fightStatus.enemies.Keys)
         {
-            playerCharacterUI.gameObject.SetActive(false);
-        }
-        else if (character.tag == "Enemy")
-        {
-            if (enemyCharacterUIs.ContainsKey(character))
+            if (enemyCharacterUIs.ContainsKey(enemy))
             {
-                enemyCharacterUIs[character].gameObject.SetActive(false);
+                enemyCharacterUIs[enemy].gameObject.SetActive(false);
             }
         }
+        playerCharacterUI.gameObject.SetActive(false);
     }
     // ---- hp
 

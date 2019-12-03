@@ -29,6 +29,24 @@ public static class UIEffect
         target.transform.localScale = originalScale;
         EndCallback.Invoke();
     }
+    public static IEnumerator AlphaIn(Image target)
+    {
+        target.gameObject.SetActive(true);
+
+        Color alpha255 = new Color(target.color.r, target.color.g, target.color.b, 1);
+        Color alpha0 = new Color(target.color.r, target.color.g, target.color.b, 0);
+
+        float timer = 0f;
+        while (timer < 1.0f)
+        {
+            target.color = Color.Lerp(alpha0, alpha255, timer);
+            yield return new WaitForEndOfFrame();
+            timer += Time.deltaTime;
+        }
+
+        target.color = alpha255;
+        
+    }
 
     public static IEnumerator AlphaIn(Image target, Action EndCallback)
     {

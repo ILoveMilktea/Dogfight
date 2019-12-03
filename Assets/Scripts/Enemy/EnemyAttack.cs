@@ -62,6 +62,15 @@ public class EnemyAttack : MonoBehaviour
     //일반 직선으로 날아가는 발사체 공격
     public void LinearShooting(Transform muzzle)
     {
+        //---- 총알 발사 높이 통일(0.5f)
+        muzzle.position = new Vector3(muzzle.position.x, 0.5f, muzzle.position.z);
+        if(FightSceneController.Instance.GetCurrentFightState() == FightState.Dead)
+        {
+            // 플레이어 뒈짓시 공격 ㄴㄴ
+            return;
+        }
+        //------
+
         float tmpAngle = 0f;
         if(directionNumber!=1)
         {
