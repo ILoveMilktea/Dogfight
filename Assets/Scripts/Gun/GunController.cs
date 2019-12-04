@@ -27,13 +27,13 @@ public class GunController : MonoBehaviour
     public Gun startingGun;
     private Gun equippedGun;
 
-    private WeaponType equipingWeapon;
+    private WeaponType equipedWeaponType;
 
     void Start()
     {
         if(startingGun!=null)
         {
-            equipingWeapon = (WeaponType)Enum.Parse(typeof(WeaponType), startingGun.name);
+            equipedWeaponType = (WeaponType)Enum.Parse(typeof(WeaponType), startingGun.name);
             EquipGun(startingGun);
         }
     }
@@ -52,7 +52,7 @@ public class GunController : MonoBehaviour
 
         //equippedGun = gunToEquip;
         equippedGun = Instantiate(gunToEquip,weaponHold.position,weaponHold.rotation);
-        ApplyActivatedSkill(equipingWeapon, equippedGun);
+        ApplyActivatedSkill(equipedWeaponType, equippedGun);
         equippedGun.transform.parent = weaponHold;
     }
 
@@ -82,26 +82,29 @@ public class GunController : MonoBehaviour
         }
     }
 
-
+    public float CurrentWeaponRange()
+    {
+        return equippedGun.maxRange;
+    }
 
     // swappppp
     public WeaponType SwapWeapon()
     {
-        if (equipingWeapon == WeaponType.ShotGun)
+        if (equipedWeaponType == WeaponType.ShotGun)
         {
-            equipingWeapon = WeaponType.EnergySphereGun;
+            equipedWeaponType = WeaponType.EnergySphereGun;
         }
         else
         {
-            equipingWeapon++;
+            equipedWeaponType++;
         }
 
         //Gun gun = ObjectPoolManager.Instance.ReadFirstOneFromUnusedList(equipingWeapon.ToString()).GetComponent<Gun>();
         //gunController.EquipGun(gun);
-        Gun gun = Resources.Load<Gun>("Prefab/Weapon/" + equipingWeapon.ToString());
+        Gun gun = Resources.Load<Gun>("Prefab/Weapon/" + equipedWeaponType.ToString());
         EquipGun(gun);
 
-        return equipingWeapon;
+        return equipedWeaponType;
     }
 
     // 스킬 켜진거 적용하는곳

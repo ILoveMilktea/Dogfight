@@ -54,6 +54,9 @@ public class LinearShootingEnemy : Enemy
     //게임시작할때 몇초동안 기다렸다 Enemy상태 갱신하기
     private float waitTimeForStart = 2.0f;
 
+    // Trajectory, 공격 궤적
+    private TrajectoryLine trajectoryLine;
+
     //[Animator관련 변수]
     //Animator 변수
     private Animator animator;
@@ -217,6 +220,12 @@ public class LinearShootingEnemy : Enemy
                 {
                     StopCoroutine(shootingCoroutine);
                     shootingCoroutine = null;
+
+                    if(trajectoryLine != null)
+                    {
+                        trajectoryLine.RemoveLine();
+                        trajectoryLine = null;
+                    }
                 }
                 Move();
                 LockOnTarget();
@@ -228,9 +237,14 @@ public class LinearShootingEnemy : Enemy
                 animator.SetBool("isShaking", true);
 
                 LockOnTarget();
-                if(shootingCoroutine==null)
+                if(shootingCoroutine == null)
                 {
-                    shootingCoroutine=StartCoroutine(Shooting());
+                    shootingCoroutine =StartCoroutine(Shooting());
+
+                    // 궤적 추가
+                    trajectoryLine = ObjectPoolManager.Instance.Get("TrajectoryLine").GetComponent<TrajectoryLine>();
+                    trajectoryLine.gameObject.SetActive(true);
+                    StartCoroutine(trajectoryLine.DrawTrajectoryWhileInterrupt(gameObject, target.gameObject));
                 }
                 //Debug.Log("상태" + linearShootingEnemyState);
             }
@@ -253,7 +267,7 @@ public class LinearShootingEnemy : Enemy
     IEnumerator Shooting()
     {
         //Debug.Log("shooting코루틴");
-        while(!isDead)
+        while (!isDead)
         {
             enemyAttack.LinearShooting(muzzle);
             yield return new WaitForSeconds(timeBetweenAttack);

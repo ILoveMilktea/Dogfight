@@ -26,6 +26,7 @@ public class DeadWindow : MonoBehaviour
         string[] deadCullingLayer = new string[] { "UI_Dead", "Player" };
         Camera.main.cullingMask = LayerMask.GetMask(deadCullingLayer);
 
+        ObjectPoolManager.Instance.SetActvieFalseAllPrefabs();
         gameover.gameObject.SetActive(true);
         backToStart.gameObject.SetActive(true);
         backToStart.onClick.AddListener(BackToStartScene);

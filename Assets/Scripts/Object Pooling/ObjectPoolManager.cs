@@ -11,7 +11,7 @@ public class ObjectPoolManager : MonoSingleton<ObjectPoolManager>
     public GameObject[] poolList;
     //개별 풀링 개수
     public int[] poolAmount;
-    private Dictionary<string,ObjectPool> objectPoolList;
+    private Dictionary<string, ObjectPool> objectPoolList;
 
     protected override void Init()
     {
@@ -29,14 +29,14 @@ public class ObjectPoolManager : MonoSingleton<ObjectPoolManager>
 
     public void InitObjectPool()
     {
-       
-        for(int i=0; i<poolList.Length; ++i)
+
+        for (int i = 0; i < poolList.Length; ++i)
         {
             //각 ObjectPool에 Prefab을 넣는 작업
             ObjectPool objectPool = new ObjectPool();
-            objectPool.source = poolList[i];         
+            objectPool.source = poolList[i];
             objectPoolList[poolList[i].name] = objectPool;
-           
+
             GameObject folder = new GameObject();
             folder.name = poolList[i].name;
             folder.transform.parent = this.transform;
@@ -45,23 +45,23 @@ public class ObjectPoolManager : MonoSingleton<ObjectPoolManager>
             //Default 풀링 개수
             int amount = defaultAmount;
             //개별 풀링 개수
-            if(poolAmount.Length>i && poolAmount[i]!=0)
+            if (poolAmount.Length > i && poolAmount[i] != 0)
             {
                 amount = poolAmount[i];
             }
 
             //풀을 생성해서 비활성화 하는 작업
-            for(int j=0; j<amount; ++j)
+            for (int j = 0; j < amount; ++j)
             {
-               
+
                 GameObject inst = Instantiate(objectPool.source);
                 inst.SetActive(false);
                 inst.transform.parent = folder.transform;
                 objectPool.unusedList.Add(inst);
-               
+
                 //한번에 풀을 생성할 때 부하줄이기 위해서 코루틴 사용
                 //yield return new WaitForEndOfFrame();
-            }            
+            }
 
             objectPool.maxAmount = amount;
 
@@ -85,7 +85,7 @@ public class ObjectPoolManager : MonoSingleton<ObjectPoolManager>
             GameObject obj = pool.unusedList[0];
             pool.unusedList.RemoveAt(0);
             //obj.SetActive(true);
-            
+
             return obj;
         }
         //사용 가능한 Object가 없을 때
@@ -108,10 +108,10 @@ public class ObjectPoolManager : MonoSingleton<ObjectPoolManager>
             Debug.Log("[ObjectPoolManager] Can't find Free ObjectPool!" + name);
         }
 
-        ObjectPool pool = objectPoolList[keyName];        
-        obj.SetActive(false);        
+        ObjectPool pool = objectPoolList[keyName];
+        obj.SetActive(false);
         pool.unusedList.Add(obj);
-        
+
     }
 
     //UnusedList에서 빼지않고 그 안의 첫번째 객체에만 접근하기
@@ -126,7 +126,7 @@ public class ObjectPoolManager : MonoSingleton<ObjectPoolManager>
         ObjectPool pool = objectPoolList[name];
         if (pool.unusedList.Count > 0)
         {
-            GameObject obj = pool.unusedList[0];            
+            GameObject obj = pool.unusedList[0];
             return obj;
         }
         //사용 가능한 Object가 없을 때
@@ -148,7 +148,7 @@ public class ObjectPoolManager : MonoSingleton<ObjectPoolManager>
         ObjectPool pool = objectPoolList[name];
         if (pool.unusedList.Count > 0)
         {
-            
+
             return pool.unusedList;
         }
         //사용 가능한 Object가 없을 때
@@ -158,5 +158,19 @@ public class ObjectPoolManager : MonoSingleton<ObjectPoolManager>
         }
     }
 
-   
+    //활성화된 프리팹들 찾아서 비활성화 시키기
+    public void SetActvieFalseAllPrefabs()
+    {
+        foreach (var pair in objectPoolList)
+        {
+            foreach (Transform child in pair.Value.folder.transform)
+            {
+                if (child.gameObject.activeSelf == true)
+                {
+                    Free(child.gameObject);
+                }
+            }
+        }
+    }
+
 }

@@ -35,7 +35,7 @@ public class FenceGenerator : MonoBehaviour
 
                 Transform prefabTmp = fencePrefabListFromObjectPool[count].transform;
                 prefabTmp.position = fencePosition;
-                prefabTmp.parent = transform;
+                //prefabTmp.parent = transform;
                 fencePrefabList.Add(prefabTmp);
                 count++;
             }

@@ -442,6 +442,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         EndFight();
     }
 
+
     public void EndFight()
     {
         // save playtime

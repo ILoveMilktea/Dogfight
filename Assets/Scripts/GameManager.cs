@@ -102,6 +102,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         IsUIEffectEnd = true;
     }
+
     public void SetSlideImagePos(string sceneName)
     {
         if(sceneName == Constants.FightSceneName || sceneName == Constants.UpgradeSceneName)
@@ -128,6 +129,11 @@ public class GameManager : MonoSingleton<GameManager>
 
             if(operation.progress >= 0.9f && IsUIEffectEnd && timer > 1f)
             {
+                if(sceneName == Constants.UpgradeSceneName || sceneName == Constants.StartSceneName)
+                {
+                    // objectpool 샷다내림
+                    ObjectPoolManager.Instance.SetActvieFalseAllPrefabs();
+                }
                 SetSlideImagePos(sceneName);
                 operation.allowSceneActivation = true;
             }

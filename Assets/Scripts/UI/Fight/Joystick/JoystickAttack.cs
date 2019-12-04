@@ -8,6 +8,7 @@ public class JoystickAttack : JoystickBase
     public Image equipingWeapon;
     private bool isSwap;
 
+    private TrajectoryLine trajectoryLine;
     protected override void Start()
     {
         base.Start();
@@ -55,15 +56,33 @@ public class JoystickAttack : JoystickBase
             // joystick handle의 이동 범위가 반을 넘어가야 움직이는거
             FightSceneController.Instance.LookMoveRotate();
             FightSceneController.Instance.PlayerAttack(moveDirection3D);
+
+            if (trajectoryLine == null)
+            {
+                TurnOnTrajectoryLine();
+            }
+            Player player = FindObjectOfType<Player>();
+            trajectoryLine.DrawLineUntilRange(player.GetMuzzlePosition(), moveDirection3D,
+                player.GetAttackRange());
         }
         else
         {
             Standby();
+
+            if (trajectoryLine != null)
+            {
+                TurnOffTrajectoryLine();
+            }
         }
     }
 
     private void Standby()
     {
+        if(trajectoryLine != null)
+        {
+            TurnOffTrajectoryLine();
+        }
+
         FightSceneController.Instance.PlayerStandby();
         FightSceneController.Instance.UnLookMoveRotate();
     }
@@ -80,5 +99,17 @@ public class JoystickAttack : JoystickBase
     public void WeaponImageSwap(WeaponType weapon)
     {
         equipingWeapon.sprite = Resources.Load<Sprite>("Image/Weapon/" + weapon.ToString());
+    }
+
+    private void TurnOnTrajectoryLine()
+    {
+        trajectoryLine = ObjectPoolManager.Instance.Get("TrajectoryLine").GetComponent<TrajectoryLine>();
+        trajectoryLine.gameObject.SetActive(true);
+        trajectoryLine.SetColor("Player");
+    }
+    private void TurnOffTrajectoryLine()
+    {
+        trajectoryLine.RemoveLine();
+        trajectoryLine = null;
     }
 }

@@ -128,4 +128,14 @@ public class Player : LivingEntity
 
         animator.SetTrigger("isDead");
     }
+
+    public float GetAttackRange()
+    {
+        return gunController.CurrentWeaponRange();
+    }
+
+    public Vector3 GetMuzzlePosition()
+    {
+        return gunController.weaponHold.position;
+    }
 }

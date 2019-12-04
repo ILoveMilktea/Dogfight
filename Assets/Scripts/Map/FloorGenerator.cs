@@ -23,7 +23,7 @@ public class FloorGenerator : MonoBehaviour
         //나중에 Read String Stage이름으로 바꿔야함
         
         List<GameObject> floorPrefabListFromObjectPool = ObjectPoolManager.Instance.ReadAllFromUnusedList(floorPrefabName);
-       
+
         Vector3 floorLocalScale = floorPrefabListFromObjectPool[0].transform.localScale;
 
         int count = 0;        
@@ -40,7 +40,7 @@ public class FloorGenerator : MonoBehaviour
 
                 Transform prefabTmp = floorPrefabListFromObjectPool[count].transform;
                 prefabTmp.position = floorPosition;
-                prefabTmp.parent = transform;
+                //prefabTmp.parent = transform;
                 floorPrefabList[y].Add(prefabTmp);                             
                 count++;                         
                 
