@@ -5,6 +5,7 @@ using UnityEngine;
 //Bullet(총알) 클래스
 public class Bullet : Projectile
 {
+    public ProjectileEffect projectileEffect;
     //총알 상태
     public enum BulletSphereState
     {   MOVING,
@@ -47,6 +48,7 @@ public class Bullet : Projectile
                 if (isHit == true) //무엇가에 맞았다면
                 {
                     state = BulletSphereState.HIT;
+                    projectileEffect.HitEffect(transform.position);
                 }
                 else //맞지않았다면
                 {

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 337068488213214070}
   - component: {fileID: 5652710427429728443}
   m_Layer: 0
-  m_Name: Bullet_Enemy
+  m_Name: Bullet_Spiderrr
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -95,6 +95,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionDamageObjectTagList:
   - Player
+  projectileEffect: {fileID: 0}
 --- !u!54 &337068488213214070
 Rigidbody:
   m_ObjectHideFlags: 0
