@@ -12,7 +12,7 @@ public class FloorGenerator : MonoBehaviour
     public void PrepareFloor(Vector2 mapSize, int stage, out List<List<Transform>> floorPrefabList)
     {
        
-        floorPrefabName = SetFloorPrefabName(stage);
+        floorPrefabName = Const_ObjectPoolName.Floor_Griffon_Base;
 
         floorPrefabList = new List<List<Transform>>();
        
@@ -36,7 +36,7 @@ public class FloorGenerator : MonoBehaviour
                 floorPrefabList.Add(new List<Transform>());
 
                 //Vector3 floorPosition = new Vector3((-mapSize.x / 2 + 0.5f + x)*floorLocalScale.x, 0, (mapSize.y/2 - 0.5f - y)*floorLocalScale.z);
-                Vector3 floorPosition = new Vector3((x + 1.0f) * floorLocalScale.x, 0, (y + 1.0f) * floorLocalScale.z);
+                Vector3 floorPosition = new Vector3((x + 1.0f) * floorLocalScale.x, -1f, (y + 1.0f) * floorLocalScale.z);
 
                 Transform prefabTmp = floorPrefabListFromObjectPool[count].transform;
                 prefabTmp.position = floorPosition;
@@ -79,32 +79,5 @@ public class FloorGenerator : MonoBehaviour
         navMeshSurface.BuildNavMesh();
     }
 
-    public string SetFloorPrefabName(int stage)
-    {
-        string floorPrefabName = null;
-        switch (stage)
-        {
-            case 1:
-                floorPrefabName = "Stage1_Floor";
-                break;
-            case 2:
-                floorPrefabName = "Stage2_Floor";
-                break;
-            case 3:
-                floorPrefabName = "Stage3_Floor";
-                break;
-            case 4:
-                floorPrefabName = "Stage4_Floor";
-                break;
-            case 5:
-                floorPrefabName = "Stage5_Floor";
-                break;
-            case 6:
-                floorPrefabName = "Stage6_Floor";
-                break;
-        }
-
-        return floorPrefabName;
-    }
 
 }

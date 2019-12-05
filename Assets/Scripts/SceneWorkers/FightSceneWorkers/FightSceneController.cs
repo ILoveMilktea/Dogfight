@@ -119,6 +119,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
             //영준수정시작
             //원래코드시작
             GameObject enemy = ObjectPoolManager.Instance.Get(enemyInfo.m_name);
+            //이거 해줘야함----->enemy.GetComponent<EnemyAttack>().SetProjectileValue();
             //GameObject enemy = Instantiate(Resources.Load("Prefab/Enemy/" + enemyInfo.m_name)) as GameObject;
             //원래코드끝
 

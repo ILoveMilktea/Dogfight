@@ -39,6 +39,9 @@ public class EnemyAttack : MonoBehaviour
 
     private void Awake()
     {
+        // 나중에 지워줘
+        projectilePrefabName = Const_ObjectPoolName.Enemy_Bullet_Spider;
+
         source = gameObject;
 
         projectiles_rotations = new List<Quaternion>(projectileCount);
@@ -125,9 +128,7 @@ public class EnemyAttack : MonoBehaviour
 
     public void SpreadShooting(Transform muzzle)
     {
-       
-
-        projectilePrefabName = "Bullet_Enemy";
+        //projectilePrefabName = "Bullet_Enemy";
         for (int i = 0; i < projectiles_rotations.Count; ++i)
         {
             projectiles_rotations[i] = Random.rotation;            

@@ -242,7 +242,7 @@ public class LinearShootingEnemy : Enemy
                     shootingCoroutine =StartCoroutine(Shooting());
 
                     // 궤적 추가
-                    trajectoryLine = ObjectPoolManager.Instance.Get("TrajectoryLine").GetComponent<TrajectoryLine>();
+                    trajectoryLine = ObjectPoolManager.Instance.Get(Const_ObjectPoolName.TrajectoryLine).GetComponent<TrajectoryLine>();
                     trajectoryLine.gameObject.SetActive(true);
                     StartCoroutine(trajectoryLine.DrawTrajectoryWhileInterrupt(gameObject, target.gameObject));
                 }

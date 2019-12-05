@@ -103,7 +103,7 @@ public class JoystickAttack : JoystickBase
 
     private void TurnOnTrajectoryLine()
     {
-        trajectoryLine = ObjectPoolManager.Instance.Get("TrajectoryLine").GetComponent<TrajectoryLine>();
+        trajectoryLine = ObjectPoolManager.Instance.Get(Const_ObjectPoolName.TrajectoryLine).GetComponent<TrajectoryLine>();
         trajectoryLine.gameObject.SetActive(true);
         trajectoryLine.SetColor("Player");
     }

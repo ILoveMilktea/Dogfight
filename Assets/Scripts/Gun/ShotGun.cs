@@ -20,7 +20,7 @@ public class ShotGun : Gun
     // Start is called before the first frame update
     private void Awake()
     {
-        //SetProjectilePrefabName("ShotgunBullet");
+        SetProjectilePrefabName(Const_ObjectPoolName.ShotGun_Bullet);
         source = GameObject.FindGameObjectWithTag("Player");
     }
 

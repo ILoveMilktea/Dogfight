@@ -10,7 +10,7 @@ public class FenceGenerator : MonoBehaviour
 
     public void PrepareFence(Vector2 mapSize, int stage)
     {
-        fencePrefabName = SetFencePrefabName(stage);
+        fencePrefabName = Const_ObjectPoolName.Fence_Griffon_Base;
         fencePrefabList = new List<Transform>();
 
         List<GameObject> fencePrefabListFromObjectPool = ObjectPoolManager.Instance.ReadAllFromUnusedList(fencePrefabName);
@@ -50,31 +50,31 @@ public class FenceGenerator : MonoBehaviour
         }
     }
 
-    public string SetFencePrefabName(int stage)
-    {
-        string fencePrefabName = null;
-        switch (stage)
-        {
-            case 1:
-                fencePrefabName = "Stage1_Fence";
-                break;
-            case 2:
-                fencePrefabName = "Stage2_Fence";
-                break;
-            case 3:
-                fencePrefabName = "Stage3_Fence";
-                break;
-            case 4:
-                fencePrefabName = "Stage4_Fence";
-                break;
-            case 5:
-                fencePrefabName = "Stage5_Fence";
-                break;
-            case 6:
-                fencePrefabName = "Stage6_Fence";
-                break;
-        }
+    //public string SetFencePrefabName(int stage)
+    //{
+    //    string fencePrefabName = null;
+    //    switch (stage)
+    //    {
+    //        case 1:
+    //            fencePrefabName = "Stage1_Fence";
+    //            break;
+    //        case 2:
+    //            fencePrefabName = "Stage2_Fence";
+    //            break;
+    //        case 3:
+    //            fencePrefabName = "Stage3_Fence";
+    //            break;
+    //        case 4:
+    //            fencePrefabName = "Stage4_Fence";
+    //            break;
+    //        case 5:
+    //            fencePrefabName = "Stage5_Fence";
+    //            break;
+    //        case 6:
+    //            fencePrefabName = "Stage6_Fence";
+    //            break;
+    //    }
 
-        return fencePrefabName;
-    }
+    //    return fencePrefabName;
+    //}
 }

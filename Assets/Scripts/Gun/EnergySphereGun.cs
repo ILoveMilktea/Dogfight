@@ -6,7 +6,7 @@ public class EnergySphereGun : Gun
 {
     private void Awake()
     {
-        SetProjectilePrefabName("EnergySphere");
+        SetProjectilePrefabName(Const_ObjectPoolName.EnergyGun_Bullet);
     }
 
     override public void Shoot()

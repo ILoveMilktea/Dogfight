@@ -6,7 +6,7 @@ public class LinearGun : Gun
 {
     private void Awake()
     {
-        SetProjectilePrefabName("Bullet");
+        SetProjectilePrefabName(Const_ObjectPoolName.LinearGun_Bullet);
     }
 
     override public void Shoot()
