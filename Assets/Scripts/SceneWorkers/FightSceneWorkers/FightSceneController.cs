@@ -74,17 +74,15 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     public void StartFightScene()
     {
         SetTimer();
-        SetStage();
-        fightScheduler.StageStart();
-    }
-    private void SetStage()
-    {
+
         fightStatus = new FightStatus();
 
         SetPlayerOnStage();
         SetEnemyOnStage();
         SetUIToAllCharacters();
         UIGrouping();
+
+        fightScheduler.StageStart();
     }
     private void SetTimer()
     {
@@ -263,6 +261,16 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         {
             player.SkillAttack(dir);
         }
+    }
+    public void SkillButtonOn(WeaponType type, string key)
+    {
+        string spriteName = WeaponSkillTable.Instance.GetTuple(type.ToString(), key).m_spriteName;
+        joystickSkill.SkillOn(Resources.Load<Sprite>("Image/Skill/" + spriteName));
+    }
+
+    public void SkillButtonOff()
+    {
+        joystickSkill.SkillOff();
     }
     // 플레이어 공격 대기
     public void PlayerStandby()

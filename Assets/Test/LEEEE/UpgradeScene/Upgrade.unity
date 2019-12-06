@@ -9890,7 +9890,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 20, y: -10}
-  m_SizeDelta: {x: 1165, y: 101}
+  m_SizeDelta: {x: 1080, y: 80}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &7544122103156836206
 MonoBehaviour:
@@ -9916,14 +9916,14 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 30
     m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 25
+    m_BestFit: 1
+    m_MinSize: 20
     m_MaxSize: 30
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
-    m_VerticalOverflow: 1
+    m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\uC124\uBA85"
 --- !u!222 &7544122103156836207

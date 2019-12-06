@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 public class JoystickSkill : JoystickBase
 {
-    public Image equipingSkill;
+    public Sprite defaultSkillImage;
+    public bool isSkillEquiped = false;
 
     public override void OnPointerUp(PointerEventData data)
     {
@@ -45,13 +46,25 @@ public class JoystickSkill : JoystickBase
         float moveAmount = Vector2.Distance(border.position, handle.position);
         moveAmount = moveAmount / handleMoveRange;
 
-        if (moveAmount > 0.5f)
+        if (moveAmount > 0.5f && isSkillEquiped)
         {
             // joystick handle의 이동 범위가 반을 넘어가야 움직이는거
             FightSceneController.Instance.PlayerSkill(moveDirection3D);
         }
 
     }
+
+    public void SkillOn(Sprite sprite)
+    {
+        isSkillEquiped = true;
+        handle.GetComponent<Image>().sprite = sprite;
+    }
+    public void SkillOff()
+    {
+        isSkillEquiped = false;
+        handle.GetComponent<Image>().sprite = defaultSkillImage;
+    }
+
 
     private void Standby()
     {
@@ -60,8 +73,4 @@ public class JoystickSkill : JoystickBase
         FightSceneController.Instance.PlayerStandby();
     }
 
-    public void WeaponImageSwap(WeaponType weapon)
-    {
-        equipingSkill.sprite = Resources.Load<Sprite>("Image/Weapon/" + weapon.ToString());
-    }
 }

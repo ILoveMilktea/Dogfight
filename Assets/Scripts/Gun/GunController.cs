@@ -16,7 +16,7 @@ public static class Const_PassiveSkill
 public static class Const_ActiveSkill_1st
 { 
     public const string PanetratingShot = "U_PanetratingShot";
-    public const string KnockBack = "U_KnockBack";
+    public const string KnockBack = "U_DoubleBarrel";
     public const string GravityField = "U_GravityField";
     public const string NodeKey = "3_1";
 }
@@ -121,7 +121,7 @@ public class GunController : MonoBehaviour
                 switch (skillInfo.m_spriteName)
                 {
                     case Const_PassiveSkill.AttackDamageUp:
-                        gun.damage += skillInfo.m_value;
+                        gun.damage += (int)skillInfo.m_value;
                         break;
                     case Const_PassiveSkill.AttackSpeedUp:
                         gun.msBetweenShots -= skillInfo.m_value;
@@ -143,6 +143,15 @@ public class GunController : MonoBehaviour
                         break;
                 }
             }
+        }
+
+        if(gun.isSkillEquiped)
+        {
+            FightSceneController.Instance.SkillButtonOn(type, gun.skillKey);
+        }
+        else
+        {
+            FightSceneController.Instance.SkillButtonOff();
         }
     }
 }

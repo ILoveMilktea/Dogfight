@@ -51,7 +51,7 @@ MonoBehaviour:
   skillKey: 
   muzzle: {fileID: 3898110433157598704}
   projectilePrefabName: Bullet
-  msBetweenShots: 300
+  msBetweenShots: 400
   muzzleVelocity: 20
   maxRange: 5
   damage: 5

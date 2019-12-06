@@ -48,7 +48,6 @@ public class Bullet : Projectile
                 if (isHit == true) //무엇가에 맞았다면
                 {
                     state = BulletSphereState.HIT;
-                    projectileEffect.HitEffect(transform.position);
                 }
                 else //맞지않았다면
                 {
@@ -66,17 +65,32 @@ public class Bullet : Projectile
             else if (state == BulletSphereState.STOP)
             {
                 //도착했을때 할거 처리하고
-                FightSceneController.Instance.RemoveBulletFromList(gameObject);
-                ObjectPoolManager.Instance.Free(gameObject);
+                //FightSceneController.Instance.RemoveBulletFromList(gameObject);
+                //ObjectPoolManager.Instance.Free(gameObject);
+                StartCoroutine(FreeBullet());
+                break;
             }
             else if (state == BulletSphereState.HIT)
             {
-                FightSceneController.Instance.RemoveBulletFromList(gameObject);
-                ObjectPoolManager.Instance.Free(gameObject);
+                //FightSceneController.Instance.RemoveBulletFromList(gameObject);
+                //ObjectPoolManager.Instance.Free(gameObject);
+                StartCoroutine(FreeBullet());
+                break;
             }
 
             yield return new WaitForEndOfFrame();
         }
+    }
+
+    private IEnumerator FreeBullet()
+    {
+        if (projectileEffect)
+        {
+            projectileEffect.HitEffect(transform.position);
+        }
+        yield return new WaitForSeconds(3.5f);
+        FightSceneController.Instance.RemoveBulletFromList(gameObject);
+        ObjectPoolManager.Instance.Free(gameObject);
     }
 
     //ObjectPool에 Free하기 전에 변수 값들 초기화 작업
@@ -86,6 +100,7 @@ public class Bullet : Projectile
         state = BulletSphereState.MOVING;       
         
     }
+
 
     private void OnTriggerEnter(Collider collider)
     {

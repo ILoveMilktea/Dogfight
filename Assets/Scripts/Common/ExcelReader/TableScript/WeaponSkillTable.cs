@@ -9,14 +9,14 @@ public class WeaponSkillInfo
     public int m_needParts { get; private set; }
     public string m_skillName { get; private set; }
     public string m_description { get; private set; }
-    public int m_value { get; private set; }
+    public float m_value { get; private set; }
     public string m_spriteName { get; private set; }
 
     public void SetprevPath(string prevPath) { m_prevPath = prevPath; }
     public void SetneedParts(int needParts) { m_needParts = needParts; }
     public void SetskillName(string skillName) { m_skillName = skillName; }
     public void Setdescription(string description) { m_description = description; }
-    public void Setvalue(int value) { m_value = value; }
+    public void Setvalue(float value) { m_value = value; }
     public void SetspriteName(string spriteName) { m_spriteName = spriteName; }
 }
 
@@ -54,7 +54,7 @@ public class WeaponSkillTable : MonoSingleton<WeaponSkillTable>
                 info.SetneedParts(binaryReader.ReadInt32());
                 info.SetskillName(binaryReader.ReadString());
                 info.Setdescription(binaryReader.ReadString());
-                info.Setvalue(binaryReader.ReadInt32());
+                info.Setvalue(binaryReader.ReadSingle());
                 info.SetspriteName(binaryReader.ReadString());
 
                 table.Add(key, info);

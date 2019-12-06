@@ -94,7 +94,7 @@ public class LinearShootingNoMovingEnemy : Enemy
         yield return new WaitForSeconds(waitTimeForStart);
 
         Debug.Log("상태" + linearShootingNoMovingEnemyState);
-        while (!isDead)
+        while (!isDead && FightSceneController.Instance.GetCurrentFightState() != FightState.Dead)
         {
             if (linearShootingNoMovingEnemyState == LinearShootingNoMovingEnemyState.IDLE)
             {
@@ -139,6 +139,8 @@ public class LinearShootingNoMovingEnemy : Enemy
             }
             yield return new WaitForEndOfFrame();
         }
+
+        animator.SetBool("isAttacking", false);
     }
 
     IEnumerator Shooting()

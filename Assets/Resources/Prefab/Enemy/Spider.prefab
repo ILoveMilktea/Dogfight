@@ -511,7 +511,7 @@ GameObject:
   - component: {fileID: 6618358285595298804}
   - component: {fileID: -7363673981483700093}
   m_Layer: 0
-  m_Name: Meerkat
+  m_Name: Spider
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -564,7 +564,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.044
   m_Pitch: 1
   Loop: 0
   Mute: 0
