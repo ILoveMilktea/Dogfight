@@ -21,8 +21,8 @@ TagManager:
   - UI_SkillNode
   - UI_Dead
   - Object_Dead
-  - 
-  - 
+  - Wall_Lava
+  - Line
   - 
   - 
   - 

@@ -6,15 +6,13 @@ using UnityEngine.UI;
 
 public class DeadWindow : MonoBehaviour
 {
-    public Image background;
+    public Material fightFog;
     public Text gameover;
     public Button backToStart;
 
-    public Material peng;
 
     public IEnumerator DeadHandler(Action offEnemies)
     {
-        background.gameObject.SetActive(true);
         //StartCoroutine(UIEffect.AlphaIn(background));
         //while(background.color.a <1.0f)
         //{
@@ -28,14 +26,19 @@ public class DeadWindow : MonoBehaviour
 
         gameover.color = Color.clear;
         gameover.gameObject.SetActive(true);
+        float fogAmount = fightFog.GetFloat("_Slide");
+
         float timer = 0;
         while (timer < 1.0f)
         {
             yield return new WaitForEndOfFrame();
             timer += Time.deltaTime;
-            gameover.color = Color.Lerp(Color.clear, Color.black, timer);
-        }
+            gameover.color = Color.Lerp(Color.clear, Color.white, timer);
 
+            fogAmount = Mathf.Lerp(0.2f, 0.5f, timer);
+            fightFog.SetFloat("_Slide", fogAmount);
+        }
+        fightFog.SetFloat("_Slide", 0.5f);
 
         //ObjectPoolManager.Instance.SetActvieFalseAllPrefabs();
         backToStart.gameObject.SetActive(true);

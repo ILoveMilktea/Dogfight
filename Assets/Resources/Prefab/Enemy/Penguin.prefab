@@ -317,7 +317,7 @@ GameObject:
   - component: {fileID: 5663483294702951594}
   - component: {fileID: 5663483294702951595}
   m_Layer: 0
-  m_Name: Panther
+  m_Name: Penguin
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -418,7 +418,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingHealth: 5
   target: {fileID: 0}
-  moveSpeed: 1
+  moveSpeed: 3
   turnSpeed: 10
   muzzle: {fileID: 7609085916206528753}
   enemyAttack: {fileID: 5663483294702951596}

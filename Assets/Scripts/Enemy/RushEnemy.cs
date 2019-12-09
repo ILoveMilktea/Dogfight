@@ -20,6 +20,7 @@ public class RushEnemy : Enemy
     //Enemy 상태
     private RushEnemyState rushEnemyState;
 
+    public float attackDamage = 50.0f;
     //공격할 범위
     public float attackDistance = 5.0f;
     //추적할 범위
@@ -65,6 +66,9 @@ public class RushEnemy : Enemy
 
     //Rushing Miss상태일때 Searching상태로 바로 넘어가는 거 방지
     private bool isRushTimerOn=false;
+
+    // Trajectory, 공격 궤적
+    private TrajectoryLine trajectoryLine;
 
     //[Animator관련 변수]
     //Animator 변수
@@ -157,10 +161,10 @@ public class RushEnemy : Enemy
         searchingDestination = transform.position;
         
        
-        while (!isDead)
+        while (!isDead && FightSceneController.Instance.GetCurrentFightState() != FightState.Dead)
         {
             
-            if (isRushHit==true || health<=0)
+            if (health<=0) // isRushHit==true || 뺌
             {
                 rushEnemyState = RushEnemyState.DEAD;
             }
@@ -219,7 +223,7 @@ public class RushEnemy : Enemy
         //맵 완전히 켜질때까지 기다리기
         yield return new WaitForSeconds(waitTimeForStart);
 
-        while (!isDead)
+        while (!isDead && FightSceneController.Instance.GetCurrentFightState() != FightState.Dead)
         {
             Debug.Log("상태" + rushEnemyState);
             if (rushEnemyState == RushEnemyState.IDLE)
@@ -262,6 +266,12 @@ public class RushEnemy : Enemy
             {
                 SetAllAnimationFalse();
                 animator.SetBool("isRunning", true);
+
+                trajectoryLine = ObjectPoolManager.Instance.Get(Const_ObjectPoolName.TrajectoryLine).GetComponent<TrajectoryLine>();
+                trajectoryLine.gameObject.SetActive(true);
+                trajectoryLine.SetWidth(transform.lossyScale.z);
+                StartCoroutine(trajectoryLine.DrawTrajectoryWhileTime(gameObject, target.transform.position, 1.0f));
+
                 LockOnTarget();
                 Rush();
             }
@@ -314,6 +324,7 @@ public class RushEnemy : Enemy
             }
             yield return new WaitForEndOfFrame();
         }
+        SetAllAnimationFalse();
     }
 
     public void Rush()
@@ -327,10 +338,15 @@ public class RushEnemy : Enemy
     {        
         IDamageable damageableObject = target.GetComponent<IDamageable>();
         //영준수정-이거 나중에 인자 없애줘야함
-        damageableObject.TakeHit(2);
-        enemyAttack.KnockBack(target);
+        //damageableObject.TakeHit(2);
+
+        if (damageableObject != null)
+        {
+            enemyAttack.KnockBack(target);
+            FightSceneController.Instance.DamageToCharacter(gameObject, target, attackDamage);
+        }
+
         isRushHit = true;
-        
     }
 
     IEnumerator RushTimer()

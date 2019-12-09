@@ -39,9 +39,6 @@ public class EnemyAttack : MonoBehaviour
 
     private void Awake()
     {
-        // 나중에 지워줘
-        projectilePrefabName = Const_ObjectPoolName.Enemy_Bullet_Spider;
-
         source = gameObject;
 
         projectiles_rotations = new List<Quaternion>(projectileCount);
@@ -54,12 +51,35 @@ public class EnemyAttack : MonoBehaviour
 
     private void OnEnable()
     {
-        
+
     }
 
     private void OnDisable()
     {
         //ResetValue();
+    }
+
+    public void SetProjectilePrefabName(string enemyName)
+    {
+        switch (enemyName)
+        {
+            case Const_ObjectPoolName.Enemy_Spider:
+                projectilePrefabName = Const_ObjectPoolName.Enemy_Bullet_Spider;
+                break;
+            case Const_ObjectPoolName.Enemy_Penguin:
+                projectilePrefabName = Const_ObjectPoolName.Enemy_Bullet_Penguin;
+                break;
+            case Const_ObjectPoolName.Enemy_Grizzly:
+                projectilePrefabName = Const_ObjectPoolName.Enemy_Bullet_Grizzly;
+                break;
+            case Const_ObjectPoolName.Boss_Griffon:
+                projectilePrefabName = Const_ObjectPoolName.Boss_Bullet_Griffon_1;
+                break;
+            default:
+                projectilePrefabName = "DefaultBullet";
+                break;
+        }
+
     }
 
     //일반 직선으로 날아가는 발사체 공격

@@ -68,7 +68,7 @@ public class LinearShootingNoMovingEnemy : Enemy
         //맵 완전히 켜질때까지 기다리기
         yield return new WaitForSeconds(waitTimeForStart);
 
-        while (!isDead)
+        while (!isDead && FightSceneController.Instance.GetCurrentFightState() != FightState.Dead)
         {
             float distance = Vector3.Distance(target.transform.position, transform.position);
 
@@ -93,7 +93,7 @@ public class LinearShootingNoMovingEnemy : Enemy
         //맵 완전히 켜질때까지 기다리기
         yield return new WaitForSeconds(waitTimeForStart);
 
-        Debug.Log("상태" + linearShootingNoMovingEnemyState);
+        //Debug.Log("상태" + linearShootingNoMovingEnemyState);
         while (!isDead && FightSceneController.Instance.GetCurrentFightState() != FightState.Dead)
         {
             if (linearShootingNoMovingEnemyState == LinearShootingNoMovingEnemyState.IDLE)
@@ -140,7 +140,7 @@ public class LinearShootingNoMovingEnemy : Enemy
             yield return new WaitForEndOfFrame();
         }
 
-        animator.SetBool("isAttacking", false);
+        SetAllAnimationFalse();
     }
 
     IEnumerator Shooting()

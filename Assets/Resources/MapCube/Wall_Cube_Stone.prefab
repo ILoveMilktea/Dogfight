@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 23505968256314430}
   - component: {fileID: 3801547310429679353}
   m_Layer: 0
-  m_Name: Stage1_Fence
+  m_Name: Wall_Cube_Stone
   m_TagString: Fence
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -58,7 +58,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5dc767adbe58df24eb8bd1c6106e4f01, type: 2}
+  - {fileID: 2100000, guid: 2315246a2450e854582f899bc8910111, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

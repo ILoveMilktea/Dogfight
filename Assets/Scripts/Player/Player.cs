@@ -31,39 +31,6 @@ public class Player : LivingEntity
         SetCooldownTimer();
     }
 
-
-    // Update is called once per frame
-    void Update()
-    {
-        // move 지워버림 ㅈㅅ
-
-        //Look Input
-        //카메라 시점에서 마우스의 위치 얻기
-        //카메라에서 마우스 포인터위치로 Ray쏘기
-        //Ray ray = viewCamera.ScreenPointToRay(Input.mousePosition);
-        //Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
-        //float rayDistance;
-
-        //out : Call by reference가능하게 하는 키워드(참조자 같은 느낌)
-        //if(groundPlane.Raycast(ray,out rayDistance))
-        //{
-        //    Vector3 point = ray.GetPoint(rayDistance);
-        //    //Debug.DrawLine(ray.origin, point, Color.red,3000f);
-        //    controller.LookAt(point);
-        //}
-
-        //Weapon Input
-        //if(Input.GetMouseButton(0))
-        //{
-        //    gunController.OnTirggerHold();
-        //}
-        //if(Input.GetMouseButtonUp(0))
-        //{
-        //    gunController.OnTriggerRelease();
-        //}
-
-    }
-
     private void SetCooldownTimer()
     {
         cooldownTimer.SetCooldownTime(5); // 임시 5초
@@ -72,16 +39,23 @@ public class Player : LivingEntity
 
     public void Move(Vector3 direction, float amount)
     {
-        Vector3 moveVelocity = direction.normalized * moveSpeed;
-        controller.Move(moveVelocity);
-        if(!isAttacking)
+        if(isKnockBack)
         {
-            controller.LookAt(transform.position + direction);
+            animator.SetBool("isMove", false);
         }
-        
-        //Debug.Log("move" + direction);
+        else
+        {
+            Vector3 moveVelocity = direction.normalized * moveSpeed;
+            controller.Move(moveVelocity);
+            if (!isAttacking)
+            {
+                controller.LookAt(transform.position + direction);
+            }
 
-        animator.SetBool("isMove", true); 
+            //Debug.Log("move" + direction);
+
+            animator.SetBool("isMove", true);
+        }
     }
 
     public void StopMove()
@@ -133,7 +107,10 @@ public class Player : LivingEntity
     {
         return gunController.CurrentWeaponRange();
     }
-
+    public float GetAttackAngle()
+    {
+        return gunController.CurrentWeaponAngle();
+    }
     public Vector3 GetMuzzlePosition()
     {
         return gunController.weaponHold.position;

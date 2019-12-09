@@ -29,6 +29,7 @@ public class Bullet : Projectile
         //실제 플레이안에서 활성화된 경우
         else
         {
+            projectileEffect.FireEffect(transform.position);
             StartCoroutine(CheckState());
         }       
     }
@@ -67,14 +68,15 @@ public class Bullet : Projectile
                 //도착했을때 할거 처리하고
                 //FightSceneController.Instance.RemoveBulletFromList(gameObject);
                 //ObjectPoolManager.Instance.Free(gameObject);
-                StartCoroutine(FreeBullet());
+                ObjectPoolManager.Instance.Free(gameObject);
                 break;
             }
             else if (state == BulletSphereState.HIT)
             {
                 //FightSceneController.Instance.RemoveBulletFromList(gameObject);
                 //ObjectPoolManager.Instance.Free(gameObject);
-                StartCoroutine(FreeBullet());
+                projectileEffect.HitEffect(transform.position);
+                ObjectPoolManager.Instance.Free(gameObject);
                 break;
             }
 
@@ -82,16 +84,6 @@ public class Bullet : Projectile
         }
     }
 
-    private IEnumerator FreeBullet()
-    {
-        if (projectileEffect)
-        {
-            projectileEffect.HitEffect(transform.position);
-        }
-        yield return new WaitForSeconds(3.5f);
-        FightSceneController.Instance.RemoveBulletFromList(gameObject);
-        ObjectPoolManager.Instance.Free(gameObject);
-    }
 
     //ObjectPool에 Free하기 전에 변수 값들 초기화 작업
     override protected void ResetValue()

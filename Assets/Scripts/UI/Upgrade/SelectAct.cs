@@ -11,6 +11,8 @@ public class SelectAct: MonoBehaviour
     public Button search;
     public Button retry;
 
+    public Button exit;
+
     private void Awake()
     {
         rest.onClick.AddListener(OnClickRestButton);
@@ -18,6 +20,8 @@ public class SelectAct: MonoBehaviour
         training.onClick.AddListener(OnClickTrainingButton);
         search.onClick.AddListener(OnClickSearchButton);
         retry.onClick.AddListener(OnClickRetryButton);
+
+        exit.onClick.AddListener(OnClickExitButton);
     }
 
     public void OnClickRestButton()
@@ -61,6 +65,10 @@ public class SelectAct: MonoBehaviour
             );
     }
 
+    public void OnClickExitButton()
+    {
+        gameObject.SetActive(false);
+    }
     private void ActRest()
     {
         // 휴식, 체력증가 소, 체력회복 대

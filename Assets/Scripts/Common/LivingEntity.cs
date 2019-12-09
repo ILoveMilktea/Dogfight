@@ -10,7 +10,7 @@ public abstract class LivingEntity : MonoBehaviour,IDamageable
     protected bool isDead=false;
 
     //KnockBack Timer   
-    private bool isKnockBack = false;
+    protected bool isKnockBack = false;
 
     // Start is called before the first frame update
     //protected virtual void Start()
@@ -45,9 +45,13 @@ public abstract class LivingEntity : MonoBehaviour,IDamageable
         {
             //dir : 날라갈 방향
             isKnockBack = true;
-            dir.y = 0;            
-            GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.VelocityChange);
-            StartCoroutine(KnockBackTimer(knockBackDuration));
+            dir.y = 0;
+            //GetComponent<Rigidbody>().AddForce(dir * force, ForceMode.VelocityChange);
+            if (gameObject.activeSelf)
+            {
+                //StartCoroutine(KnockBackTimer(knockBackDuration));
+                StartCoroutine(KnockBackTimer(dir, force, knockBackDuration));
+            }
         }
         
 
@@ -67,8 +71,29 @@ public abstract class LivingEntity : MonoBehaviour,IDamageable
 
     IEnumerator KnockBackTimer(float knockBackDuration)
     {
-        yield return new WaitForSeconds(knockBackDuration);        
+        yield return new WaitForSeconds(knockBackDuration);
         StopKnockBack();
         isKnockBack = false;
+    }
+    IEnumerator KnockBackTimer(Vector3 dir, float force, float knockBackDuration)
+    {
+        float timer = 0f;
+        Rigidbody rb = GetComponent<Rigidbody>();
+        Vector3 startVelocity = dir.normalized * force;
+        Vector3 velocity = startVelocity;
+
+
+        while (timer < knockBackDuration)
+        {
+            rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
+            yield return new WaitForEndOfFrame();
+            timer += Time.fixedDeltaTime;
+            velocity = Vector3.Lerp(startVelocity, Vector3.zero, timer / knockBackDuration);
+        }
+        StopKnockBack();
+        isKnockBack = false;
+        //    yield return new WaitForSeconds(knockBackDuration);        
+        //    StopKnockBack();
+        //    isKnockBack = false;
     }
 }

@@ -83,6 +83,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         UIGrouping();
 
         fightScheduler.StageStart();
+        deadWindow.fightFog.SetFloat("_Slide", 0.2f);
     }
     private void SetTimer()
     {
@@ -117,6 +118,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
             //영준수정시작
             //원래코드시작
             GameObject enemy = ObjectPoolManager.Instance.Get(enemyInfo.m_name);
+            enemy.GetComponent<EnemyAttack>().SetProjectilePrefabName(enemyInfo.m_name);
             //이거 해줘야함----->enemy.GetComponent<EnemyAttack>().SetProjectileValue();
             //GameObject enemy = Instantiate(Resources.Load("Prefab/Enemy/" + enemyInfo.m_name)) as GameObject;
             //원래코드끝
@@ -298,7 +300,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     // ---- hp
     public void DamageToCharacter(GameObject character, int damage)
     {
-        if(character == player.gameObject)
+        if(character == player.gameObject&& GetCurrentFightState() != FightState.Dead)
         {
             playerCharacterUI.HpDown(damage);
             bool isCharacterDead = fightStatus.playerStatus.DamageToCharacter(damage);
@@ -320,10 +322,10 @@ public class FightSceneController : MonoSingleton<FightSceneController>
             }
         }
     }
+
     public void DamageToCharacter(GameObject source, GameObject target, float gunDamage)
     {
-        Debug.Log(source.name + " hit " + target.name);
-        if (target == player.gameObject)
+        if (target == player.gameObject && GetCurrentFightState() != FightState.Dead)
         {
             int damage = fightStatus.enemies[source].atk;
 
@@ -334,7 +336,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
                 PlayerDead();
             }
         }
-        else if (source == player.gameObject)
+        else if (source == player.gameObject && target.activeSelf == true)
         {
             int damage = (int)gunDamage;
             if (enemyCharacterUIs.ContainsKey(target))
@@ -369,6 +371,9 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         OffAllCharacterUI();
         OffAllBullets();
         player.PlayerDead();
+        
+        deadWindow.fightFog.SetFloat("_Slide", 0.2f);
+        deadWindow.gameObject.SetActive(true);
         StartCoroutine(deadWindow.DeadHandler(OffAllEnemy));
     }
     public void EnemyDead(GameObject enemy)
@@ -377,13 +382,14 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         int dropParts = fightStatus.enemies[enemy].dropParts;
         fightStatus.AddParts(dropParts);
         parts.text = fightStatus.gainParts.ToString();
+        ParticleManager.Instance.OnParticle(fightStatus.enemies[enemy].name + "Death", 2.0f, enemy.transform.position);
 
         // enemy ui, character offf
         fightStatus.RemoveEnemyInstance(enemy);
         enemyCharacterUIs[enemy].gameObject.SetActive(false);
         enemyCharacterUIs.Remove(enemy);
 
-        enemy.SetActive(false);
+        ObjectPoolManager.Instance.Free(enemy);
     }
 
     public void OffAllEnemy()
@@ -429,6 +435,18 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         curUsingBullets.Clear();
     }
     //----- bullet
+
+    public string GetEnemyName(GameObject enemy)
+    {
+        if(fightStatus.enemies.ContainsKey(enemy))
+        {
+            return fightStatus.enemies[enemy].name;
+        }
+        else
+        {
+            return "default";
+        }
+    }
 
 
     public int RemainEnemyNumber()

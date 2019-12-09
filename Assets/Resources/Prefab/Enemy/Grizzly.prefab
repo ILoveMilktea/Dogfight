@@ -141,7 +141,7 @@ GameObject:
   - component: {fileID: 3859684631353268218}
   - component: {fileID: -6783266905586350352}
   m_Layer: 0
-  m_Name: Hedgehog
+  m_Name: Grizzly
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -339,7 +339,7 @@ MonoBehaviour:
   speedChangeRatio: 0
   projectilePrefabName: 
   knockBackForce: 20
-  knockBackDuration: 2
+  knockBackDuration: 0.2
   projectileCount: 0
   projectileSpreadAngle: 0
 --- !u!114 &3859684631353268221
@@ -360,14 +360,15 @@ MonoBehaviour:
   turnSpeed: 3
   muzzle: {fileID: 0}
   enemyAttack: {fileID: 3859684631353268220}
-  attackDistance: 5
-  chasingDistance: 0
-  timeBetweenAttack: 5
+  attackDamage: 50
+  attackDistance: 10
+  chasingDistance: 10
+  timeBetweenAttack: 2
   acceleration: 10
-  rushSpeed: 3
+  rushSpeed: 6
   searchingOffset: 1
-  searchRangeMin: -5
-  searchRangeMax: 6
+  searchRangeMin: -3
+  searchRangeMax: 3
   navMeshAgent: {fileID: 3972638276411570695}
 --- !u!136 &3859684631353268218
 CapsuleCollider:

@@ -901,6 +901,7 @@ GameObject:
   - component: {fileID: 876707038}
   - component: {fileID: 876707041}
   - component: {fileID: 876707042}
+  - component: {fileID: 876707043}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -967,10 +968,10 @@ MonoBehaviour:
   - {fileID: 186734, guid: 2585b71f073f8e644b0af329b3ab3bd8, type: 3}
   - {fileID: 947370545522457084, guid: 8c651df2a60ee864cacfdc7f1aeed555, type: 3}
   - {fileID: 2540961892683625476, guid: d29f6d3c235ec41449d56ac65ac2cc42, type: 3}
-  - {fileID: 1545097402564553599, guid: 5b1a50033ef261346bf5d8623457f324, type: 3}
+  - {fileID: 186734, guid: c13af2f61c55505458efe8563fbee9db, type: 3}
   - {fileID: 186734, guid: 8f1ad68b75d05844d88545cc831b6ebf, type: 3}
-  - {fileID: 1545097402564553599, guid: c28e9a0f8ed88be4881032f4d2cb4c43, type: 3}
-  - {fileID: 1545097402564553599, guid: 04e6b3cff81df4245aa04721f63edf24, type: 3}
+  - {fileID: 186734, guid: 1ca768e5fbea04041a47fc5223c3752c, type: 3}
+  - {fileID: 186734, guid: b1dba68efbaba044f8357d31d909755f, type: 3}
   - {fileID: 1545097402564553599, guid: a5731b322f67e304aa5f01a2fa30dacb, type: 3}
   - {fileID: 6618358285595298807, guid: d64d0ae6094e4644b842fcd50cdfa705, type: 3}
   - {fileID: 5663483294702951592, guid: 62802b91b1e546e46b00faca5651cb74, type: 3}
@@ -982,7 +983,7 @@ MonoBehaviour:
   - {fileID: 1892310713830552, guid: c5e097b0eb89a7343bdf761a1670d2c3, type: 3}
   - {fileID: 1781065274991804, guid: 59e802e168edd1c4e9314f525eb12571, type: 3}
   - {fileID: 703457413352339137, guid: 857e5b7ab1b04724581d0ed213be450d, type: 3}
-  poolAmount: 140000000500000014000000320000003200000032000000320000003200000005000000070000000500000003000000210300002103000021030000210300002103000014000000
+  poolAmount: 14000000050000001400000032000000320000003200000032000000320000000a000000070000000500000003000000210300002103000021030000210300002103000014000000
 --- !u!114 &876707042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -999,6 +1000,31 @@ MonoBehaviour:
   objectPoolLength: 20
   soundDistance: 7
   logSounds: 0
+--- !u!114 &876707043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 876707037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae1c84462edd0ef40b4f0fab770a6528, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultAmount: 10
+  particlePrefabList:
+  - {fileID: 133466, guid: b50181060b0f7cf40a8a8bab38073e66, type: 3}
+  - {fileID: 125844, guid: 0fd6f82417ff6094abdb01939d80b6c4, type: 3}
+  - {fileID: 133466, guid: 6df9f676749c62640875189a84e941fb, type: 3}
+  - {fileID: 128560, guid: 186cbcc9a82e6754d9b264aa11f87819, type: 3}
+  - {fileID: 117272, guid: 7fc7d93bb277ec34db49364bf1d1d1aa, type: 3}
+  - {fileID: 149826, guid: 5ddc89d234136a44e80086d586db1369, type: 3}
+  - {fileID: 131676, guid: ff839af3b0b03ee4cbdd09c7f69aa59c, type: 3}
+  - {fileID: 160430, guid: ce9903acb2e0a334dae3549fe5ed7dc9, type: 3}
+  - {fileID: 117382, guid: 8e4e8ce3bda8db442af2a008c007590e, type: 3}
+  - {fileID: 158782, guid: 787ca980affe1c34d9b12b96d7948c18, type: 3}
+  particlePoolAmount: 03000000030000000300000003000000320000003200000014000000140000000a0000000a000000
 --- !u!1 &1035538898
 GameObject:
   m_ObjectHideFlags: 0

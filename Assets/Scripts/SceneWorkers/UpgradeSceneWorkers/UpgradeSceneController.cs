@@ -122,13 +122,11 @@ public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
     public void OnClickActButton()
     {
         selectAct.gameObject.SetActive(true);
-        
-        ActiveExitButton(selectAct.gameObject);
     }
 
     public void CloseSelectActWindow()
     {
-        exitButton.ClearStack();
+        selectAct.gameObject.SetActive(false);
         actButton.interactable = false;
     }
     public void CloseSelectWeaponWindow()

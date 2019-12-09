@@ -5,6 +5,8 @@ using UnityEngine;
 //EnerySphere(에너지구) 클래스
 public class EnergySphere : Projectile
 {
+    public ProjectileEffect projectileEffect;
+
     //상태
     public enum EnerySphereState
     { MOVING,
@@ -40,6 +42,7 @@ public class EnergySphere : Projectile
         //실제 플레이안에서 활성화된 경우
         else
         {
+            projectileEffect.FireEffect(transform.position);
             StartCoroutine(CheckState());
         }
     }
@@ -75,6 +78,7 @@ public class EnergySphere : Projectile
             }
             else if (state == EnerySphereState.HIT)
             {
+                projectileEffect.HitEffect(transform.position);
                 if (isSpecialMode == false)
                 {                    
                     //맞았을때 할거 처리하고

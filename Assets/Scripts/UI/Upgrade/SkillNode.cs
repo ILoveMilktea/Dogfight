@@ -14,7 +14,11 @@ public class SkillNode : MonoBehaviour
 
     public RectTransform startPos;
     public RectTransform endPos;
-    // Use this for initialization
+
+    public GameObject nodeLightParticle;
+    public GameObject nodeSelectParticle;
+    public GameObject lineLightParticle;
+
     void Start()
     {
         lineRectTransform = prevPathLine.rectTransform;
@@ -39,11 +43,27 @@ public class SkillNode : MonoBehaviour
     {
         prevPathLine.color = Color.white;
         button.image.color = Color.white;
+
+
+        RectTransform lineLightRect = lineLightParticle.GetComponent<RectTransform>();
+        lineLightRect.sizeDelta = lineRectTransform.sizeDelta;
+        lineLightRect.anchoredPosition = lineRectTransform.anchoredPosition;
+        lineLightRect.rotation = lineRectTransform.rotation;
+        lineLightParticle.SetActive(true);
+        nodeLightParticle.SetActive(true);
     }
     
     public void LightOff()
     {
         prevPathLine.color = new Color(0.25f, 0.25f, 0.25f);
         button.image.color = new Color(0.25f, 0.25f, 0.25f);
+
+        lineLightParticle.SetActive(false);
+        nodeLightParticle.SetActive(false);
+    }
+
+    public void SelectLightOn()
+    {
+        nodeSelectParticle.SetActive(true);
     }
 }

@@ -731,8 +731,8 @@ MonoBehaviour:
   turnSpeed: 3
   muzzle: {fileID: 2561126840192750557}
   enemyAttack: {fileID: 6618358285595298805}
-  lockOnAttackDistance: 5
-  timeBetweenAttack: 3
+  lockOnAttackDistance: 9
+  timeBetweenAttack: 2
 --- !u!136 &6618358285595298804
 CapsuleCollider:
   m_ObjectHideFlags: 0

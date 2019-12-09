@@ -91,6 +91,11 @@ public class ShotGun : Gun
                 newProjectile.SetDamage(criticalDamage);
                 //------------- critical 적용
 
+                // -- 속도 서서히 감속
+                newProjectile.SetSpeedChangeMode(true);
+                newProjectile.SetSpeedChangingRatio(0.7f);
+                newProjectile.SetSpeedAfterChange(muzzleVelocity * 0.5f);
+                // -- 속도 서서히 감속
                 newProjectileObject.SetActive(true);
             }
 

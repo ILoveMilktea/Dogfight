@@ -13,6 +13,7 @@ public class ObjectPoolManager : MonoSingleton<ObjectPoolManager>
     public int[] poolAmount;
     private Dictionary<string, ObjectPool> objectPoolList;
 
+
     protected override void Init()
     {
         objectPoolList = new Dictionary<string, ObjectPool>();
@@ -113,6 +114,7 @@ public class ObjectPoolManager : MonoSingleton<ObjectPoolManager>
         pool.unusedList.Add(obj);
 
     }
+
 
     //UnusedList에서 빼지않고 그 안의 첫번째 객체에만 접근하기
     public GameObject ReadFirstOneFromUnusedList(string name)

@@ -95,6 +95,7 @@ public class LinearShootingEnemy : Enemy
             searchingRangeMaxZ = mapSize.y * 0.5f - searchingOffset;
             searchingRangeMinZ = mapSize.y * -0.5f + searchingOffset;
 
+
             animator.SetBool("IsDead", false);
 
             StartCoroutine(EnemyAction());
@@ -148,7 +149,7 @@ public class LinearShootingEnemy : Enemy
         //맵 완전히 켜질때까지 기다리기
         yield return new WaitForSeconds(waitTimeForStart);
 
-        while (!isDead)
+        while (!isDead && FightSceneController.Instance.GetCurrentFightState() != FightState.Dead)
         {
             Debug.Log("상태" + linearShootingEnemyState);
             float distance = Vector3.Distance(target.transform.position, transform.position);
@@ -186,7 +187,7 @@ public class LinearShootingEnemy : Enemy
         //맵 완전히 켜질때까지 기다리기
         yield return new WaitForSeconds(waitTimeForStart);
 
-        while (!isDead)
+        while (!isDead && FightSceneController.Instance.GetCurrentFightState() != FightState.Dead)
         {
             
 
@@ -221,11 +222,11 @@ public class LinearShootingEnemy : Enemy
                     StopCoroutine(shootingCoroutine);
                     shootingCoroutine = null;
 
-                    if(trajectoryLine != null)
-                    {
-                        trajectoryLine.RemoveLine();
-                        trajectoryLine = null;
-                    }
+                    //if(trajectoryLine != null)
+                    //{
+                    //    trajectoryLine.RemoveLine();
+                    //    trajectoryLine = null;
+                    //}
                 }
                 Move();
                 LockOnTarget();
@@ -242,9 +243,9 @@ public class LinearShootingEnemy : Enemy
                     shootingCoroutine =StartCoroutine(Shooting());
 
                     // 궤적 추가
-                    trajectoryLine = ObjectPoolManager.Instance.Get(Const_ObjectPoolName.TrajectoryLine).GetComponent<TrajectoryLine>();
-                    trajectoryLine.gameObject.SetActive(true);
-                    StartCoroutine(trajectoryLine.DrawTrajectoryWhileInterrupt(gameObject, target.gameObject));
+                    //trajectoryLine = ObjectPoolManager.Instance.Get(Const_ObjectPoolName.TrajectoryLine).GetComponent<TrajectoryLine>();
+                    //trajectoryLine.gameObject.SetActive(true);
+                    //StartCoroutine(trajectoryLine.DrawTrajectoryWhileInterrupt(gameObject, target.gameObject));
                 }
                 //Debug.Log("상태" + linearShootingEnemyState);
             }
@@ -262,6 +263,8 @@ public class LinearShootingEnemy : Enemy
             }
             yield return new WaitForEndOfFrame();
         }
+
+        SetAllAnimationFalse();
     }
 
     IEnumerator Shooting()

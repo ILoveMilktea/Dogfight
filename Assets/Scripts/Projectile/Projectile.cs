@@ -26,7 +26,7 @@ public abstract class Projectile : MonoBehaviour
     //KnockBack 힘
     protected float knockBackForce = 5.0f;
     //KnockBack 시간
-    protected float knockBackDuration = 0.3f;
+    protected float knockBackDuration = 0.2f;
 
     //speed바뀌는 모드
     protected bool isSpeedChangingMode = false;

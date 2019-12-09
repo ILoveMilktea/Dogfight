@@ -15,13 +15,14 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        
-        myRigidbody.MovePosition(myRigidbody.position + velocity * Time.fixedDeltaTime);
+        //myRigidbody.MovePosition(myRigidbody.position + velocity * Time.fixedDeltaTime);
+
     }
 
     public void Move(Vector3 _velocity)
     {
         velocity = _velocity;
+        myRigidbody.MovePosition(myRigidbody.position + velocity * Time.fixedDeltaTime);
     }
 
     public void LookAt(Vector3 lookPoint)

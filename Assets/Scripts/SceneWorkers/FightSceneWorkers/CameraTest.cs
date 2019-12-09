@@ -43,12 +43,12 @@ public class CameraTest : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         Vector3 next = player.transform.position + distance;
         next.x = distance.x;
 
-        transform.position = Vector3.Lerp(transform.position, next, Time.deltaTime * 3);
+        transform.position = next;
 
         if (transform.position.z < bottomSpace - d_z)
         {

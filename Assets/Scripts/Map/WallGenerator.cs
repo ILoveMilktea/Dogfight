@@ -18,7 +18,14 @@ public class WallGenerator : MonoBehaviour
             WallStatusInfo wallStatusInfo = Tables.Instance.WallStatus.GetTuple(stageWallInfo.m_serialNumber);
             GameObject wall = ObjectPoolManager.Instance.Get(wallStatusInfo.m_name);
 
-            wall.transform.position = new Vector3(stageWallInfo.m_posX, 0, stageWallInfo.m_posY);
+            if(wallStatusInfo.m_name == Const_ObjectPoolName.Wall_Griffon_Damage)
+            {
+                wall.transform.position = new Vector3(stageWallInfo.m_posX, -0.9f, stageWallInfo.m_posY);
+            }
+            else
+            {
+                wall.transform.position = new Vector3(stageWallInfo.m_posX, 0, stageWallInfo.m_posY);
+            }
             wall.SetActive(true);
 
             walls.Add(wall);

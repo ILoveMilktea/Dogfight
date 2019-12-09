@@ -62,8 +62,16 @@ public class JoystickAttack : JoystickBase
                 TurnOnTrajectoryLine();
             }
             Player player = FindObjectOfType<Player>();
-            trajectoryLine.DrawLineUntilRange(player.GetMuzzlePosition(), moveDirection3D,
-                player.GetAttackRange());
+            if(equipingWeapon.sprite.name == WeaponType.ShotGun.ToString())
+            {
+                trajectoryLine.DrawLineWithAngle(player.GetMuzzlePosition(), moveDirection3D,
+                    player.GetAttackRange(), player.GetAttackAngle());
+            }
+            else
+            {
+                trajectoryLine.DrawLineUntilRange(player.GetMuzzlePosition(), moveDirection3D,
+                    player.GetAttackRange());
+            }
         }
         else
         {

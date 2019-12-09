@@ -85,8 +85,10 @@ public class WeaponWindow : MonoBehaviour
 
     public void OnClickWeaponButton()
     {
+        selectedWeapon.image.color = selectedWeapon.colors.normalColor;
         selectedWeapon.interactable = true;
         selectedWeapon = EventSystem.current.currentSelectedGameObject.GetComponent<Button>();
+        selectedWeapon.image.color = selectedWeapon.colors.selectedColor;
         selectedWeapon.interactable = false;
 
         // replace background image

@@ -42,20 +42,7 @@ public class BossEnemy : Enemy
     //[Animator관련 변수]
     //Animator 변수
     private Animator animator;
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
-        {            
-            health = 1;
-        }
-
-        if (Input.GetKeyDown(KeyCode.D))
-        {           
-            health = 0;
-        }
-    }
-
+    
 
     private void OnEnable()
     {

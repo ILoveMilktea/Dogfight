@@ -87,6 +87,11 @@ public class GunController : MonoBehaviour
         return equippedGun.maxRange;
     }
 
+    public float CurrentWeaponAngle()
+    {
+        return equippedGun.projectileMaxAngle;
+    }
+
     // swappppp
     public WeaponType SwapWeapon()
     {

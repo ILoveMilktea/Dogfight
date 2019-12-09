@@ -46,8 +46,8 @@ public class GameManager : MonoSingleton<GameManager>
         switch (sceneName)
         {
             case Constants.StartSceneName:
-                IsUIEffectEnd = false;
-                StartCoroutine(UIEffect.CutIn(cutEffectImage, UIEffectEndListener));
+                //IsUIEffectEnd = false;
+                //StartCoroutine(UIEffect.CutIn(cutEffectImage, UIEffectEndListener));
                 break;
             case Constants.WorldMapSceneName:
                 IsUIEffectEnd = false;
