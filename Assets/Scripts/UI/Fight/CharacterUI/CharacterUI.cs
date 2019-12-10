@@ -62,7 +62,9 @@ public class CharacterUI : MonoBehaviour
         Vector3 UIWorldPos = target.transform.position + new Vector3(0, target.transform.lossyScale.y, 0);
         Vector3 UIScreenPos = Camera.main.WorldToScreenPoint(UIWorldPos);
 
-        rectTransform.anchoredPosition = new Vector2(UIScreenPos.x, UIScreenPos.y);
+        float fovX = 1920.0f / Screen.width;
+        float fovY = 1080.0f / Screen.height;
+        rectTransform.anchoredPosition = new Vector2(UIScreenPos.x * fovX, UIScreenPos.y * fovY);
     }
 
     public void SetName(string name)

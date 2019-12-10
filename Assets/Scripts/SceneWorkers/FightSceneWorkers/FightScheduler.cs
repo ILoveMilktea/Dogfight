@@ -24,17 +24,18 @@ public class FightScheduler : MonoBehaviour
     private IEnumerator StandbyPhase()
     {
         // 맵한번 둘러보는 연출??
-        FightSceneController.Instance.standbyImage.SetActive(true);
+        //FightSceneController.Instance.standbyImage.SetActive(true);
 
         float timer = 0f;
-        while(timer < 1f)
+        while(timer < 1.5f)
         {
             yield return new WaitForEndOfFrame();
             timer += Time.deltaTime;
         }
 
-        FightSceneController.Instance.standbyImage.SetActive(false);
+        //FightSceneController.Instance.standbyImage.SetActive(false);
         StartCoroutine(FightPhase());
+        //FightSceneController.Instance.ChangeFightState(FightState.Fight);
     }
 
     private IEnumerator FightPhase()
@@ -46,6 +47,7 @@ public class FightScheduler : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        FightSceneController.Instance.ShowResult();
+        FightSceneController.Instance.ChangeFightState(FightState.Clear);
+        //FightSceneController.Instance.ShowResult();
     }
 }

@@ -32,11 +32,11 @@ public class SkillNode : MonoBehaviour
 
         Vector2 differenceVector = endPoint - startPoint;
 
-        lineRectTransform.sizeDelta = new Vector2(differenceVector.magnitude, lineWidth);
-        //lineRectTransform.pivot = new Vector2(0, 0.5f);
-        lineRectTransform.anchoredPosition = (startPoint - endPoint) * 0.5f;
-        float angle = Mathf.Atan2(differenceVector.y, differenceVector.x) * Mathf.Rad2Deg;
-        lineRectTransform.rotation = Quaternion.Euler(0, 0, angle);
+        //lineRectTransform.sizeDelta = new Vector2(differenceVector.magnitude, lineWidth);
+        ////lineRectTransform.pivot = new Vector2(0, 0.5f);
+        //lineRectTransform.anchoredPosition = (startPoint - endPoint) * 0.5f;
+        //float angle = Mathf.Atan2(differenceVector.y, differenceVector.x) * Mathf.Rad2Deg;
+        //lineRectTransform.rotation = Quaternion.Euler(0, 0, angle);
     }
 
     public void LightOn()
@@ -45,12 +45,12 @@ public class SkillNode : MonoBehaviour
         button.image.color = Color.white;
 
 
-        RectTransform lineLightRect = lineLightParticle.GetComponent<RectTransform>();
-        lineLightRect.sizeDelta = lineRectTransform.sizeDelta;
-        lineLightRect.anchoredPosition = lineRectTransform.anchoredPosition;
-        lineLightRect.rotation = lineRectTransform.rotation;
-        lineLightParticle.SetActive(true);
-        nodeLightParticle.SetActive(true);
+        //RectTransform lineLightRect = lineLightParticle.GetComponent<RectTransform>();
+        //lineLightRect.sizeDelta = lineRectTransform.sizeDelta;
+        //lineLightRect.anchoredPosition = lineRectTransform.anchoredPosition;
+        //lineLightRect.rotation = lineRectTransform.rotation;
+        //lineLightParticle.SetActive(true);
+        //nodeLightParticle.SetActive(true);
     }
     
     public void LightOff()
@@ -58,12 +58,12 @@ public class SkillNode : MonoBehaviour
         prevPathLine.color = new Color(0.25f, 0.25f, 0.25f);
         button.image.color = new Color(0.25f, 0.25f, 0.25f);
 
-        lineLightParticle.SetActive(false);
-        nodeLightParticle.SetActive(false);
+        //lineLightParticle.SetActive(false);
+        //nodeLightParticle.SetActive(false);
     }
 
     public void SelectLightOn()
     {
-        nodeSelectParticle.SetActive(true);
+        //nodeSelectParticle.SetActive(true);
     }
 }

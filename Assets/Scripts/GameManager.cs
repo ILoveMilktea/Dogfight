@@ -40,7 +40,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         IsUIEffectEnd = true;
     }
-    
+
     public void SceneStart(string sceneName)
     {
         switch (sceneName)
@@ -55,11 +55,29 @@ public class GameManager : MonoSingleton<GameManager>
                 break;
             case Constants.FightSceneName:
                 IsUIEffectEnd = false;
-                StartCoroutine(UIEffect.SlideDownOut(slideEffectImage, UIEffectEndListener));
+                if (cutEffectImage.material.GetFloat("_Radius") < 1.0f)
+                {
+                    SetSlideImagePos(true);
+                    StartCoroutine(UIEffect.CutIn(cutEffectImage, UIEffectEndListener));
+
+                }
+                else
+                {
+                    StartCoroutine(UIEffect.SlideDownOut(slideEffectImage, UIEffectEndListener));
+                }
                 break;
             case Constants.UpgradeSceneName:
                 IsUIEffectEnd = false;
-                StartCoroutine(UIEffect.SlideDownOut(slideEffectImage, UIEffectEndListener));
+                if (cutEffectImage.material.GetFloat("_Radius") < 1.0f)
+                {
+                    SetSlideImagePos(false);
+                    StartCoroutine(UIEffect.CutIn(cutEffectImage, UIEffectEndListener));
+
+                }
+                else
+                {
+                    StartCoroutine(UIEffect.SlideDownOut(slideEffectImage, UIEffectEndListener));
+                }
                 break;
         }
     }
@@ -67,7 +85,7 @@ public class GameManager : MonoSingleton<GameManager>
     public void LoadNextScene(string curSceneName, string nextSceneName)
     {
         Button[] buttons = FindObjectsOfType<Button>();
-        foreach(var button in buttons)
+        foreach (var button in buttons)
         {
             button.interactable = false;
         }
@@ -84,11 +102,13 @@ public class GameManager : MonoSingleton<GameManager>
                 break;
             case Constants.FightSceneName:
                 IsUIEffectEnd = false;
+                SetSlideImagePos(true);
                 StartCoroutine(UIEffect.SlideDownIn(slideEffectImage, UIEffectEndListener));
                 //StartCoroutine(UIEffect.AlphaIn(fadeEffectImage, UIEffectEndListener));
                 break;
             case Constants.UpgradeSceneName:
                 IsUIEffectEnd = false;
+                SetSlideImagePos(true);
                 StartCoroutine(UIEffect.SlideDownIn(slideEffectImage, UIEffectEndListener));
                 //StartCoroutine(UIEffect.AlphaIn(fadeEffectImage, UIEffectEndListener));
                 break;
@@ -105,7 +125,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void SetSlideImagePos(string sceneName)
     {
-        if(sceneName == Constants.FightSceneName || sceneName == Constants.UpgradeSceneName)
+        if (sceneName == Constants.FightSceneName || sceneName == Constants.UpgradeSceneName)
         {
             RectTransform rt = slideEffectImage.rectTransform;
             rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, 0);
@@ -114,6 +134,24 @@ public class GameManager : MonoSingleton<GameManager>
         {
             RectTransform rt = slideEffectImage.rectTransform;
             rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, rt.rect.height);
+        }
+    }
+
+    public void SetSlideImagePos(bool up)
+    {
+        if(up)
+        {
+            Vector2 endPos = slideEffectImage.rectTransform.anchoredPosition;
+            endPos.y = 0;
+            endPos.y += slideEffectImage.rectTransform.rect.height;
+            slideEffectImage.rectTransform.anchoredPosition = endPos;
+        }
+        else
+        {
+            Vector2 endPos = slideEffectImage.rectTransform.anchoredPosition;
+            endPos.y = 0;
+            endPos.y -= slideEffectImage.rectTransform.rect.height;
+            slideEffectImage.rectTransform.anchoredPosition = endPos;
         }
     }
 

@@ -148,7 +148,7 @@ public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
     public void EndUpgrade()
     {
         DataManager.Instance.Save();
-        DataManager.Instance.SetAlreadyAct(false);
+        //DataManager.Instance.SetAlreadyAct(false);
         DataManager.Instance.SetStage(DataManager.Instance.GetPlayInfo.Stage + 1);
 
         popupYN.gameObject.SetActive(false);

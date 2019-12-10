@@ -64,6 +64,7 @@ public static class UIEffect
         }
 
         //target.color = originalColor;
+        yield return new WaitForSeconds(0.5f);
         EndCallback.Invoke();
     }
 
@@ -82,6 +83,7 @@ public static class UIEffect
 
         //target.color = originalColor;
         target.gameObject.SetActive(false);
+        yield return new WaitForSeconds(0.5f);
         EndCallback.Invoke();
     }
 
@@ -103,7 +105,8 @@ public static class UIEffect
         }
 
         material.SetFloat("_Radius", 0);
-        target.gameObject.SetActive(false);
+        //target.gameObject.SetActive(false);
+        yield return new WaitForSeconds(0.5f);
         EndCallback.Invoke();
     }
 
@@ -124,7 +127,8 @@ public static class UIEffect
             timer += Time.deltaTime;
         }
         material.SetFloat("_Radius", destinationRadius);
-        target.gameObject.SetActive(false);
+        //target.gameObject.SetActive(false);
+        yield return new WaitForSeconds(0.5f);
         EndCallback.Invoke();
     }
 
@@ -143,6 +147,7 @@ public static class UIEffect
         }
 
         target.rectTransform.anchoredPosition = endPos;
+        yield return new WaitForSeconds(0.5f);
         EndCallback.Invoke();
     }
 
@@ -162,6 +167,7 @@ public static class UIEffect
 
         startPos.y += target.rectTransform.rect.height;
         target.rectTransform.anchoredPosition = startPos;
+        yield return new WaitForSeconds(0.5f);
         EndCallback.Invoke();
     }
 }

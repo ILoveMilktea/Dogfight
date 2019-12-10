@@ -31,7 +31,8 @@ public class DataManager : MonoSingleton<DataManager>
 #endif
 
 #if UNITY_ANDROID
-        dataPath = "jar:file://" + Application.dataPath + "!/assets";
+        //dataPath = "jar:file://" + Application.dataPath + "!/assets";
+        dataPath = Application.persistentDataPath + "/SaveData";
 #endif
 
 #if UNITY_STANDALONE || UNITY_EDITOR

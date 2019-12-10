@@ -11,7 +11,7 @@ public class Ghost : Enemy
 
     Vector3 pos;
     Vector3 localScale;
-    public GameObject target;
+    //public GameObject target;
 
     Vector3 startPosition;
 

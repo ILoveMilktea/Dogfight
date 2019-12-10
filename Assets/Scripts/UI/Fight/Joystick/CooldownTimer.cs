@@ -39,7 +39,7 @@ public class CooldownTimer : MonoBehaviour
 
     public IEnumerator SkillTimer()
     {
-        while(FightSceneController.Instance.GetCurrentFightState() != FightState.End)
+        while(true)
         {
             if(updateTime < cooldownTime)
             {

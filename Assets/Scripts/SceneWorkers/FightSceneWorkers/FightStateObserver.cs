@@ -9,6 +9,7 @@ public enum FightState
     Fight,
     Pause,
     Dead,
+    Clear,
     End
 }
 

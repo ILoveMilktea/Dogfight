@@ -93,6 +93,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         SetStateChangeCallback(FightState.Fight, playTimer.ReleaseTimer);
         SetStateChangeCallback(FightState.Pause, playTimer.FreezeTimer);
         SetStateChangeCallback(FightState.Dead, playTimer.StandbyTimer);
+        SetStateChangeCallback(FightState.Clear, playTimer.ReleaseTimer);
         SetStateChangeCallback(FightState.End, playTimer.StandbyTimer);
     }
 
@@ -235,7 +236,8 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     // 플레이어 이동
     public void MovePlayer(Vector3 dir, float amount)
     {
-        if (fightStateObserver.curFightState == FightState.Fight)
+        if (fightStateObserver.curFightState == FightState.Fight ||
+            fightStateObserver.curFightState == FightState.Clear)
         {
             player.Move(dir, amount);
         }
@@ -243,7 +245,8 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     // 플레이어 멈춤
     public void StopPlayer()
     {
-        if (fightStateObserver.curFightState == FightState.Fight)
+        if (fightStateObserver.curFightState == FightState.Fight ||
+            fightStateObserver.curFightState == FightState.Clear)
         {
             player.StopMove();
         }
@@ -251,7 +254,8 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     // 플레이어 공격
     public void PlayerAttack(Vector3 dir)
     {
-        if (fightStateObserver.curFightState == FightState.Fight)
+        if (fightStateObserver.curFightState == FightState.Fight ||
+            fightStateObserver.curFightState == FightState.Clear)
         {
             player.Attack(dir);
         }
@@ -259,7 +263,8 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     // 플레이어 스킬
     public void PlayerSkill(Vector3 dir)
     {
-        if (fightStateObserver.curFightState == FightState.Fight)
+        if (fightStateObserver.curFightState == FightState.Fight ||
+            fightStateObserver.curFightState == FightState.Clear)
         {
             player.SkillAttack(dir);
         }
@@ -277,7 +282,8 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     // 플레이어 공격 대기
     public void PlayerStandby()
     {
-        if (fightStateObserver.curFightState == FightState.Fight)
+        if (fightStateObserver.curFightState == FightState.Fight ||
+            fightStateObserver.curFightState == FightState.Clear)
         {
             player.Standby();
         }
@@ -467,6 +473,40 @@ public class FightSceneController : MonoSingleton<FightSceneController>
 
         //resultWindow.ShowResult(EndFight);
         EndFight();
+    }
+    public void Retreat()
+    {
+        ChangeFightState(FightState.End);
+        OffAllBullets();
+        playTimer.StopTimer();
+        player.StopMove();
+
+        DataManager.Instance.AddPlayTime(playTimer.GetPlaytime());
+        DataManager.Instance.AddParts(fightStatus.gainParts);
+        DataManager.Instance.SetRemainHp(fightStatus.playerStatus.remainHp);
+        DataManager.Instance.SetStage(DataManager.Instance.GetPlayInfo.Stage - 1);
+
+        DataManager.Instance.Save();
+
+        GameManager.Instance.LoadNextScene(Constants.FightSceneName, Constants.UpgradeSceneName);
+    }
+
+    public void GoNext()
+    {
+        ChangeFightState(FightState.End);
+        OffAllBullets();
+        playTimer.StopTimer();
+        player.StopMove();
+
+        DataManager.Instance.AddPlayTime(playTimer.GetPlaytime());
+        DataManager.Instance.AddParts(fightStatus.gainParts);
+        DataManager.Instance.SetRemainHp(fightStatus.playerStatus.remainHp);
+        DataManager.Instance.SetAlreadyAct(false);
+
+
+        DataManager.Instance.Save();
+
+        GameManager.Instance.LoadNextScene(Constants.FightSceneName, Constants.UpgradeSceneName);
     }
 
 

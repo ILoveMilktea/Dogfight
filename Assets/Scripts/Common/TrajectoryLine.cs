@@ -110,11 +110,12 @@ public class TrajectoryLine : MonoBehaviour
         while (interval < 1.0f)
         {
             interval += 1.0f / (float)pointCount;
-            Vector3 lerpPoint = Vector3.Slerp(sectorStartPoint, attackRangePoint, interval);
+            Vector3 lerpPoint = Vector3.Lerp(sectorStartPoint, attackRangePoint, interval);
             
-            line.SetPosition((int)idx++, lerpPoint);
+            line.SetPosition(idx, lerpPoint);
+            idx += 1;
         }
-        line.SetPosition(pointCount + 1, attackRangePoint);
+        line.SetPosition(line.positionCount - 1, attackRangePoint);
 
         AnimationCurve curve = new AnimationCurve();
         curve.AddKey(new Keyframe(0.0f, lineWidth));

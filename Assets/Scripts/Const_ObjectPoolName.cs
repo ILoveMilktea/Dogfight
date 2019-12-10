@@ -18,6 +18,9 @@ public static class Const_ObjectPoolName
     public const string Boss_Bullet_Griffon_1 = "Bullet_Griffon_1";
     public const string Boss_Bullet_Griffon_2 = "Bullet_Griffon_2";
 
+    public const string Entrance_Prev = "Entrance_Prev_Cube_Soil";
+    public const string Entrance_Next = "Entrance_Next_Cube_Soil";
+
     public const string Floor_Griffon_Base = "Floor_Cube_Soil";
     public const string Floor_Griffon_Deco = "Floor_Cube_SoilWGrass";
     public const string Fence_Griffon_Base = "Fence_Cube_Stone";

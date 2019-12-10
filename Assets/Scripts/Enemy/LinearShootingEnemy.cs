@@ -151,7 +151,8 @@ public class LinearShootingEnemy : Enemy
 
         while (!isDead && FightSceneController.Instance.GetCurrentFightState() != FightState.Dead)
         {
-            Debug.Log("상태" + linearShootingEnemyState);
+            //Debug.Log("상태" + linearShootingEnemyState);
+
             float distance = Vector3.Distance(target.transform.position, transform.position);
 
             if(distance<=attackDistance)
