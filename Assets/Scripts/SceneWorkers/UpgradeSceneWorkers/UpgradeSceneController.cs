@@ -8,9 +8,9 @@ public static class ConstDecriptions
 {
     public const string FightButton = "다음?";
 
-    public const string Select_RestButton = "휴식?"; // "Fight"
-    public const string Select_EatButton = "식사?";
-    public const string Select_Training = "단련?";
+    public const string Select_RestButton = "짧은 휴식을 취합니다.\n남은 체력이 10 회복되고, 최대 체력 10 증가 버프를 받습니다."; // "Fight"
+    public const string Select_EatButton = "잡은 동물을 구워 먹습니다.\n남은 체력이 30 회복됩니다.";
+    public const string Select_Training = "생명의 기운을 흡수합니다.\n최대 체력 5 증가 버프와 기본 공격력 2 증가 버프를 받습니다.";
     public const string Select_Search = "탐색?";
     public const string Select_Retry = "재전투?";
 }
@@ -107,15 +107,16 @@ public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
         //ActiveExitButton(popupYN.gameObject);
     }
 
-    public void OpenPopupResult(string description, Action okFunc)
+    public void OpenPopupResult(Sprite sprite, string description, Action okFunc)
     {
         ClosePopupYN();
         CloseSelectActWindow();
         DataManager.Instance.SetAlreadyAct(true);
         DataManager.Instance.Save();
 
-        popupResult.gameObject.SetActive(true);
+        popupResult.image.sprite = sprite;
         popupResult.SetDescription(description);
+        popupResult.gameObject.SetActive(true);
         popupResult.SetCallback(okFunc);
     }
 

@@ -146,6 +146,7 @@ public class DataManager : MonoSingleton<DataManager>
     public void AddBuffHp(int value)
     {
         SetBuffHp(GetPlayerStatus.BuffHp + value);
+        AddRemainHp(value);
     }
     public void SetBuffAtk(int value)
     {

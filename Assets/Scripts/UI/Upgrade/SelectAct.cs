@@ -72,37 +72,37 @@ public class SelectAct: MonoBehaviour
     private void ActRest()
     {
         // 휴식, 체력증가 소, 체력회복 대
-        DataManager.Instance.AddBuffHp(30);
+        DataManager.Instance.AddBuffHp(10);
         DataManager.Instance.AddRemainHp(10);
 
-        UpgradeSceneController.Instance.OpenPopupResult("rest", UpgradeSceneController.Instance.ClosePopupResult);
+        UpgradeSceneController.Instance.OpenPopupResult(rest.image.sprite, "피로가..회복...zzZ", UpgradeSceneController.Instance.ClosePopupResult);
     }
 
     private void ActEat()
     {
         // 식사, 체력증가 소, 체력회복 중, atk증가 소
-        DataManager.Instance.AddBuffHp(10);
+        //DataManager.Instance.AddBuffHp(10);
         DataManager.Instance.AddRemainHp(30);
         
-        UpgradeSceneController.Instance.OpenPopupResult("eat", UpgradeSceneController.Instance.ClosePopupResult);
+        UpgradeSceneController.Instance.OpenPopupResult(eat.image.sprite, "맛있어!", UpgradeSceneController.Instance.ClosePopupResult);
     }
 
     private void ActTraining()
     {
         // 단련, 체력증가 중, atk증가 소 || 체력증가 소, atk증가 중
-        DataManager.Instance.AddBuffHp(10);
-        DataManager.Instance.AddBuffAtk(5);
+        DataManager.Instance.AddBuffHp(5);
+        DataManager.Instance.AddBuffAtk(2);
         
-        UpgradeSceneController.Instance.OpenPopupResult("training", UpgradeSceneController.Instance.ClosePopupResult);
+        UpgradeSceneController.Instance.OpenPopupResult(training.image.sprite, "마음이 고양되는 기분이다.", UpgradeSceneController.Instance.ClosePopupResult);
     }
 
     private void ActSearch()
     {
-        UpgradeSceneController.Instance.OpenPopupResult("search", UpgradeSceneController.Instance.ClosePopupResult);
+        UpgradeSceneController.Instance.OpenPopupResult(search.image.sprite, "search", UpgradeSceneController.Instance.ClosePopupResult);
     }
 
     private void ActRetry()
     {
-        UpgradeSceneController.Instance.OpenPopupResult("retry", UpgradeSceneController.Instance.ClosePopupResult);
+        UpgradeSceneController.Instance.OpenPopupResult(retry.image.sprite, "retry", UpgradeSceneController.Instance.ClosePopupResult);
     }
 }

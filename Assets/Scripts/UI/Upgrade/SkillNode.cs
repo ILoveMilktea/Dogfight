@@ -32,11 +32,11 @@ public class SkillNode : MonoBehaviour
 
         Vector2 differenceVector = endPoint - startPoint;
 
-        //lineRectTransform.sizeDelta = new Vector2(differenceVector.magnitude, lineWidth);
-        ////lineRectTransform.pivot = new Vector2(0, 0.5f);
-        //lineRectTransform.anchoredPosition = (startPoint - endPoint) * 0.5f;
-        //float angle = Mathf.Atan2(differenceVector.y, differenceVector.x) * Mathf.Rad2Deg;
-        //lineRectTransform.rotation = Quaternion.Euler(0, 0, angle);
+        lineRectTransform.sizeDelta = new Vector2(differenceVector.magnitude, lineWidth);
+        //lineRectTransform.pivot = new Vector2(0, 0.5f);
+        lineRectTransform.anchoredPosition = (startPoint - endPoint) * 0.5f;
+        float angle = Mathf.Atan2(differenceVector.y, differenceVector.x) * Mathf.Rad2Deg;
+        lineRectTransform.rotation = Quaternion.Euler(0, 0, angle);
     }
 
     public void LightOn()

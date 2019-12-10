@@ -2836,7 +2836,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingHealth: 5
-  moveSpeed: 8
+  moveSpeed: 6
   isAttacking: 0
   animator: {fileID: 983420147}
 --- !u!114 &983420143

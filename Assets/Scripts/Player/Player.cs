@@ -45,7 +45,7 @@ public class Player : LivingEntity
         }
         else
         {
-            Vector3 moveVelocity = direction.normalized * moveSpeed;
+            Vector3 moveVelocity = direction.normalized * moveSpeed * amount;
             controller.Move(moveVelocity);
             if (!isAttacking)
             {
