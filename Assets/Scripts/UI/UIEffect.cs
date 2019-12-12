@@ -29,6 +29,47 @@ public static class UIEffect
         target.transform.localScale = originalScale;
         EndCallback.Invoke();
     }
+    public static IEnumerator ExpandFrom90(GameObject target)
+    {
+        Vector3 originalScale = target.transform.localScale;
+        Vector3 startScale = originalScale * 0.9f;
+        target.transform.localScale = startScale;
+
+        if (target.gameObject.activeSelf == false)
+        {
+            target.gameObject.SetActive(true);
+        }
+
+        float timer = 0f;
+        while (timer < 1.0f)
+        {
+            target.transform.localScale = Vector3.Lerp(startScale, originalScale, timer);
+            yield return new WaitForEndOfFrame();
+            timer += Time.deltaTime * 10;
+        }
+
+        target.transform.localScale = originalScale;
+    }
+    public static IEnumerator ContractTo90(GameObject target)
+    {
+        Vector3 originalScale = target.transform.localScale;
+        Vector3 EndScale = originalScale * 0.9f;
+
+        if (target.gameObject.activeSelf == false)
+        {
+            target.gameObject.SetActive(true);
+        }
+
+        float timer = 0f;
+        while (timer < 1.0f)
+        {
+            target.transform.localScale = Vector3.Lerp(originalScale, EndScale, timer);
+            yield return new WaitForEndOfFrame();
+            timer += Time.deltaTime * 10;
+        }
+
+        target.gameObject.SetActive(false);
+    }
     public static IEnumerator AlphaIn(Image target)
     {
         target.gameObject.SetActive(true);

@@ -105,64 +105,52 @@ public class ShotGun : Gun
     public override void SkillShoot()
     {
         // special, burst 모드로 한번 쏘게 해주십셔
-        if (Time.time > nextShotTime)
+
+        float tmpAngle = 0f;
+        if (directionNumber != 1)
         {
-            //Time.time : 게임이 시작되고 지난 시간(초)
-            nextShotTime = Time.time + msBetweenShots / 1000;
+            tmpAngle = -projectileMaxAngle * 0.5f;
+        }
 
-            if (shotsRemainingInBurst == 0)
+        float variation = projectileMaxAngle / (directionNumber * 2 - 1);
+        //날라갈 방향만큼 총알 각도 조절
+        for (int i = 0; i < directionNumber * 2; ++i)
+        {
+            if (i == directionNumber)
             {
-                return;
-            }
-            --shotsRemainingInBurst;
-
-
-            float tmpAngle = 0f;
-            if (directionNumber != 1)
-            {
-                tmpAngle = -projectileMaxAngle * 0.5f;
+                // 묻고 더블로 가!
+                tmpAngle = -projectileMaxAngle * 0.5f + variation * 0.5f;
             }
 
-            float variation = projectileMaxAngle / (directionNumber * 2 - 1);
-            //날라갈 방향만큼 총알 각도 조절
-            for (int i = 0; i < directionNumber * 2; ++i)
+            GameObject newProjectileObject = ObjectPoolManager.Instance.Get(projectilePrefabName);
+            Transform projectileTransform = newProjectileObject.transform;
+            projectileTransform.position = muzzle.position;
+            projectileTransform.rotation = muzzle.rotation;
+            Projectile newProjectile = newProjectileObject.GetComponent<Projectile>();
+
+            //GameObject source = FindObjectOfType<Player>().gameObject;
+            newProjectile.SetSource(source);
+            newProjectile.SetRotation(Quaternion.Euler(newProjectile.transform.eulerAngles + new Vector3(0, tmpAngle, 0)));
+            tmpAngle += variation;
+
+            //스킬 모드일때 총알 세팅
+            //총알 계속 나가는 거는 MaxRange가 1000정도면 벽 닿을때까지 안없어지고, 벽 닿으면 총알 없어져서 이렇게 했습니다
+            newProjectile.SetMaxRange(1000);
+            newProjectile.SetSpeed(muzzleVelocity);
+            newProjectile.SetKnockBackMode(true);
+            newProjectile.SetKnockBackForce(knockBackForce);
+            newProjectile.SetKnockBackMuzzlePosition(muzzle.position);
+
+            //------------- critical 적용
+            float criticalDamage = damage + FightSceneController.Instance.GetPlayerATK();
+            if (Random.Range(0, 100) <= criticalChance)
             {
-                if(i == directionNumber)
-                {
-                    // 묻고 더블로 가!
-                    tmpAngle = -projectileMaxAngle * 0.5f + variation * 0.5f;
-                }
-
-                GameObject newProjectileObject = ObjectPoolManager.Instance.Get(projectilePrefabName);
-                Transform projectileTransform = newProjectileObject.transform;
-                projectileTransform.position = muzzle.position;
-                projectileTransform.rotation = muzzle.rotation;
-                Projectile newProjectile = newProjectileObject.GetComponent<Projectile>();
-
-                //GameObject source = FindObjectOfType<Player>().gameObject;
-                newProjectile.SetSource(source);
-                newProjectile.SetRotation(Quaternion.Euler(newProjectile.transform.eulerAngles + new Vector3(0, tmpAngle, 0)));
-                tmpAngle += variation;
-
-                //스킬 모드일때 총알 세팅
-                //총알 계속 나가는 거는 MaxRange가 1000정도면 벽 닿을때까지 안없어지고, 벽 닿으면 총알 없어져서 이렇게 했습니다
-                newProjectile.SetMaxRange(1000);
-                newProjectile.SetSpeed(muzzleVelocity);
-                newProjectile.SetKnockBackMode(true);
-                newProjectile.SetKnockBackForce(knockBackForce);
-                newProjectile.SetKnockBackMuzzlePosition(muzzle.position);
-
-                //------------- critical 적용
-                float criticalDamage = damage + FightSceneController.Instance.GetPlayerATK();
-                if (Random.Range(0, 100) <= criticalChance)
-                {
-                    criticalDamage = criticalDamage * criticalDamageRate;
-                }
-                newProjectile.SetDamage(criticalDamage);
-                //------------- critical 적용
-
-                newProjectileObject.SetActive(true);
+                criticalDamage = criticalDamage * criticalDamageRate;
             }
+            newProjectile.SetDamage(criticalDamage);
+            //------------- critical 적용
+
+            newProjectileObject.SetActive(true);
         }
     }
 

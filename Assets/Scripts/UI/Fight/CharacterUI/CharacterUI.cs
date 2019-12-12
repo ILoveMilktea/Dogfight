@@ -50,6 +50,7 @@ public class CharacterUI : MonoBehaviour
         //float nameWidth = nameRT.sizeDelta.x;
         //float sizeRatio = characterWidth / nameWidth;
         //nameRT.sizeDelta = new Vector2(nameRT.sizeDelta.x * sizeRatio, nameRT.sizeDelta.y);
+        
         // resize Hp
         RectTransform hpRT = characterHp.GetComponent<RectTransform>();
         float HpWidth = hpRT.sizeDelta.x;

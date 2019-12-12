@@ -67,7 +67,7 @@ public class SelectAct: MonoBehaviour
 
     public void OnClickExitButton()
     {
-        gameObject.SetActive(false);
+        UpgradeSceneController.Instance.CloseSelectActWindow();
     }
     private void ActRest()
     {
@@ -75,7 +75,7 @@ public class SelectAct: MonoBehaviour
         DataManager.Instance.AddBuffHp(10);
         DataManager.Instance.AddRemainHp(10);
 
-        UpgradeSceneController.Instance.OpenPopupResult(rest.image.sprite, "피로가..회복...zzZ", UpgradeSceneController.Instance.ClosePopupResult);
+        UpgradeSceneController.Instance.OpenPopupResult(rest.image.sprite, "피로가..회복...zzZ\n남은체력 10 회복, 최대체력 10 버프를 받습니다.", UpgradeSceneController.Instance.ClosePopupResult);
     }
 
     private void ActEat()
@@ -84,7 +84,7 @@ public class SelectAct: MonoBehaviour
         //DataManager.Instance.AddBuffHp(10);
         DataManager.Instance.AddRemainHp(30);
         
-        UpgradeSceneController.Instance.OpenPopupResult(eat.image.sprite, "맛있어!", UpgradeSceneController.Instance.ClosePopupResult);
+        UpgradeSceneController.Instance.OpenPopupResult(eat.image.sprite, "생기가 돈다!\n남은 체력이 30 회복됩니다.", UpgradeSceneController.Instance.ClosePopupResult);
     }
 
     private void ActTraining()
@@ -93,7 +93,7 @@ public class SelectAct: MonoBehaviour
         DataManager.Instance.AddBuffHp(5);
         DataManager.Instance.AddBuffAtk(2);
         
-        UpgradeSceneController.Instance.OpenPopupResult(training.image.sprite, "마음이 고양되는 기분이다.", UpgradeSceneController.Instance.ClosePopupResult);
+        UpgradeSceneController.Instance.OpenPopupResult(training.image.sprite, "마음이 고양되는 기분이다.\n최대체력 5 버프, 공격력 2 버프를 받습니다.", UpgradeSceneController.Instance.ClosePopupResult);
     }
 
     private void ActSearch()

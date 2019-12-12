@@ -13,7 +13,7 @@ public class PlayTimer : MonoBehaviour
 
     private void Start()
     {
-        playtime = 0f;
+        playtime = DataManager.Instance.GetPlayInfo.Playtime;
         isFight = false;
         timer = Timer();
     }

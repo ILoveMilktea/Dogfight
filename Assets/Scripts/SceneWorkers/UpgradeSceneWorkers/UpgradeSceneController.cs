@@ -6,11 +6,11 @@ using UnityEngine.UI;
 
 public static class ConstDecriptions
 {
-    public const string FightButton = "다음?";
+    public const string FightButton = "다음 스테이지로 진행하시겠습니까?";
 
-    public const string Select_RestButton = "짧은 휴식을 취합니다.\n남은 체력이 10 회복되고, 최대 체력 10 증가 버프를 받습니다."; // "Fight"
-    public const string Select_EatButton = "잡은 동물을 구워 먹습니다.\n남은 체력이 30 회복됩니다.";
-    public const string Select_Training = "생명의 기운을 흡수합니다.\n최대 체력 5 증가 버프와 기본 공격력 2 증가 버프를 받습니다.";
+    public const string Select_RestButton = "짧은 휴식을 취합니다.\n<size=50>남은 행동 시간을 소모합니다.</size>"; // "Fight"
+    public const string Select_EatButton = "잡은 동물을 구워 먹습니다.\n<size=50>남은 행동 시간을 소모합니다.</size>";
+    public const string Select_Training = "생명의 기운을 흡수합니다.\n<size=50>남은 행동 시간을 소모합니다.</size>";
     public const string Select_Search = "탐색?";
     public const string Select_Retry = "재전투?";
 }
@@ -100,7 +100,8 @@ public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
     }
     public void OpenPopupYN(string description, Action yesFunc, Action noFunc)
     {
-        popupYN.gameObject.SetActive(true);
+        StartCoroutine(UIEffect.ExpandFrom90(popupYN.gameObject));
+        //popupYN.gameObject.SetActive(true);
         popupYN.SetDescription(description);
         popupYN.SetCallback(yesFunc, noFunc);
 
@@ -116,34 +117,52 @@ public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
 
         popupResult.image.sprite = sprite;
         popupResult.SetDescription(description);
-        popupResult.gameObject.SetActive(true);
+        //popupResult.gameObject.SetActive(true);
+        StartCoroutine(UIEffect.ExpandFrom90(popupResult.gameObject));
         popupResult.SetCallback(okFunc);
     }
 
     public void OnClickActButton()
     {
-        selectAct.gameObject.SetActive(true);
+        //selectAct.gameObject.SetActive(true);
+        StartCoroutine(UIEffect.ExpandFrom90(selectAct.gameObject));
     }
-
-    public void CloseSelectActWindow()
-    {
-        selectAct.gameObject.SetActive(false);
-        actButton.interactable = false;
-    }
-    public void CloseSelectWeaponWindow()
-    {
-        weaponWindow.gameObject.SetActive(false);
-    }
-
 
     public void OnClickUpgradeButton()
     {
-        weaponWindow.gameObject.SetActive(true);
+        //weaponWindow.gameObject.SetActive(true);
+        StartCoroutine(UIEffect.ExpandFrom90(weaponWindow.gameObject));
     }
 
     public void OnClickFightButton()
     {
-        OpenPopupYN(ConstDecriptions.FightButton, EndUpgrade, ClosePopupYN);
+        //OpenPopupYN(ConstDecriptions.FightButton, EndUpgrade, ClosePopupYN);
+        EndUpgrade();
+    }
+
+    public void CloseSelectActWindow()
+    {
+        //selectAct.gameObject.SetActive(false);
+        StartCoroutine(UIEffect.ContractTo90(selectAct.gameObject));
+        actButton.interactable = false;
+    }
+    public void CloseSelectWeaponWindow()
+    {
+        //weaponWindow.gameObject.SetActive(false);
+        StartCoroutine(UIEffect.ContractTo90(weaponWindow.gameObject));
+    }
+
+    public void ClosePopupYN()
+    {
+        //exitButton.PullUI();
+        //popupYN.gameObject.SetActive(false);
+        StartCoroutine(UIEffect.ContractTo90(popupYN.gameObject));
+    }
+
+    public void ClosePopupResult()
+    {
+        //popupResult.gameObject.SetActive(false);
+        StartCoroutine(UIEffect.ContractTo90(popupResult.gameObject));
     }
 
     public void EndUpgrade()
@@ -156,14 +175,4 @@ public class UpgradeSceneController : MonoSingleton<UpgradeSceneController>
         GameManager.Instance.LoadNextScene(Constants.UpgradeSceneName, Constants.FightSceneName);
     }
 
-    public void ClosePopupYN()
-    {
-        //exitButton.PullUI();
-        popupYN.gameObject.SetActive(false);
-    }
-    
-    public void ClosePopupResult()
-    {
-        popupResult.gameObject.SetActive(false);
-    }
 }

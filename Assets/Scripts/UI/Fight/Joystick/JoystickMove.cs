@@ -38,6 +38,7 @@ public class JoystickMove : JoystickBase
         }
     }
 
+
     private void Move()
     {
         Vector2 moveDirection = handle.position - border.position;

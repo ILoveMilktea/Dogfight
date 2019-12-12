@@ -22,6 +22,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     private JoystickAttack joystickAttack;
     private JoystickMove joystickMove;
     private JoystickSkill joystickSkill;
+    private bool activeSelf_JoystickSkill;
 
     public ResultWindow resultWindow;
     public DeadWindow deadWindow;
@@ -104,6 +105,9 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         CharacterStatus status = new CharacterStatus("Player", statusFromData.MaxHp + statusFromData.BuffHp, statusFromData.RemainHp, statusFromData.Atk + statusFromData.BuffAtk);
 
         fightStatus.SetPlayerStatus(status);
+        Debug.Log(DataManager.Instance.GetPlayInfo.Parts);
+        fightStatus.AddParts(DataManager.Instance.GetPlayInfo.Parts);
+        parts.text = fightStatus.gainParts.ToString();
     }
     // stage에 해당하는 몹 생성, 위치지정
     private void SetEnemyOnStage()
@@ -152,7 +156,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         playerCharacterUI.SetMaxHp(fightStatus.playerStatus.maxHp);
         playerCharacterUI.SetRemainHp(fightStatus.playerStatus.remainHp);
         playerCharacterUI.SetTarget(player);
-        playerCharacterUI.ResizeUI();
+        //playerCharacterUI.ResizeUI();
 
         GameObject[] enemies = fightStatus.enemies.Keys.ToArray();
         foreach(var enemy in enemies)
@@ -163,7 +167,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
             enemyCharacterUIs[enemy].SetName(fightStatus.enemies[enemy].name);
             enemyCharacterUIs[enemy].SetMaxHp(fightStatus.enemies[enemy].maxHp);
             enemyCharacterUIs[enemy].SetTarget(enemy);
-            enemyCharacterUIs[enemy].ResizeUI();
+            //enemyCharacterUIs[enemy].ResizeUI();
 
         }
     }
@@ -173,7 +177,7 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         // 전투 중 active한 UI들
         fightGroup.SetMember(joystickAttack.gameObject);
         fightGroup.SetMember(joystickMove.gameObject);
-        fightGroup.SetMember(joystickSkill.gameObject);
+        //fightGroup.SetMember(joystickSkill.gameObject);
 
         // 일시정지 중 active한 UI들
         pauseGroup.SetMember(pauseImage.gameObject);
@@ -199,10 +203,13 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     {
         if (fightStateObserver.curFightState == FightState.Pause)
         {
+            joystickSkill.gameObject.SetActive(activeSelf_JoystickSkill);
             fightStateObserver.SetCurrentFightState(FightState.Fight);
         }
         else if(fightStateObserver.curFightState == FightState.Fight)
         {
+            activeSelf_JoystickSkill = joystickSkill.gameObject.activeSelf;
+            joystickSkill.gameObject.SetActive(false);
             fightStateObserver.SetCurrentFightState(FightState.Pause);
         }
     }
@@ -260,6 +267,14 @@ public class FightSceneController : MonoSingleton<FightSceneController>
             player.Attack(dir);
         }
     }
+    public void PlayerSkillReady(Vector3 dir)
+    {
+        if (fightStateObserver.curFightState == FightState.Fight ||
+            fightStateObserver.curFightState == FightState.Clear)
+        {
+            player.SkillReady(dir);
+        }
+    }
     // 플레이어 스킬
     public void PlayerSkill(Vector3 dir)
     {
@@ -271,13 +286,14 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     }
     public void SkillButtonOn(WeaponType type, string key)
     {
+        joystickSkill.gameObject.SetActive(true);
         string spriteName = WeaponSkillTable.Instance.GetTuple(type.ToString(), key).m_spriteName;
         joystickSkill.SkillOn(Resources.Load<Sprite>("Image/Skill/" + spriteName));
     }
 
     public void SkillButtonOff()
     {
-        joystickSkill.SkillOff();
+        joystickSkill.gameObject.SetActive(false);
     }
     // 플레이어 공격 대기
     public void PlayerStandby()
@@ -294,13 +310,22 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         WeaponType weapon = player.SwapWeapon();
         joystickAttack.WeaponImageSwap(weapon);
     }
-    public void LookMoveRotate()
+    public void LockMoveRotate()
     {
         player.isAttacking = true;
     }
-    public void UnLookMoveRotate()
+    public void UnLockMoveRotate()
     {
         player.isAttacking = false;
+    }
+
+    public void LockNormalAttack()
+    {
+        joystickAttack.LockJoystick();
+    }
+    public void UnLockNormalAttack()
+    {
+        joystickAttack.UnLockJoystick();
     }
 
     // ---- hp
@@ -463,17 +488,6 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     {
         return fightStateObserver.curFightState;
     }
-    public void ShowResult()
-    {
-        OffAllBullets();
-        ChangeFightState(FightState.End);
-        playTimer.StopTimer();
-        player.StopMove();
-        DataManager.Instance.Save();
-
-        //resultWindow.ShowResult(EndFight);
-        EndFight();
-    }
     public void Retreat()
     {
         ChangeFightState(FightState.End);
@@ -481,8 +495,8 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         playTimer.StopTimer();
         player.StopMove();
 
-        DataManager.Instance.AddPlayTime(playTimer.GetPlaytime());
-        DataManager.Instance.AddParts(fightStatus.gainParts);
+        DataManager.Instance.SetPlayTime(playTimer.GetPlaytime());
+        DataManager.Instance.SetParts(fightStatus.gainParts);
         DataManager.Instance.SetRemainHp(fightStatus.playerStatus.remainHp);
         DataManager.Instance.SetStage(DataManager.Instance.GetPlayInfo.Stage - 1);
 
@@ -498,8 +512,8 @@ public class FightSceneController : MonoSingleton<FightSceneController>
         playTimer.StopTimer();
         player.StopMove();
 
-        DataManager.Instance.AddPlayTime(playTimer.GetPlaytime());
-        DataManager.Instance.AddParts(fightStatus.gainParts);
+        DataManager.Instance.SetPlayTime(playTimer.GetPlaytime());
+        DataManager.Instance.SetParts(fightStatus.gainParts);
         DataManager.Instance.SetRemainHp(fightStatus.playerStatus.remainHp);
         DataManager.Instance.SetAlreadyAct(false);
 
@@ -510,15 +524,10 @@ public class FightSceneController : MonoSingleton<FightSceneController>
     }
 
 
-    public void EndFight()
+    public void DungeonClear()
     {
-        // save playtime
-        DataManager.Instance.AddPlayTime(playTimer.GetPlaytime());
-        // save gain parts
-        DataManager.Instance.AddParts(fightStatus.gainParts);
-        // save player reaminHp
-        DataManager.Instance.SetRemainHp(fightStatus.playerStatus.remainHp);
+        //5스테이지 클리어
+        playTimer.StandbyTimer();
 
-        GameManager.Instance.LoadNextScene(Constants.FightSceneName, Constants.UpgradeSceneName);
     }
 }

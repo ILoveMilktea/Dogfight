@@ -170,7 +170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -178,9 +178,9 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 263ef331874eba4409e6ffb81102347a, type: 3}
     m_FontSize: 50
-    m_FontStyle: 1
+    m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 50
@@ -435,19 +435,19 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 100
+    m_Font: {fileID: 12800000, guid: 263ef331874eba4409e6ffb81102347a, type: 3}
+    m_FontSize: 120
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 1
-    m_MaxSize: 100
+    m_MaxSize: 120
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: The Heimr
+  m_Text: Heimer's myth
 --- !u!222 &267211506
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1038,11 +1038,12 @@ MonoBehaviour:
   - {fileID: 128560, guid: 186cbcc9a82e6754d9b264aa11f87819, type: 3}
   - {fileID: 117272, guid: 7fc7d93bb277ec34db49364bf1d1d1aa, type: 3}
   - {fileID: 149826, guid: 5ddc89d234136a44e80086d586db1369, type: 3}
-  - {fileID: 131676, guid: ff839af3b0b03ee4cbdd09c7f69aa59c, type: 3}
-  - {fileID: 160430, guid: ce9903acb2e0a334dae3549fe5ed7dc9, type: 3}
+  - {fileID: 117272, guid: f178445359214d14cb92dd27d7a08380, type: 3}
+  - {fileID: 132996, guid: c88b18e63d6380c49b5a2808a5ea113d, type: 3}
   - {fileID: 117382, guid: 8e4e8ce3bda8db442af2a008c007590e, type: 3}
   - {fileID: 158782, guid: 787ca980affe1c34d9b12b96d7948c18, type: 3}
-  particlePoolAmount: 03000000030000000300000003000000320000003200000014000000140000000a0000000a000000
+  - {fileID: 176436, guid: 14d754c24de0fbf4f91ddd0f11bbed5f, type: 3}
+  particlePoolAmount: 03000000030000000300000003000000320000003200000014000000140000000a0000000200000002000000
 --- !u!82 &876707044
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1339,7 +1340,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1347,9 +1348,9 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 263ef331874eba4409e6ffb81102347a, type: 3}
     m_FontSize: 50
-    m_FontStyle: 1
+    m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 50
@@ -1667,7 +1668,6 @@ GameObject:
   - component: {fileID: 1929984143}
   - component: {fileID: 1929984142}
   - component: {fileID: 1929984141}
-  - component: {fileID: 1929984144}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -1723,17 +1723,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1929984144
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1929984140}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f5a44652bc190d468a1fd159c3c4bf7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  eventSystem: {fileID: 1929984142}
-  dragThresholdCM: 0.5

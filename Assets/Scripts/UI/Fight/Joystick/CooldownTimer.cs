@@ -41,18 +41,23 @@ public class CooldownTimer : MonoBehaviour
     {
         while(true)
         {
-            if(updateTime < cooldownTime)
+            if (updateTime >= cooldownTime)
+            {
+                skillImage.color = Color.white;
+                skillOn = true;
+            }
+            else
             {
                 updateTime += Time.deltaTime;
                 skillImage.fillAmount = updateTime / cooldownTime;
-                if (updateTime >= cooldownTime)
-                {
-                    skillImage.color = Color.white;
-                    skillOn = true;
-                }
             }
 
             yield return new WaitForEndOfFrame();
+
+            if(Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                updateTime += 5;
+            }
         }
     }
 }

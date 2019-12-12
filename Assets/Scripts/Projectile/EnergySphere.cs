@@ -12,7 +12,8 @@ public class EnergySphere : Projectile
     { MOVING,
       STOP,
       HIT,
-      DESTROY
+      GRAVITY,
+      DESTROY,
     };
     public EnerySphereState state;
 
@@ -43,6 +44,7 @@ public class EnergySphere : Projectile
         else
         {
             projectileEffect.FireEffect(transform.position);
+            //gameObject.transform.GetChild(2).gameObject.SetActive(true);
             StartCoroutine(CheckState());
         }
     }
@@ -94,6 +96,8 @@ public class EnergySphere : Projectile
                     {
                         gameObject.transform.GetChild(i).gameObject.SetActive(true);
                     }
+                    //gameObject.transform.GetChild(2).gameObject.SetActive(false);
+                    state = EnerySphereState.GRAVITY;
                     StartCoroutine(DestroyTimer());
                 }
             }
@@ -117,6 +121,7 @@ public class EnergySphere : Projectile
                         //child.transform.parent = this.gameObject.transform;
                         gameObject.transform.GetChild(i).gameObject.SetActive(true);
                     }
+                    state = EnerySphereState.GRAVITY;
                     StartCoroutine(DestroyTimer());
                 }
 
@@ -135,13 +140,14 @@ public class EnergySphere : Projectile
 
                         for (int i = 0; i < gameObject.transform.childCount; ++i)
                         {
-                            if (gameObject.transform.GetChild(i).gameObject.activeSelf == true)
+                            // 총알까지 끄시면 곤란해요~
+                            if (gameObject.transform.GetChild(i).gameObject.activeSelf == true &&
+                                i != gameObject.transform.childCount - 1)
                             {
                                 //Debug.Log("자식 destroy" + gameObject.transform.GetChild(i).gameObject);                            
                                 gameObject.transform.GetChild(i).gameObject.SetActive(false);
                             }
                         }
-                       // gameObject.transform.GetChild(1).gameObject.SetActive(false);
                         isChildrenDestroyed = true;
 
                     }

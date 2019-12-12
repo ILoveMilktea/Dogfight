@@ -26,12 +26,16 @@ public class JoystickBase : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
 
     protected TouchState state;
 
+    protected bool handleLock;
+
     protected virtual void Start()
     {
         canvas = GetComponentInParent<Canvas>();
 
         touchPos = Vector2.zero;
         handleMoveRange = border.rect.width * 0.5f;
+
+        handleLock = false;
     }
 
     // Gameobject touch
@@ -44,6 +48,7 @@ public class JoystickBase : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
     // Gameobject drag
     public virtual void OnDrag(PointerEventData data)
     {
+        Debug.Log("drag");
         touchPos = data.position;
         Vector2 zeroPoint = new Vector2(border.position.x, border.position.y);
         Vector2 moveVector = touchPos - zeroPoint;
@@ -72,5 +77,15 @@ public class JoystickBase : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
         {
             handle.position = touchPos;
         }
+    }
+
+
+    public void LockJoystick()
+    {
+        handleLock = true;
+    }
+    public void UnLockJoystick()
+    {
+        handleLock = false;
     }
 }

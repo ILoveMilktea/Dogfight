@@ -191,6 +191,11 @@ public class EnemyAttack : MonoBehaviour
         this.projectileMaxAngle = maxAngle;
     }
 
+    public void SetDirectionNumber(int directionNumber)
+    {
+        this.directionNumber = directionNumber;
+    }
+
     //비활성화 될때 값 초기화
     public void ResetValue()
     {

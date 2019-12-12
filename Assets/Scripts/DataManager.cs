@@ -103,9 +103,9 @@ public class DataManager : MonoSingleton<DataManager>
     public void SetPlayerStatusInfo(PlayerStatusInfo info)
     {
         SetMaxHp(info.MaxHp);
+        SetBuffHp(info.BuffHp);
         SetRemainHp(info.RemainHp);
         SetAtk(info.Atk);
-        SetBuffHp(info.BuffHp);
         SetBuffAtk(info.BuffAtk);
     }
     public void SetMaxHp(int value)
@@ -118,9 +118,9 @@ public class DataManager : MonoSingleton<DataManager>
     }
     public void SetRemainHp(int value)
     {
-        if (value > dataCenter.playerStatusInfo.MaxHp)
+        if (value > dataCenter.playerStatusInfo.MaxHp + dataCenter.playerStatusInfo.BuffHp)
         {
-            GetPlayerStatus.SetRemainHp(GetPlayerStatus.MaxHp);
+            GetPlayerStatus.SetRemainHp(GetPlayerStatus.MaxHp + dataCenter.playerStatusInfo.BuffHp);
         }
         else
         {

@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class JoystickAttack : JoystickBase
 {
+    private Player player;
+
     public Image equipingWeapon;
     private bool isSwap;
 
@@ -13,31 +15,35 @@ public class JoystickAttack : JoystickBase
     {
         base.Start();
         isSwap = true;
+        player = FindObjectOfType<Player>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        switch (state)
+        if (!handleLock)
         {
-            case TouchState.Begin:
-                state = TouchState.Stay;
-                isSwap = true;
-                break;
-            case TouchState.Stay:
-                Attack();
-                break;
-            case TouchState.Drag:
-                state = TouchState.Stay;
-                Attack();
-                break;
-            case TouchState.End:
-                Standby();
-                CheckSwap();
-                state = TouchState.None;
-                break;
-            default:
-                break;
+            switch (state)
+            {
+                case TouchState.Begin:
+                    state = TouchState.Stay;
+                    isSwap = true;
+                    break;
+                case TouchState.Stay:
+                    Attack();
+                    break;
+                case TouchState.Drag:
+                    state = TouchState.Stay;
+                    Attack();
+                    break;
+                case TouchState.End:
+                    Standby();
+                    CheckSwap();
+                    state = TouchState.None;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -50,18 +56,18 @@ public class JoystickAttack : JoystickBase
         float moveAmount = Vector2.Distance(border.position, handle.position);
         moveAmount = moveAmount / handleMoveRange;
 
-        if (moveAmount > 0.5f)
+        if (moveAmount > 0.3f)
         {
             isSwap = false;
             // joystick handle의 이동 범위가 반을 넘어가야 움직이는거
-            FightSceneController.Instance.LookMoveRotate();
+            FightSceneController.Instance.LockMoveRotate();
             FightSceneController.Instance.PlayerAttack(moveDirection3D);
 
             if (trajectoryLine == null)
             {
                 TurnOnTrajectoryLine();
             }
-            Player player = FindObjectOfType<Player>();
+
             if(equipingWeapon.sprite.name == WeaponType.ShotGun.ToString())
             {
                 trajectoryLine.DrawLineWithAngle(player.GetMuzzlePosition(), moveDirection3D,
@@ -92,7 +98,7 @@ public class JoystickAttack : JoystickBase
         }
 
         FightSceneController.Instance.PlayerStandby();
-        FightSceneController.Instance.UnLookMoveRotate();
+        FightSceneController.Instance.UnLockMoveRotate();
     }
 
     private void CheckSwap()
@@ -120,4 +126,5 @@ public class JoystickAttack : JoystickBase
         trajectoryLine.RemoveLine();
         trajectoryLine = null;
     }
+
 }

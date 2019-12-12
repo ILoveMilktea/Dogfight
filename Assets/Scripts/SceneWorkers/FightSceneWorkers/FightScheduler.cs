@@ -48,6 +48,11 @@ public class FightScheduler : MonoBehaviour
         }
 
         FightSceneController.Instance.ChangeFightState(FightState.Clear);
-        //FightSceneController.Instance.ShowResult();
+
+        if (DataManager.Instance.GetPlayInfo.Stage == 5)
+        {
+            // 보스전
+            FightSceneController.Instance.DungeonClear();
+        }
     }
 }

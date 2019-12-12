@@ -72,11 +72,14 @@ public class Player : LivingEntity
         gunController.OnTirggerHold();
         //gunController.OnTriggerRelease(); // 연사를 위해 임시추가
     }
-
+    public void SkillReady(Vector3 direction)
+    {
+        controller.LookAt(transform.position + direction);
+    }
     public void SkillAttack(Vector3 direction)
     {
         controller.LookAt(transform.position + direction);
-        // 여기서 guncontroller로 접속해서 스킬모드로 한방 쏴야하는데~~~
+
         if (cooldownTimer.IsSkillReady())
         {
             gunController.OnSkillTriggerHold();
@@ -115,4 +118,5 @@ public class Player : LivingEntity
     {
         return gunController.weaponHold.position;
     }
+
 }

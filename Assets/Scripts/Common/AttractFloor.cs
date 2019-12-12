@@ -36,13 +36,14 @@ public class AttractFloor : MonoBehaviour
         //실제 플레이안에서 활성화된 경우
         //else
         //{
-            //장판 크기 설정
-            gameObject.transform.localScale = new Vector3(floorRange, 0.1f, floorRange);
-            //장판 지속 시간 체크 코루틴 시작
-            //StartCoroutine(FloorLastingTimer());
-            Debug.Log("attract활성화됨");
-            StartCoroutine(CheckState());
-           
+        //장판 크기 설정
+        gameObject.transform.localScale = new Vector3(floorRange, 0.1f, floorRange);
+        //장판 지속 시간 체크 코루틴 시작
+        //StartCoroutine(FloorLastingTimer());
+        //Debug.Log("attract활성화됨");
+        ParticleManager.Instance.OnParticle("GravityField", 5.0f, transform.position);
+        StartCoroutine(CheckState());
+
         //}
     }
 
@@ -51,12 +52,12 @@ public class AttractFloor : MonoBehaviour
         StopColliders();
         ResetValue();
         //StopAllCoroutines();
-        Debug.Log("AttractFloor비활성화");
+        //Debug.Log("AttractFloor비활성화");
     }
 
     IEnumerator CheckState()
     {
-        while(true)
+        while (true)
         {
             if (transform.parent != null)
             {
@@ -75,7 +76,7 @@ public class AttractFloor : MonoBehaviour
             }
             yield return new WaitForEndOfFrame();
         }
-    }  
+    }
 
     private void StopColliders()
     {
@@ -83,9 +84,9 @@ public class AttractFloor : MonoBehaviour
         {
             if (affectedGameObjectList[i] != null)
             {
-                Debug.Log("stop할거"+affectedGameObjectList[i]);
-                affectedGameObjectList[i].GetComponent<Rigidbody>().velocity = Vector3.zero;    
-                        
+                //Debug.Log("stop할거"+affectedGameObjectList[i]);
+                affectedGameObjectList[i].GetComponent<Rigidbody>().velocity = Vector3.zero;
+
             }
         }
 
@@ -97,30 +98,31 @@ public class AttractFloor : MonoBehaviour
 
     //장판 끌어당기기
     private void Attract(Collider other, Vector3 dir)
-    {  
-        if(isFloorFinished==false)
-        {            
+    {
+
+        if (isFloorFinished == false)
+        {
             other.GetComponent<Rigidbody>().velocity = Vector3.zero;
             other.GetComponent<Rigidbody>().AddForce(dir * floorForce, ForceMode.Acceleration);
 
-        }      
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(isFloorFinished==false)
-        {            
+        if (isFloorFinished == false)
+        {
             if (other.CompareTag("Enemy") || other.CompareTag("Player"))
-            {                
+            {
                 affectedGameObjectList.Add(other.gameObject);
             }
-        }        
+        }
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if(isFloorFinished==false)
-        {            
+        if (isFloorFinished == false)
+        {
             if (other.CompareTag("Enemy") || other.CompareTag("Player"))
             {
                 Vector3 currTargetPosition = other.transform.position;
@@ -134,16 +136,16 @@ public class AttractFloor : MonoBehaviour
                 Attract(other, dir);
                 //StartCoroutine(attractCoroutine);                           
             }
-        }             
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Enemy") || other.CompareTag("Player"))
-        {            
+        {
             other.GetComponent<Rigidbody>().velocity = Vector3.zero;
         }
-    }   
+    }
 
     IEnumerator FloorLastingTimer()
     {

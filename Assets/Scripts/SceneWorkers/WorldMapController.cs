@@ -28,7 +28,7 @@ public class WorldMapController : MonoSingleton<WorldMapController>
 
     public void OnClickDungeon_Griffon()
     {
-        OpenPopupYN("Griffon Dungeon으로 배달을 시작하시겠습니까?",
+        OpenPopupYN("그리폰 던전으로\n배달을 시작하시겠습니까?",
             EnterDungeon_Griffon, ClosePopupYN);
     }
 
@@ -41,13 +41,14 @@ public class WorldMapController : MonoSingleton<WorldMapController>
 
     public void OpenPopupYN(string description, Action yesFunc, Action noFunc)
     {
-        popupYN.gameObject.SetActive(true);
+        //popupYN.gameObject.SetActive(true);
+        StartCoroutine(UIEffect.ExpandFrom90(popupYN.gameObject));
         popupYN.SetDescription(description);
         popupYN.SetCallback(yesFunc, noFunc);
     }
 
     public void ClosePopupYN()
     {
-        popupYN.gameObject.SetActive(false);
+        StartCoroutine(UIEffect.ContractTo90(popupYN.gameObject));
     }
 }

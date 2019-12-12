@@ -15,9 +15,9 @@ public static class Const_PassiveSkill
 
 public static class Const_ActiveSkill_1st
 { 
-    public const string PanetratingShot = "U_PanetratingShot";
-    public const string KnockBack = "U_DoubleBarrel";
-    public const string GravityField = "U_GravityField";
+    public const string LinearGun = "U_PanetratingShot";
+    public const string ShotGun = "U_DoubleBarrel";
+    public const string EnergySphere = "U_GravityField";
     public const string NodeKey = "3_1";
 }
 
@@ -54,6 +54,7 @@ public class GunController : MonoBehaviour
         equippedGun = Instantiate(gunToEquip,weaponHold.position,weaponHold.rotation);
         ApplyActivatedSkill(equipedWeaponType, equippedGun);
         equippedGun.transform.parent = weaponHold;
+        equippedGun.gameObject.SetActive(true);
     }
 
 
@@ -135,14 +136,14 @@ public class GunController : MonoBehaviour
                         gun.maxRange += skillInfo.m_value;
                         break;
                     case Const_PassiveSkill.AttackAngleUp:
-                        gun.projectileMaxAngle += skillInfo.m_value;
+                        gun.directionNumber += (int)skillInfo.m_value;
                         break;
                     case Const_PassiveSkill.CriticalChanceUp:
                         gun.criticalChance += skillInfo.m_value;
                         break;
-                    case Const_ActiveSkill_1st.PanetratingShot:
-                    case Const_ActiveSkill_1st.KnockBack:
-                    case Const_ActiveSkill_1st.GravityField:
+                    case Const_ActiveSkill_1st.LinearGun:
+                    case Const_ActiveSkill_1st.ShotGun:
+                    case Const_ActiveSkill_1st.EnergySphere:
                         gun.isSkillEquiped = true;
                         gun.skillKey = Const_ActiveSkill_1st.NodeKey;
                         break;
@@ -159,4 +160,5 @@ public class GunController : MonoBehaviour
             FightSceneController.Instance.SkillButtonOff();
         }
     }
+
 }

@@ -7,8 +7,9 @@ public class BossEnemy : Enemy
     private enum BossEnemyState
     {
         IDLE,
-        ATTACKING_SHOOTING,
-        ATTACKING_ROTATING,
+        ATTACKING_LINEARSHOOTING,
+        ATTACKING_ROTATINGSHOOTING,
+        ATTACKING_SPREADSHOOTING,
         DEAD
     };
 
@@ -20,10 +21,10 @@ public class BossEnemy : Enemy
     //공격간 시간 간격
     //public float timeBetweenAttack;
     //공격할 수 있는지 
-    private bool isAttackAvailable=true;
+    private bool isAttackAvailable = true;
     //공격중인지
     private bool isAttackWait = false;
-   
+
 
     //각 공격스킬 당 시간간격
     public float timeBetweenAttack;
@@ -42,7 +43,11 @@ public class BossEnemy : Enemy
     //[Animator관련 변수]
     //Animator 변수
     private Animator animator;
-    
+
+    private bool isSpreadShootingAttackMode = false;
+    private bool isLinearShootingAttackMode = true;
+    private bool isRotateShootingAttackMode = false;
+
 
     private void OnEnable()
     {
@@ -70,7 +75,7 @@ public class BossEnemy : Enemy
     {
         isAttackAvailable = true;
         isAttackWait = false;
-        attackSkillCoroutine = null;      
+        attackSkillCoroutine = null;
     }
 
     protected override void Move()
@@ -80,6 +85,43 @@ public class BossEnemy : Enemy
 
     IEnumerator CheckEnemyState()
     {
+        ////맵 완전히 켜질때까지 기다리기
+        //yield return new WaitForSeconds(waitTimeForStart);
+
+        //float halfHealth = startingHealth * 0.5f;
+        ////시작하고 3초간 가만히 있기
+        //yield return new WaitForSeconds(3.0f);
+        //while (!isDead)
+        //{          
+        //    if(health==0)
+        //    {
+        //        bossEnemyState = BossEnemyState.DEAD;
+        //    }
+        //    else
+        //    {
+        //        if (isAttackAvailable == false)
+        //        {
+        //            if (isAttackWait == true)
+        //            {
+        //                LockOnTarget();
+        //            }
+        //            bossEnemyState = BossEnemyState.IDLE;
+        //        }
+        //        else if (health >= halfHealth && isAttackAvailable == true) //체력이 반 이상일때
+        //        {
+        //            bossEnemyState = BossEnemyState.ATTACKING_SHOOTING;
+        //        }
+        //        else if (isAttackAvailable == true) //체력이 반 이하일 때
+        //        {
+        //            bossEnemyState = BossEnemyState.ATTACKING_ROTATING;
+        //        }
+
+        //    }
+        //    yield return new WaitForEndOfFrame();
+        //}
+
+        //===================================================
+
         //맵 완전히 켜질때까지 기다리기
         yield return new WaitForSeconds(waitTimeForStart);
 
@@ -87,8 +129,8 @@ public class BossEnemy : Enemy
         //시작하고 3초간 가만히 있기
         yield return new WaitForSeconds(3.0f);
         while (!isDead)
-        {          
-            if(health==0)
+        {
+            if (health == 0)
             {
                 bossEnemyState = BossEnemyState.DEAD;
             }
@@ -102,15 +144,19 @@ public class BossEnemy : Enemy
                     }
                     bossEnemyState = BossEnemyState.IDLE;
                 }
-                else if (health >= halfHealth && isAttackAvailable == true) //체력이 반 이상일때
+                else if (isLinearShootingAttackMode && isAttackAvailable == true)
                 {
-                    bossEnemyState = BossEnemyState.ATTACKING_SHOOTING;
+                    bossEnemyState = BossEnemyState.ATTACKING_LINEARSHOOTING;
                 }
-                else if (isAttackAvailable == true) //체력이 반 이하일 때
+                else if (isSpreadShootingAttackMode && isAttackAvailable == true)
                 {
-                    bossEnemyState = BossEnemyState.ATTACKING_ROTATING;
+                    bossEnemyState = BossEnemyState.ATTACKING_SPREADSHOOTING;
                 }
-                
+                else if (isRotateShootingAttackMode && isAttackAvailable == true)
+                {
+                    bossEnemyState = BossEnemyState.ATTACKING_ROTATINGSHOOTING;
+                }
+
             }
             yield return new WaitForEndOfFrame();
         }
@@ -122,31 +168,46 @@ public class BossEnemy : Enemy
         yield return new WaitForSeconds(waitTimeForStart);
 
         while (!isDead)
-        {              
-            if (bossEnemyState == BossEnemyState.IDLE)
-            {                
+        {
 
-                LockOnTarget();               
-            }
-            else if (bossEnemyState == BossEnemyState.ATTACKING_SHOOTING)
+            if (bossEnemyState == BossEnemyState.IDLE)
             {
+                LockOnTarget();
+            }
+            else if (bossEnemyState == BossEnemyState.ATTACKING_LINEARSHOOTING)
+            {
+                LockOnTarget();
+                SetAllAnimationFalse();
+                animator.SetBool("isJumping", true);
+                if (attackSkillCoroutine == null)
+                {
+
+                    attackSkillCoroutine = StartCoroutine(LinearShooting());
+                }
+            }
+            else if (bossEnemyState == BossEnemyState.ATTACKING_SPREADSHOOTING)
+            {
+                LockOnTarget();
                 SetAllAnimationFalse();
                 animator.SetBool("isWalking", true);
-                if (attackSkillCoroutine==null)
+                if (attackSkillCoroutine == null)
                 {
-                    attackSkillCoroutine=StartCoroutine(SpreadShooting());                   
-                }               
+
+                    attackSkillCoroutine = StartCoroutine(SpreadShooting());
+                }
             }
-            else if(bossEnemyState==BossEnemyState.ATTACKING_ROTATING)
+            else if (bossEnemyState == BossEnemyState.ATTACKING_ROTATINGSHOOTING)
             {
                 SetAllAnimationFalse();
                 animator.SetBool("isJumping", true);
-                if (attackSkillCoroutine==null)
+                if (attackSkillCoroutine == null)
                 {
-                    attackSkillCoroutine = StartCoroutine(RotatingAttack());                    
+
+                    attackSkillCoroutine = StartCoroutine(RotatingAttack());
                 }
             }
-            else if(bossEnemyState==BossEnemyState.DEAD)
+
+            else if (bossEnemyState == BossEnemyState.DEAD)
             {
                 isDead = true;
                 SetAllAnimationFalse();
@@ -154,26 +215,30 @@ public class BossEnemy : Enemy
                 //죽는 애니메이션 3초동안 유지하고 없어짐
                 yield return new WaitForSeconds(3.0f);
 
-                ObjectPoolManager.Instance.Free(gameObject);  
-            }           
-           
+                ObjectPoolManager.Instance.Free(gameObject);
+            }
+
             yield return new WaitForEndOfFrame();
         }
-    }   
+    }
 
     //부채꼴형태로 발사체 공격
     IEnumerator SpreadShooting()
     {
-        int count = Random.Range(3,6);
+        int count = Random.Range(3, 6);
         //SpreadShooting스킬에서 한번 발사간 시간 간격
         float timeBetweenSpreadShooting = 1.0f;
-        while(count!=0)
+        while (count != 0)
         {
+            LockOnTarget();
             count--;
             enemyAttack.SpreadShooting(muzzle);
 
             yield return new WaitForSeconds(timeBetweenSpreadShooting);
-        }        
+        }
+
+        isSpreadShootingAttackMode = false;
+        isRotateShootingAttackMode = true;
 
         StartCoroutine(AttackWaitTimer());
     }
@@ -181,11 +246,13 @@ public class BossEnemy : Enemy
     //회전하면서 발사체 공격
     IEnumerator RotatingAttack()
     {
-        float totalRotateTime=0f;
+        float totalRotateTime = 0f;
+        enemyAttack.SetDirectionNumber(1);
+        enemyAttack.SetSpeedChangeMode(false);
         while (true)
         {
             //RotatignAttack 공격 지속 시간이 지나면
-            if(totalRotateTime>=rotatingAttackLastingTime)
+            if (totalRotateTime >= rotatingAttackLastingTime)
             {
                 break;
             }
@@ -204,6 +271,30 @@ public class BossEnemy : Enemy
             totalRotateTime += rotateTime;
             //Debug.Log("projectile position: " + newProjectileObject.transform.position);          
         }
+
+        isRotateShootingAttackMode = false;
+        isLinearShootingAttackMode = true;
+
+        StartCoroutine(AttackWaitTimer());
+    }
+
+    IEnumerator LinearShooting()
+    {
+        int count = Random.Range(3, 4);
+        float timeBetweenLinearShooting = 1.0f;
+        enemyAttack.SetDirectionNumber(3);
+        enemyAttack.SetSpeedChangeMode(true);
+        while (count != 0)
+        {
+
+            count--;
+            enemyAttack.LinearShooting(muzzle);
+
+            yield return new WaitForSeconds(timeBetweenLinearShooting);
+
+        }
+        isLinearShootingAttackMode = false;
+        isSpreadShootingAttackMode = true;
 
         StartCoroutine(AttackWaitTimer());
     }
@@ -226,7 +317,7 @@ public class BossEnemy : Enemy
         animator.SetBool("isRunning", false);
         animator.SetBool("isAttacking", false);
         animator.SetBool("isGetHitting", false);
-        animator.SetBool("isDead", false);        
+        animator.SetBool("isDead", false);
     }
 
 }

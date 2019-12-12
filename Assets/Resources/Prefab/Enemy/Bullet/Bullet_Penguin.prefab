@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2359868495888950510}
   - component: {fileID: 3418699438431097977}
   m_Layer: 0
-  m_Name: Bullet_Spider
+  m_Name: Bullet_Penguin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -164,6 +164,22 @@ PrefabInstance:
     - target: {fileID: 19856832, guid: a1731238c7dc98a4cabc2b445ffc5423, type: 3}
       propertyPath: simulationSpeed
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 19920020, guid: a1731238c7dc98a4cabc2b445ffc5423, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8d73f0e0d24b26341961fb843ead24d2, type: 2}
+    - target: {fileID: 19854162, guid: a1731238c7dc98a4cabc2b445ffc5423, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 0.5882353
+      objectReference: {fileID: 0}
+    - target: {fileID: 19854162, guid: a1731238c7dc98a4cabc2b445ffc5423, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19854162, guid: a1731238c7dc98a4cabc2b445ffc5423, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 0.09550207
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a1731238c7dc98a4cabc2b445ffc5423, type: 3}
