@@ -31,6 +31,11 @@ public class BossEnemy : Enemy
     //공격 스킬 코루틴
     private Coroutine attackSkillCoroutine;
 
+    public float timeBetweenLinearShooting = 0.7f;
+    public float timeBetweenSpreadShooting = 0.7f;
+
+    private float deadAnimationLastingTime = 2.0f;
+
     //RotatingAttack 공격 시간
     public float rotatingAttackLastingTime;
 
@@ -47,6 +52,14 @@ public class BossEnemy : Enemy
     private bool isSpreadShootingAttackMode = false;
     private bool isLinearShootingAttackMode = true;
     private bool isRotateShootingAttackMode = false;
+
+    //spreadshooting한번에 몇번 쏘게 할건지
+    private int spreadShootingBurstCountMin=3;
+    private int spreadShootingBurstCountMax = 6;
+
+    //linearshooting한번에 몇번 쏘게 할건지
+    private int linearShootingBurstCountMin = 3;
+    private int linearShootingBurstCountMax = 4;
 
 
     private void OnEnable()
@@ -84,50 +97,13 @@ public class BossEnemy : Enemy
     }
 
     IEnumerator CheckEnemyState()
-    {
-        ////맵 완전히 켜질때까지 기다리기
-        //yield return new WaitForSeconds(waitTimeForStart);
-
-        //float halfHealth = startingHealth * 0.5f;
-        ////시작하고 3초간 가만히 있기
-        //yield return new WaitForSeconds(3.0f);
-        //while (!isDead)
-        //{          
-        //    if(health==0)
-        //    {
-        //        bossEnemyState = BossEnemyState.DEAD;
-        //    }
-        //    else
-        //    {
-        //        if (isAttackAvailable == false)
-        //        {
-        //            if (isAttackWait == true)
-        //            {
-        //                LockOnTarget();
-        //            }
-        //            bossEnemyState = BossEnemyState.IDLE;
-        //        }
-        //        else if (health >= halfHealth && isAttackAvailable == true) //체력이 반 이상일때
-        //        {
-        //            bossEnemyState = BossEnemyState.ATTACKING_SHOOTING;
-        //        }
-        //        else if (isAttackAvailable == true) //체력이 반 이하일 때
-        //        {
-        //            bossEnemyState = BossEnemyState.ATTACKING_ROTATING;
-        //        }
-
-        //    }
-        //    yield return new WaitForEndOfFrame();
-        //}
-
-        //===================================================
-
+    {      
         //맵 완전히 켜질때까지 기다리기
         yield return new WaitForSeconds(waitTimeForStart);
 
         float halfHealth = startingHealth * 0.5f;
         //시작하고 3초간 가만히 있기
-        yield return new WaitForSeconds(3.0f);
+        //yield return new WaitForSeconds(3.0f);
         while (!isDead)
         {
             if (health == 0)
@@ -172,13 +148,14 @@ public class BossEnemy : Enemy
 
             if (bossEnemyState == BossEnemyState.IDLE)
             {
+                SetAllAnimationFalse();
                 LockOnTarget();
             }
             else if (bossEnemyState == BossEnemyState.ATTACKING_LINEARSHOOTING)
             {
                 LockOnTarget();
                 SetAllAnimationFalse();
-                animator.SetBool("isJumping", true);
+                animator.SetBool("isAttacking_Skill2", true);
                 if (attackSkillCoroutine == null)
                 {
 
@@ -189,7 +166,7 @@ public class BossEnemy : Enemy
             {
                 LockOnTarget();
                 SetAllAnimationFalse();
-                animator.SetBool("isWalking", true);
+                animator.SetBool("isAttacking_Skill1", true);
                 if (attackSkillCoroutine == null)
                 {
 
@@ -199,7 +176,7 @@ public class BossEnemy : Enemy
             else if (bossEnemyState == BossEnemyState.ATTACKING_ROTATINGSHOOTING)
             {
                 SetAllAnimationFalse();
-                animator.SetBool("isJumping", true);
+                animator.SetBool("isAttacking_Skill2", true);
                 if (attackSkillCoroutine == null)
                 {
 
@@ -212,8 +189,8 @@ public class BossEnemy : Enemy
                 isDead = true;
                 SetAllAnimationFalse();
                 animator.SetBool("isDead", true);
-                //죽는 애니메이션 3초동안 유지하고 없어짐
-                yield return new WaitForSeconds(3.0f);
+                //죽는 애니메이션 2초동안 유지하고 없어짐
+                yield return new WaitForSeconds(deadAnimationLastingTime);
 
                 ObjectPoolManager.Instance.Free(gameObject);
             }
@@ -225,9 +202,9 @@ public class BossEnemy : Enemy
     //부채꼴형태로 발사체 공격
     IEnumerator SpreadShooting()
     {
-        int count = Random.Range(3, 6);
+        int count = Random.Range(spreadShootingBurstCountMin, spreadShootingBurstCountMax);
         //SpreadShooting스킬에서 한번 발사간 시간 간격
-        float timeBetweenSpreadShooting = 1.0f;
+        
         while (count != 0)
         {
             LockOnTarget();
@@ -280,8 +257,8 @@ public class BossEnemy : Enemy
 
     IEnumerator LinearShooting()
     {
-        int count = Random.Range(3, 4);
-        float timeBetweenLinearShooting = 1.0f;
+        int count = Random.Range(linearShootingBurstCountMin, linearShootingBurstCountMax);
+       
         enemyAttack.SetDirectionNumber(3);
         enemyAttack.SetSpeedChangeMode(true);
         while (count != 0)
@@ -311,12 +288,11 @@ public class BossEnemy : Enemy
 
     //모든 Animator 변수 false하기
     private void SetAllAnimationFalse()
-    {
-        animator.SetBool("isWalking", false);
-        animator.SetBool("isJumping", false);
-        animator.SetBool("isRunning", false);
-        animator.SetBool("isAttacking", false);
-        animator.SetBool("isGetHitting", false);
+    {        
+        animator.SetBool("isRunning", false);        
+        animator.SetBool("isAttacking_Skill1", false);
+        animator.SetBool("isAttacking_Skill2", false);
+        //animator.SetBool("isHurt", false);
         animator.SetBool("isDead", false);
     }
 
